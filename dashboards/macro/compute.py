@@ -368,7 +368,8 @@ def _sankey(ce, meta):
         named += v
         nodes.append({"name": name})
         links.append({"source": "Average household", "target": name, "value": v})
-        row = {"name": name, "value": v, "share": round(v / total * 100, 1), "change": chg(v, pv), "children": []}
+        row = {"name": name, "value": v, "prev": pv, "share": round(v / total * 100, 1), "change": chg(v, pv),
+               "children": []}
         if kids:
             kid_sum = kid_prev = 0
             for kname, kid in kids:
@@ -380,16 +381,16 @@ def _sankey(ce, meta):
                 kid_prev += kpv or 0
                 nodes.append({"name": kname})
                 links.append({"source": name, "target": kname, "value": kv})
-                row["children"].append({"name": kname, "value": kv, "share": round(kv / total * 100, 1),
-                                        "change": chg(kv, kpv)})
+                row["children"].append({"name": kname, "value": kv, "prev": kpv,
+                                        "share": round(kv / total * 100, 1), "change": chg(kv, kpv)})
             rem = v - kid_sum
             if name in REMAINDER_LABEL and rem > 0:
                 rlabel = REMAINDER_LABEL[name]
                 nodes.append({"name": rlabel})
                 links.append({"source": name, "target": rlabel, "value": rem})
                 rprev = (pv - kid_prev) if pv and kid_prev else None
-                row["children"].append({"name": rlabel, "value": rem, "share": round(rem / total * 100, 1),
-                                        "change": chg(rem, rprev)})
+                row["children"].append({"name": rlabel, "value": rem, "prev": rprev,
+                                        "share": round(rem / total * 100, 1), "change": chg(rem, rprev)})
             row["children"].sort(key=lambda c: -c["value"])
         rows.append(row)
     other = total - named
@@ -399,8 +400,8 @@ def _sankey(ce, meta):
     pother_note = None
     pother = (ptotal - sum(val(g[1], prev) for g in SANKEY_GROUPS)) if ptotal else None
     rows.sort(key=lambda r: -r["value"])
-    rows.append({"name": "Everything else", "value": other, "share": round(other / total * 100, 1),
-                 "change": chg(other, pother), "children": []})  # always last
+    rows.append({"name": "Everything else", "value": other, "prev": pother,
+                 "share": round(other / total * 100, 1), "change": chg(other, pother), "children": []})  # always last
     big3 = sum(val(g[1], yr) for g in SANKEY_GROUPS[:3]) / total * 100
     return {
         "year": yr, "prev": prev, "total": total, "prev_total": ptotal,
@@ -441,6 +442,9 @@ def _add_inflation_context(k, cpi):
 
     def tag(r):
         r["vs"] = round(r["change"] - infl, 1) if r.get("change") is not None else None
+        # dollars above (+) or below (-) what inflation alone would have added to last year's spending
+        r["excess"] = round(r["value"] - r["prev"] * (1 + infl / 100)) if r.get("prev") else None
+        r["delta"] = round(r["value"] - r["prev"]) if r.get("prev") else None
         r["short"] = SHORT.get(r["name"], r["name"])
         for c in r.get("children", []):
             tag(c)
@@ -458,9 +462,11 @@ def _add_inflation_context(k, cpi):
     groups = [dict(r) for r in big]
     if small:
         sv = sum(r["value"] for r in small)
-        sp = sum(r["value"] / (1 + r["change"] / 100) for r in small if r["change"] is not None)
+        sp = sum(r["prev"] for r in small if r.get("prev"))
         schg = round((sv / sp - 1) * 100, 1) if sp else None
-        groups.append({"name": SMALL_CLUSTER, "short": "Smaller", "value": sv,
+        groups.append({"name": SMALL_CLUSTER, "short": "Smaller", "value": sv, "prev": sp,
+                       "excess": round(sv - sp * (1 + infl / 100)) if sp else None,
+                       "delta": round(sv - sp) if sp else None,
                        "share": round(sv / k["total"] * 100, 1), "change": schg,
                        "vs": round(schg - infl, 1) if schg is not None else None,
                        "children": [dict(r, children=[]) for r in small]})
@@ -474,12 +480,52 @@ def _add_inflation_context(k, cpi):
         return head + (f" {lead['name']} moved most: {lead['change']:+.1f}%, "
                        f"{abs(lead['vs']):.1f} points {speed} than prices.")
 
-    steps = [{"key": "overview", "title": f"${k['total']:,.0f} a year",
-              "text": (f"Average household spending {'rose' if (total_chg or 0) >= 0 else 'fell'} "
-                       f"{abs(total_chg):.1f}% in {yr}, while prices rose {infl:.1f}%. "
-                       f"{faster} of {len(k['rows'])} categories "
-                       f"grew faster than prices (red); the rest grew slower (green).")}]
+    ptot = k["prev_total"]
+    dtot = k["total"] - ptot
+    from_prices = ptot * infl / 100
+    beyond = dtot - from_prices
+    gain = sorted((g for g in groups if g.get("delta") is not None), key=lambda g: -g["delta"])
+    top = gain[0]
+    over = sorted((g for g in groups if g.get("excess") is not None), key=lambda g: -g["excess"])
+    under = [g for g in over if g["excess"] < 0]
+
+    steps = [
+        {"key": "grow", "title": f"${k['total']:,.0f} a year",
+         "text": (f"The average household spent ${k['total']:,.0f} in {yr}, ${dtot:,.0f} more than in {prev} "
+                  f"({total_chg:+.1f}%). Prices rose {infl:.1f}% over the same period.")},
+        {"key": "overview", "title": "Where it goes",
+         "text": (f"Housing alone takes {groups[0]['share']:.0f}% of the budget. {faster} of {len(k['rows'])} categories "
+                  f"grew faster than prices (red); the rest grew slower (green).")},
+        {"key": "excess", "title": "Beyond inflation",
+         "text": (f"If every price had simply risen {infl:.1f}%, each category would cost last year's amount plus "
+                  f"inflation. The bars show the gap: {over[0]['name']} ran ${over[0]['excess']:,.0f} over"
+                  + (f", while {under[0]['name']} came in ${-under[0]['excess']:,.0f} under." if under else ".")
+                  + " Bars are zoomed in to make small gaps visible.")},
+    ]
     for i, g in enumerate(groups):
         if g["children"]:
             steps.append({"key": g["name"], "group": i, "title": g["name"], "text": story(g)})
+    steps.append({"key": "finale", "title": f"Where the extra ${dtot:,.0f} went",
+                  "text": (f"{top['name']} took ${top['delta']:,.0f} of the increase ({top['delta'] / dtot * 100:.0f}%). "
+                           f"Overall inflation explains about ${from_prices:,.0f}. The other ~${beyond:,.0f} is growth "
+                           f"beyond it: households buying more, or prices in those categories rising faster than "
+                           f"average (rent, for example).")})
+    k["story"] = {"prev_total": ptot, "delta_total": round(dtot), "from_prices": round(from_prices),
+                  "beyond": round(beyond)}
+
+    # desktop companion: where the year-over-year increase went, by category (increases only)
+    ups = [r for r in k["rows"] if (r.get("delta") or 0) > 0]
+    downs = [r for r in k["rows"] if (r.get("delta") or 0) < 0]
+    root = f"+${dtot:,.0f} vs {prev}"
+    k["delta_flow"] = {
+        "title": f"Where the extra ${dtot:,.0f} went",
+        "total": sum(r["delta"] for r in ups),
+        "nodes": [{"name": root}] + [{"name": r["name"]} for r in ups],
+        "links": [{"source": root, "target": r["name"], "value": r["delta"]} for r in ups],
+        "downs": [{"name": r["name"], "delta": r["delta"]} for r in downs],
+    }
+    k["deltaTitle"] = f"Where the extra ${dtot:,.0f} went"
+    k["deltaSub"] = (f"{top['name']} took ${top['delta']:,.0f} ({top['delta'] / dtot * 100:.0f}%) of the increase. "
+                     f"Overall inflation explains about ${from_prices:,.0f} of it."
+                     + "".join(f" {d['name']} fell ${-d['delta']:,.0f}, so it is not shown." for d in k["delta_flow"]["downs"]))
     k["flow"] = {"groups": groups, "steps": steps}

@@ -174,12 +174,20 @@
   viz.deltaKey($("#key-sankey"), keyCaption, keyLabels);
   viz.sankey($("#c-sankey"), { ...K, colorOf: hasInfl ? (name) => (name in VS ? vsColor(VS[name]) : null) : null });
 
+  // desktop: where the year-over-year increase went
+  if (K.delta_flow) {
+    viz.sankey($("#c-delta"), { ...K.delta_flow, valuePrefix: "+", shareLabel: "of the increase",
+      colorOf: (name) => (name in VS ? vsColor(VS[name]) : null) });
+  }
+
   // phones: scroll-driven vertical flow (overview, then one cluster per step)
   if (K.flow) {
     viz.deltaKey($("#key-flow"), keyCaption, keyLabels);
     const story = viz.flowStory($("#flow-svg"), {
-      total: K.total, groups: K.flow.groups, steps: K.flow.steps,
+      total: K.total, prevTotal: K.prev_total, year: K.year, prevYear: K.prev,
+      groups: K.flow.groups, steps: K.flow.steps,
       colorOf: (n) => vsColor(n.vs), fmt: (v) => `$${(v / 1000).toFixed(1)}K`,
+      fmtDelta: (v) => `${v >= 0 ? "+" : "−"}$${Math.abs(Math.round(v)).toLocaleString("en-US")}`,
       label: `Average household spending of ${FMT.usd0(K.total)} flowing into categories`,
     });
     const stepsEl = $("#flow-steps");
@@ -187,7 +195,7 @@
       const wrap = document.createElement("div"); wrap.className = "fs-step"; wrap.dataset.i = i;
       const card = document.createElement("div"); card.className = "fs-card";
       const prog = document.createElement("div"); prog.className = "fs-progress";
-      prog.textContent = i === 0 ? "OVERVIEW · SCROLL FOR DETAILS" : `DETAIL ${i} OF ${K.flow.steps.length - 1}`;
+      prog.textContent = `${i + 1} / ${K.flow.steps.length}${i === 0 ? " · KEEP SCROLLING" : ""}`;
       const h = document.createElement("h4"); h.textContent = st.title;
       const p = document.createElement("p"); p.textContent = st.text;
       card.append(prog, h, p);
@@ -206,7 +214,12 @@
       stepsEl.append(wrap);
     });
     const io = new IntersectionObserver((items) => {
-      items.forEach((it) => { if (it.isIntersecting) story.setStep(+it.target.dataset.i); });
+      items.forEach((it) => {
+        const i = +it.target.dataset.i;
+        if (it.isIntersecting) story.setStep(i);
+        // scrolled back up past the first card: rewind to last year's total
+        else if (i === 0 && it.boundingClientRect.top > window.innerHeight * 0.6) story.setStep(-1);
+      });
     }, { rootMargin: "-62% 0px -30% 0px" });
     stepsEl.querySelectorAll(".fs-step").forEach((w) => io.observe(w));
     document.addEventListener("themechange", () => story.rebuild());

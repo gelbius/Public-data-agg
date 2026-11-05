@@ -234,7 +234,7 @@
           formatter: (p) => {
             const v = p.data.value ?? p.value;
             const name = p.dataType === "edge" ? `${p.data.source} → ${p.data.target}` : p.name;
-            return tipHtml(name, [{ color: t.series("accent"), value: FMT.usd0(v), name: `${((v / total) * 100).toFixed(1)}% of spending` }]);
+            return tipHtml(name, [{ color: t.series("accent"), value: FMT.usd0(v), name: `${((v / total) * 100).toFixed(1)}% ${cfg.shareLabel || "of spending"}` }]);
           },
         },
         series: [{
@@ -250,7 +250,7 @@
           lineStyle: { opacity: 0.2, curveness: 0.5 },
           label: {
             color: t.ink, fontSize: narrow ? 10 : 12, fontFamily: t.sans,
-            formatter: (p) => `${p.name}  {v|${FMT.usd0(p.value)}}`,
+            formatter: (p) => (cfg.valuePrefix && level[p.name] === 0 ? p.name : `${p.name}  {v|${cfg.valuePrefix || ""}${FMT.usd0(p.value)}}`),
             rich: { v: { color: t.dim, fontFamily: t.mono, fontSize: narrow ? 9 : 11 } },
           },
         }],
@@ -319,30 +319,43 @@
     add("dk-label", labels[1]);
   }
 
-  /* ---------- vertical flow story (phones): an overview, then one cluster per scroll step.
-     cfg: {total, groups:[{name, short, value, vs, children:[{name, short, value, vs}]}],
-           steps:[{key, group?}], colorOf(node)->color, fmt(v)->text, label}
-     Returns setStep(i). Layout is plain SVG so it can be sticky and cross-fade smoothly. */
+  /* ---------- vertical flow story (phones): scroll-driven, one idea per step.
+     Steps (by key): grow -> overview -> excess -> <cluster steps with .group> -> finale.
+     cfg: {total, prevTotal, prevYear, year, groups:[{name, short, value, vs, excess, delta,
+           children:[...]}], steps:[{key, group?}], colorOf(node), fmt(v), fmtDelta(v), label}
+     Plain SVG + CSS transitions so it stays light and pauses cleanly; scrolling back reverses it.
+     Returns {setStep(i), rebuild()}. */
   function flowStory(svgHost, cfg) {
     const NS = "http://www.w3.org/2000/svg";
-    let step = 0, built = null;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let stepIdx = -1, built = null, countRaf = 0;
     const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
     const text = (parent, x, y, str, cls, anchor = "middle") => { const tn = el("text", { x, y, class: cls, "text-anchor": anchor }, parent); tn.textContent = str; return tn; };
     const ribbon = (sx0, sx1, ys, tx0, tx1, yt) => {
       const m = (ys + yt) / 2;
       return `M${sx0},${ys} C${sx0},${m} ${tx0},${m} ${tx0},${yt} L${tx1},${yt} C${tx1},${m} ${sx1},${m} ${sx1},${ys} Z`;
     };
-    // place labels under nodes in two staggered rows, clamped inside the chart
-    const labelRows = (g, nodes, y, W, rowGap, showAll) => {
+    const stagger = (node, i, ms = 70) => { node.style.transitionDelay = `${i * ms}ms`; };
+    // labels under a row of nodes: two staggered rows when crowded, clamped inside the chart
+    const labelRows = (g, nodes, y, W, rowGap, valueOf) => {
       nodes.forEach((n, i) => {
-        if (!showAll && !n.big) return;
-        const row = nodes.length > 3 ? i % 2 : 0;
-        const cx = Math.max(34, Math.min(W - 34, (n.x0 + n.x1) / 2));
+        const rows = nodes.length > 5 ? 3 : nodes.length > 3 ? 2 : 1;
+        const row = i % rows;
+        const mid = (n.x0 + n.x1) / 2;
+        const cx = Math.max(34, Math.min(W - 34, mid));
         const ly = y + 18 + row * rowGap;
-        if (row) el("line", { x1: (n.x0 + n.x1) / 2, x2: (n.x0 + n.x1) / 2, y1: y + 4, y2: ly - 11, class: "fs-tick" }, g);
+        if (rows === 3) rowGap = Math.min(rowGap, 28);
+        if (row) el("line", { x1: mid, x2: mid, y1: y + 4, y2: ly - 11, class: "fs-tick" }, g);
         text(g, cx, ly, n.short, "fs-name");
-        text(g, cx, ly + 13, cfg.fmt(n.value), "fs-val");
+        text(g, cx, ly + 13, valueOf(n), "fs-val");
       });
+    };
+    // lay nodes side by side across the width, sized by a value
+    const row = (items, valueOf, W, gap) => {
+      const sum = items.reduce((a, it) => a + Math.max(0, valueOf(it)), 0);
+      const usable = W - gap * (items.length - 1);
+      let x = 0;
+      return items.map((it) => { const w = (Math.max(0, valueOf(it)) / sum) * usable; const n = { ...it, x0: x, x1: x + w }; x += w + gap; return n; });
     };
 
     function build() {
@@ -351,65 +364,124 @@
       const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": cfg.label }, svgHost);
       const gap = 5, nodeH = 8;
       const y0 = 30, y1 = Math.round(H * 0.34), y2 = H - 76;
-      const G = cfg.groups, sum = G.reduce((a, g) => a + g.value, 0);
-      // level 1: groups side by side across the width
-      let x = 0;
-      const usable = W - gap * (G.length - 1);
-      const L1 = G.map((g) => { const w = (g.value / sum) * usable; const n = { ...g, x0: x, x1: x + w, big: w > 26 }; x += w + gap; return n; });
-      // root bar segmented in the same order
+      const G = cfg.groups;
+      const L1 = row(G, (g) => g.value, W, gap);
       let rx = 0;
-      const seg = G.map((g) => { const w = (g.value / sum) * W; const s0 = rx; rx += w; return [s0, rx]; });
+      const seg = G.map((g) => { const w = (g.value / cfg.total) * W; const s0 = rx; rx += w; return [s0, rx]; });
 
-      const gRoot = el("g", {}, svg);
-      text(gRoot, W / 2, y0 - 10, `Average household · ${cfg.fmt(cfg.total)}`, "fs-root");
-      el("rect", { x: 0, y: y0, width: W, height: nodeH, rx: 2, class: "fs-rootbar" }, gRoot);
+      // --- root: last year's size as a ghost, this year's bar grows over it
+      const gRoot = el("g", { class: "fs-rootg" }, svg);
+      const prevW = (cfg.prevTotal / cfg.total) * W;
+      const ghost = el("line", { x1: prevW, x2: prevW, y1: y0 - 4, y2: y0 + nodeH + 4, class: "fs-ghost" }, gRoot);
+      const bar = el("rect", { x: 0, y: y0, width: W, height: nodeH, rx: 2, class: "fs-rootbar fs-grow-x" }, gRoot);
+      bar.style.transform = `scaleX(${cfg.prevTotal / cfg.total})`;
+      const rootLabel = text(gRoot, W / 2, y0 - 10, "", "fs-root");
+      const growTag = text(gRoot, W, y0 + nodeH + 32, `+${cfg.fmt(cfg.total - cfg.prevTotal)} vs ${cfg.prevYear}`, "fs-tag", "end");
+      const prevTag = text(gRoot, prevW, y0 + nodeH + 16, `${cfg.prevYear}`, "fs-val", "end");
 
-      const ribbons1 = L1.map((n, i) => el("path", { d: ribbon(seg[i][0], seg[i][1], y0 + nodeH, n.x0, n.x1, y1), class: "fs-ribbon", fill: cfg.colorOf(n) }, svg));
-      const nodes1 = L1.map((n) => el("rect", { x: n.x0, y: y1, width: Math.max(1, n.x1 - n.x0), height: nodeH, rx: 2, fill: cfg.colorOf(n), class: "fs-node" }, svg));
+      // --- level 1: groups (ribbons grow down from the root, staggered)
+      const gL1 = el("g", { class: "fs-l1" }, svg);
+      const ribbons1 = L1.map((n, i) => { const r = el("path", { d: ribbon(seg[i][0], seg[i][1], y0 + nodeH, n.x0, n.x1, y1), class: "fs-ribbon fs-grow-y", fill: cfg.colorOf(n) }, gL1); stagger(r, i); return r; });
+      const nodes1 = L1.map((n, i) => { const r = el("rect", { x: n.x0, y: y1, width: Math.max(1, n.x1 - n.x0), height: nodeH, rx: 2, fill: cfg.colorOf(n), class: "fs-node" }, gL1); stagger(r, i); return r; });
       const overviewLabels = el("g", { class: "fs-layer" }, svg);
-      labelRows(overviewLabels, L1, y1 + nodeH, W, 30, true);
+      labelRows(overviewLabels, L1, y1 + nodeH, W, 30, (n) => cfg.fmt(n.value));
 
-      // one layer per cluster: ribbons from its group node to its children spread across the width
+      // --- excess: zoomed bars under each group = dollars above/below inflation
+      const gEx = el("g", { class: "fs-layer" }, svg);
+      const maxEx = Math.max(...G.map((g) => Math.abs(g.excess || 0)), 1);
+      const exTop = y1 + nodeH + 6, exMax = Math.max(40, (y2 - exTop) * 0.62);
+      L1.forEach((n, i) => {
+        if (n.excess == null) return;
+        const h = Math.max(2, (Math.abs(n.excess) / maxEx) * exMax);
+        const r = el("rect", { x: n.x0, y: exTop, width: Math.max(4, n.x1 - n.x0), height: h, rx: 2, fill: cfg.colorOf(n), class: "fs-grow-y" }, gEx);
+        stagger(r, i, 90);
+      });
+      el("line", { x1: 0, x2: W, y1: exTop, y2: exTop, class: "fs-zero" }, gEx);
+      labelRows(gEx, L1, exTop + exMax, W, 28, (n) => cfg.fmtDelta(n.excess));
+
+      // --- clusters: the active group fans out across the width
       const clusters = G.map((g, gi) => {
         if (!g.children || !g.children.length) return null;
         const layer = el("g", { class: "fs-layer" }, svg);
         const n1 = L1[gi];
+        const kids = row(g.children, (c) => c.value, W, gap);
         const ksum = g.children.reduce((a, c) => a + c.value, 0);
-        const kUsable = W - gap * (g.children.length - 1);
-        let kx = 0, sx = n1.x0;
-        const kids = g.children.map((c) => {
-          const w = (c.value / ksum) * kUsable, sw = (c.value / ksum) * (n1.x1 - n1.x0);
-          const k = { ...c, x0: kx, x1: kx + w, s0: sx, s1: sx + sw, big: true };
-          kx += w + gap; sx += sw; return k;
+        let sx = n1.x0;
+        kids.forEach((k, i) => {
+          const sw = (k.value / ksum) * (n1.x1 - n1.x0);
+          const r = el("path", { d: ribbon(sx, sx + sw, y1 + nodeH, k.x0, k.x1, y2), class: "fs-ribbon fs-ribbon-2 fs-grow-y", fill: cfg.colorOf(k) }, layer);
+          stagger(r, i, 90);
+          sx += sw;
         });
-        kids.forEach((k) => el("path", { d: ribbon(k.s0, k.s1, y1 + nodeH, k.x0, k.x1, y2), class: "fs-ribbon fs-ribbon-2", fill: cfg.colorOf(k) }, layer));
         kids.forEach((k) => el("rect", { x: k.x0, y: y2, width: Math.max(1, k.x1 - k.x0), height: nodeH, rx: 2, fill: cfg.colorOf(k), class: "fs-node" }, layer));
-        // active group's name as a pill just under its node
         const cx = Math.max(60, Math.min(W - 60, (n1.x0 + n1.x1) / 2));
-        const pill = el("g", {}, layer);
         const label = `${g.short} · ${cfg.fmt(g.value)}`;
-        el("rect", { x: cx - label.length * 3.4 - 8, y: y1 + nodeH + 6, width: label.length * 6.8 + 16, height: 20, rx: 2, class: "fs-pill" }, pill);
-        text(pill, cx, y1 + nodeH + 20, label, "fs-name");
-        labelRows(layer, kids, y2 + nodeH, W, 28, true);
+        el("rect", { x: cx - label.length * 3.4 - 8, y: y1 + nodeH + 6, width: label.length * 6.8 + 16, height: 20, rx: 2, class: "fs-pill" }, layer);
+        text(layer, cx, y1 + nodeH + 20, label, "fs-name");
+        labelRows(layer, kids, y2 + nodeH, W, 28, (n) => cfg.fmt(n.value));
         return layer;
       });
-      built = { ribbons1, nodes1, overviewLabels, clusters };
-      apply();
+
+      // --- finale: only the year-over-year increase, split by where it went
+      const gFin = el("g", { class: "fs-layer" }, svg);
+      const ups = G.filter((g) => (g.delta || 0) > 0).sort((a, b) => b.delta - a.delta);
+      const upSum = ups.reduce((a, g) => a + g.delta, 0);
+      text(gFin, W / 2, y0 - 10, `+${cfg.fmt(cfg.total - cfg.prevTotal)} more than ${cfg.prevYear}`, "fs-root");
+      el("rect", { x: 0, y: y0, width: W, height: nodeH, rx: 2, class: "fs-rootbar" }, gFin);
+      const F = row(ups, (g) => g.delta, W, gap);
+      let fx = 0;
+      F.forEach((n, i) => {
+        const w = (n.delta / upSum) * W;
+        const r = el("path", { d: ribbon(fx, fx + w, y0 + nodeH, n.x0, n.x1, y1), class: "fs-ribbon fs-grow-y", fill: cfg.colorOf(n) }, gFin);
+        stagger(r, i, 90);
+        fx += w;
+        el("rect", { x: n.x0, y: y1, width: Math.max(1, n.x1 - n.x0), height: nodeH, rx: 2, fill: cfg.colorOf(n), class: "fs-node" }, gFin);
+      });
+      labelRows(gFin, F, y1 + nodeH, W, 28, (n) => `+${cfg.fmt(n.delta)}`);
+
+      built = { gRoot, bar, ghost, rootLabel, growTag, prevTag, gL1, ribbons1, nodes1, overviewLabels, gEx, clusters, gFin };
+      apply(true);
     }
 
-    function apply() {
+    function countTo(from, to, prefix) {
+      cancelAnimationFrame(countRaf);
+      if (reduce) { built.rootLabel.textContent = `${prefix}${cfg.fmt(to)}`; return; }
+      const t0 = performance.now(), dur = 900;
+      const tick = (now) => {
+        const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+        built.rootLabel.textContent = `${prefix}${cfg.fmt(from + (to - from) * e)}`;
+        if (p < 1) countRaf = requestAnimationFrame(tick);
+      };
+      countRaf = requestAnimationFrame(tick);
+    }
+
+    function apply(fresh) {
       if (!built) return;
-      const s = cfg.steps[step] || cfg.steps[0];
-      const active = s.group;
-      built.overviewLabels.classList.toggle("on", active == null);
-      built.clusters.forEach((c, i) => c && c.classList.toggle("on", i === active));
-      built.ribbons1.forEach((r, i) => r.classList.toggle("dim", active != null && i !== active));
-      built.nodes1.forEach((r, i) => r.classList.toggle("dim", active != null && i !== active));
+      const s = cfg.steps[stepIdx];
+      const key = s ? s.key : null;              // null = before the story starts
+      const active = s && s.group != null ? s.group : null;
+      const B = built;
+      const grown = key !== null;
+      B.bar.style.transform = grown ? "scaleX(1)" : `scaleX(${cfg.prevTotal / cfg.total})`;
+      B.growTag.classList.toggle("on", key === "grow");
+      B.prevTag.classList.toggle("on", key === null || key === "grow");
+      B.ghost.classList.toggle("on", key === null || key === "grow");
+      B.gRoot.classList.toggle("hide", key === "finale");
+      B.gL1.classList.toggle("on", grown && key !== "grow" && key !== "finale");
+      B.overviewLabels.classList.toggle("on", key === "overview");
+      B.gEx.classList.toggle("on", key === "excess");
+      B.clusters.forEach((c, i) => c && c.classList.toggle("on", i === active));
+      B.ribbons1.forEach((r, i) => r.classList.toggle("dim", (active != null && i !== active) || key === "excess"));
+      B.nodes1.forEach((r, i) => r.classList.toggle("dim", active != null && i !== active));
+      B.gFin.classList.toggle("on", key === "finale");
+      if (key === null) { cancelAnimationFrame(countRaf); B.rootLabel.textContent = `${cfg.prevYear} · ${cfg.fmt(cfg.prevTotal)}`; }
+      else if (key === "grow" && !fresh) countTo(cfg.prevTotal, cfg.total, `${cfg.year} · `);
+      else { cancelAnimationFrame(countRaf); B.rootLabel.textContent = `Average household · ${cfg.fmt(cfg.total)}`; }
     }
 
     build();
     let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(build, 200); });
-    return { setStep(i) { step = i; apply(); }, rebuild: build };
+    return { setStep(i) { if (i === stepIdx) return; stepIdx = i; apply(false); }, rebuild: build };
   }
 
   /* ---------- data table twin */

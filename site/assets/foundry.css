@@ -341,7 +341,22 @@ thead th { position: sticky; top: 0; background: var(--panel-2); font-weight: 60
 .fs-host svg { display: block; overflow: visible; }
 .fs-root { font: 600 12px var(--sans); fill: var(--ink); }
 .fs-rootbar { fill: var(--ink); }
-.fs-ribbon { opacity: .22; transition: opacity .5s var(--ease); }
+.fs-ribbon { opacity: .22; transition: opacity .5s var(--ease), transform .7s var(--ease); }
+/* growth animations: bars grow from the left, ribbons and zoomed bars grow downward */
+.fs-grow-x { transform-box: fill-box; transform-origin: left center; transition: transform .9s var(--ease); }
+.fs-grow-y { transform-box: fill-box; transform-origin: center top; transition: transform .7s var(--ease), opacity .5s var(--ease); }
+.fs-layer:not(.on) .fs-grow-y, .fs-l1:not(.on) .fs-grow-y { transform: scaleY(0); }
+.fs-l1 { transition: opacity .45s var(--ease); }
+.fs-l1:not(.on) { opacity: 0; }
+.fs-rootg { transition: opacity .4s var(--ease); }
+.fs-rootg.hide { opacity: 0; }
+.fs-ghost { stroke: var(--ink-dim); stroke-width: 1.5; opacity: 0; transition: opacity .3s; }
+.fs-ghost.on { opacity: 1; }
+.fs-tag { font: 600 11px var(--sans); fill: var(--bad); opacity: 0; transition: opacity .4s var(--ease) .5s; }
+.fs-tag.on { opacity: 1; }
+.fs-rootg text.fs-val { transition: opacity .3s; }
+.fs-rootg text.fs-val:not(.on) { opacity: 0; }
+.fs-zero { stroke: var(--line-2); stroke-width: 1; }
 .fs-ribbon.dim { opacity: .05; }
 .fs-ribbon-2 { opacity: .3; }
 .fs-node { transition: opacity .5s var(--ease); }
@@ -352,4 +367,7 @@ thead th { position: sticky; top: 0; background: var(--panel-2); font-weight: 60
 .fs-val { font: 400 10px var(--mono); fill: var(--ink-dim); }
 .fs-tick { stroke: var(--line-2); stroke-width: 1; }
 .fs-pill { fill: var(--panel); stroke: var(--line-2); }
-@media (prefers-reduced-motion: reduce) { .fs-layer, .fs-node, .fs-ribbon { transition: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .fs-layer, .fs-node, .fs-ribbon, .fs-l1, .fs-grow-x, .fs-grow-y, .fs-tag, .fs-rootg { transition: none !important; }
+  .fs-layer:not(.on) .fs-grow-y, .fs-l1:not(.on) .fs-grow-y { transform: none; }
+}
