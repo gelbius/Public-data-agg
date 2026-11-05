@@ -1,0 +1,83 @@
+{
+  "_doc": "What the macro dashboard downloads. 'fred' series come from the free FRED CSV endpoint (no API key). 'bls_ce' series come from the BLS Consumer Expenditure Survey API v1 (no key).",
+  "fred": {
+    "UNRATE": {
+      "start": "2014-01-01",
+      "name": "Unemployment rate"
+    },
+    "CPIAUCSL": {
+      "start": "2013-01-01",
+      "name": "Consumer Price Index (all items)"
+    },
+    "CPILFESL": {
+      "start": "2013-01-01",
+      "name": "Core CPI (ex food & energy)"
+    },
+    "FEDFUNDS": {
+      "start": "2014-01-01",
+      "name": "Effective federal funds rate"
+    },
+    "MORTGAGE30US": {
+      "start": "1971-01-01",
+      "name": "30-year fixed mortgage rate (Freddie Mac)"
+    },
+    "TERMCBCCALLNS": {
+      "start": "1972-01-01",
+      "name": "Credit card APR, accounts assessed interest"
+    },
+    "REVOLSL": {
+      "start": "2014-01-01",
+      "name": "Revolving consumer credit outstanding"
+    },
+    "PSAVERT": {
+      "start": "1959-01-01",
+      "name": "Personal saving rate"
+    },
+    "TDSP": {
+      "start": "1980-01-01",
+      "name": "Household debt service ratio"
+    },
+    "DRCCLACBS": {
+      "start": "1991-01-01",
+      "name": "Credit card delinquency rate, all banks"
+    },
+    "UMCSENT": {
+      "start": "1952-01-01",
+      "name": "Univ. of Michigan consumer sentiment"
+    },
+    "USREC": {
+      "start": "1952-01-01",
+      "name": "NBER recession indicator"
+    },
+    "GASREGW": {
+      "start": "1990-01-01",
+      "name": "Regular gasoline price, weekly (EIA)"
+    },
+    "CES0500000003": {
+      "start": "2013-01-01",
+      "name": "Average hourly earnings, private"
+    },
+    "DSPIC96": {
+      "start": "2014-01-01",
+      "name": "Real disposable personal income"
+    }
+  },
+  "bls_ce": {
+    "_doc": "Annual averages per consumer unit (household), all consumer units.",
+    "CXUTOTALEXPLB0101M": "Total spending",
+    "CXUHOUSINGLB0101M": "Housing",
+    "CXUSHELTERLB0101M": "Shelter",
+    "CXUUTILSLB0101M": "Utilities, fuels & public services",
+    "CXUTRANSLB0101M": "Transportation",
+    "CXUVEHPURCHLB0101M": "Vehicle purchases",
+    "CXUFOODTOTLLB0101M": "Food",
+    "CXUFOODHOMELB0101M": "Food at home",
+    "CXUFOODAWAYLB0101M": "Food away from home",
+    "CXUHEALTHLB0101M": "Healthcare",
+    "CXUINSPENSNLB0101M": "Insurance & pensions",
+    "CXUENTRTAINLB0101M": "Entertainment",
+    "CXUCASHCONTLB0101M": "Cash contributions",
+    "CXUAPPARELLB0101M": "Apparel",
+    "CXUPUBTRANSLB0101M": "Public & other transportation"
+  }
+}

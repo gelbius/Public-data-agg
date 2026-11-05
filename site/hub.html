@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Public Data Dashboards</title>
+<meta name="description" content="Dashboards built from public government data, refreshed automatically.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/foundry.css">
+<script>try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./">
+      <svg class="mark" width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 11 V5 H11"/><path d="M21 5 H27 V11"/><path d="M27 21 V27 H21"/><path d="M11 27 H5 V21"/><path d="M18 7.5 L11.5 16.5 H15 L14 24 L21.5 14.5 H17.5 Z" fill="#E8A24A" stroke="none"/></svg>
+      Public Data
+    </a>
+    <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle dark mode">☾</button>
+  </div>
+</header>
+<main>
+  <section class="masthead wrap rise">
+    <span class="eyebrow"><span class="tick">+</span> Public data, made legible</span>
+    <h1>What the numbers <em>actually say.</em></h1>
+    <p class="lead">Dashboards built only from public government data. Each one refreshes itself on a schedule and computes every headline from the source series, so nothing on these pages is typed by hand.</p>
+  </section>
+  <section class="wrap hub-list">__CARDS__
+  </section>
+</main>
+<footer class="site-foot">
+  <div class="wrap">
+    <span class="built"><svg width="14" height="14" viewBox="0 0 32 32" aria-hidden="true"><path d="M18 7.5 L11.5 16.5 H15 L14 24 L21.5 14.5 H17.5 Z" fill="#E8A24A"/></svg> Built with Claude · <a href="https://foundrysolutions.ai">Foundry Solutions</a></span>
+    <span>Code MIT-licensed · <a href="https://github.com/gelbius/public-data-agg">Source on GitHub</a></span>
+  </div>
+</footer>
+<script src="assets/viz.js"></script>
+<script>viz.initThemeToggle(document.getElementById("theme-btn"));</script>
+</body>
+</html>

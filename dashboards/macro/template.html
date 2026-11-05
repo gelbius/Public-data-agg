@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Consumer: Economic State of the Union</title>
+<meta name="description" content="__DESCRIPTION__">
+<meta property="og:title" content="The Consumer: An Economic State of the Union">
+<meta property="og:description" content="__DESCRIPTION__">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/foundry.css">
+<script>
+  // apply a saved theme before first paint (no flash)
+  try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <svg class="mark" width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 11 V5 H11"/><path d="M21 5 H27 V11"/><path d="M27 21 V27 H21"/><path d="M11 27 H5 V21"/><path d="M18 7.5 L11.5 16.5 H15 L14 24 L21.5 14.5 H17.5 Z" fill="#E8A24A" stroke="none"/></svg>
+      Public Data <small>/ Macro</small>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#sec-hero">Overview</a><a href="#sec-kpis">Key numbers</a><a href="#sec-wages">Wages</a>
+      <a href="#sec-squeeze">The squeeze</a><a href="#sec-delinq">Delinquency</a><a href="#sec-sentiment">Sentiment</a>
+      <a href="#sec-sankey">Spending</a><a href="#sec-method">Method</a>
+    </nav>
+    <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle dark mode">☾</button>
+  </div>
+</header>
+
+<main>
+  <section class="masthead wrap rise">
+    <span class="eyebrow"><span class="tick">+</span> Dashboard 01 · US macro</span>
+    <h1>The Consumer: <em>an economic state of the union.</em></h1>
+    <p class="lead">What American households face right now (prices, rates, jobs, pay, credit and mood), told only with public government data. Every number and headline on this page is computed from the source series. None is typed by hand.</p>
+    <div class="meta-row">
+      <span class="chip"><span class="dot"></span> Refreshed automatically</span>
+      <span>Data fetched <b id="m-fetched"></b></span>
+      <span>Sources <b>FRED · BLS · BEA · EIA · Freddie Mac · Univ. of Michigan</b></span>
+    </div>
+  </section>
+
+  <!-- HERO -->
+  <section class="section wrap" id="sec-hero">
+    <article class="card" id="shot-hero">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Inflation, rates &amp; jobs since 2019</span>
+        <h2 data-k="hero.headline"></h2>
+        <p class="sub" data-k="hero.sub"></p>
+      </div>
+      <ul class="legend">
+        <li><i class="key" style="color:var(--s-cpi)"></i>Inflation (CPI, year over year)</li>
+        <li><i class="key dashed" style="color:var(--s-cpi)"></i>Core inflation (ex food &amp; energy)</li>
+        <li><i class="key" style="color:var(--s-ff)"></i>Fed funds rate</li>
+        <li><i class="key" style="color:var(--s-ur)"></i>Unemployment rate</li>
+        <li><i class="key swatch" style="background:var(--band-2)"></i>Phase (our interpretation)</li>
+      </ul>
+      <div class="chart tall" id="c-hero" role="img" aria-label="Line chart of inflation, core inflation, the fed funds rate and unemployment since 2019"></div>
+      <details class="data" id="t-hero"><summary>Show the data</summary></details>
+      <div class="card-foot" data-src="hero"></div>
+    </article>
+  </section>
+
+  <!-- KPIs -->
+  <section class="section wrap" id="sec-kpis">
+    <div class="card-head">
+      <span class="eyebrow"><span class="tick">+</span> Key numbers</span>
+      <h2 data-k="kpis.headline"></h2>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="card-foot" data-src="kpis"></div>
+  </section>
+
+  <!-- WAGES -->
+  <section class="section wrap" id="sec-wages">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Paychecks vs prices</span>
+        <h2 data-k="wages.headline"></h2>
+        <p class="sub" data-k="wages.sub"></p>
+      </div>
+      <ul class="legend">
+        <li><i class="key" style="color:var(--s-wage)"></i>Average hourly pay, year over year</li>
+        <li><i class="key" style="color:var(--s-cpi)"></i>Prices (CPI), year over year</li>
+        <li><i class="key swatch" style="background:var(--good-wash)"></i>▲ Real pay rising</li>
+        <li><i class="key swatch" style="background:var(--bad-wash)"></i>▼ Real pay falling</li>
+      </ul>
+      <div class="chart" id="c-wages" role="img" aria-label="Wage growth versus inflation since 2019, with the gap shaded"></div>
+      <p class="footnote" data-k="wages.footnote"></p>
+      <details class="data" id="t-wages"><summary>Show the data</summary></details>
+      <div class="card-foot" data-src="wages"></div>
+    </article>
+  </section>
+
+  <!-- SQUEEZE -->
+  <section class="section wrap" id="sec-squeeze">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> The squeeze</span>
+        <h2 data-k="squeeze.headline"></h2>
+        <p class="sub" data-k="squeeze.sub"></p>
+      </div>
+      <div class="trio" id="squeeze"></div>
+      <details class="data" id="t-squeeze"><summary>Show the data</summary></details>
+      <div class="card-foot" data-src="squeeze"></div>
+    </article>
+  </section>
+
+  <!-- DELINQUENCY -->
+  <section class="section wrap" id="sec-delinq">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Credit stress</span>
+        <h2 data-k="delinq.headline"></h2>
+        <p class="sub" data-k="delinq.sub"></p>
+      </div>
+      <div class="split">
+        <div>
+          <ul class="legend">
+            <li><i class="key" style="color:var(--s-accent)"></i>Card delinquency rate, all banks</li>
+            <li><i class="key dashed" style="color:var(--chart-muted)"></i>2019 average</li>
+            <li><i class="key swatch" style="background:var(--band-2)"></i>Recession</li>
+          </ul>
+          <div class="chart" id="c-delinq" role="img" aria-label="Credit card delinquency rate since 1991"></div>
+        </div>
+        <div class="stats" id="delinq-stats"></div>
+      </div>
+      <details class="data" id="t-delinq"><summary>Show the data</summary></details>
+      <div class="card-foot" data-src="delinq"></div>
+    </article>
+  </section>
+
+  <!-- SENTIMENT -->
+  <section class="section wrap" id="sec-sentiment">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Mood</span>
+        <h2 data-k="sentiment.headline"></h2>
+        <p class="sub" data-k="sentiment.sub"></p>
+      </div>
+      <ul class="legend">
+        <li><i class="key" style="color:var(--s-accent)"></i>Consumer sentiment index (1966 = 100)</li>
+        <li><i class="key swatch" style="background:var(--band-2)"></i>Recession</li>
+      </ul>
+      <div class="chart" id="c-sentiment" role="img" aria-label="University of Michigan consumer sentiment since 1952"></div>
+      <details class="data" id="t-sentiment"><summary>Show the data</summary></details>
+      <div class="card-foot" data-src="sentiment"></div>
+    </article>
+  </section>
+
+  <!-- SANKEY -->
+  <section class="section wrap" id="sec-sankey">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Household budget</span>
+        <h2 data-k="sankey.headline"></h2>
+        <p class="sub" data-k="sankey.sub"></p>
+      </div>
+      <div class="chart tall" id="c-sankey" role="img" aria-label="Flow diagram of average household spending by category"></div>
+      <ul class="pills" id="sankey-pills"></ul>
+      <ul class="caveats" id="sankey-notes"></ul>
+      <details class="data" id="t-sankey"><summary>Show the data</summary></details>
+      <div class="card-foot" data-src="sankey"></div>
+    </article>
+  </section>
+
+  <!-- METHOD -->
+  <section class="section wrap" id="sec-method">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Method</span>
+        <h2>Every number on this page comes from <em>a public government series.</em></h2>
+        <p class="sub">A scheduled job downloads each series from FRED (Federal Reserve Bank of St. Louis) and the BLS Consumer Expenditure Survey. A build step then computes every figure and headline, and the site redeploys. No API keys and no private data.</p>
+      </div>
+      <div class="method-grid" id="series-index"></div>
+      <ul class="caveats">
+        <li>Hero phase labels (e.g. "Energy shock") are our interpretation of the data, dated from Fed rate moves and inflation turning points. They are not official designations.</li>
+        <li>BLS did not publish October 2025 CPI or unemployment figures. Lines bridge that gap.</li>
+        <li>The revolving credit series shows a sharp one-month drop in December 2024. The chart flags it rather than smoothing it away.</li>
+        <li>Household spending (Consumer Expenditure Survey) is annual and lags by about nine months.</li>
+        <li>Recession shading uses the NBER-based indicator (USREC).</li>
+      </ul>
+    </article>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span class="built"><svg width="14" height="14" viewBox="0 0 32 32" aria-hidden="true"><path d="M18 7.5 L11.5 16.5 H15 L14 24 L21.5 14.5 H17.5 Z" fill="#E8A24A"/></svg> Built with Claude from public Federal Reserve &amp; BLS data · <a href="https://foundrysolutions.ai">Foundry Solutions</a></span>
+    <span>Code MIT-licensed · <a href="https://github.com/gelbius/public-data-agg">Source on GitHub</a></span>
+  </div>
+</footer>
+
+<script id="data" type="application/json">__DATA__</script>
+<script src="../assets/vendor/echarts-5.6.0.min.js"></script>
+<script src="../assets/viz.js"></script>
+<script src="page.js"></script>
+</body>
+</html>

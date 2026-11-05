@@ -147,3 +147,11 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Cloudflare local files (secrets + temp)
+.dev.vars
+.wrangler/
+
+# Python
+__pycache__/
+*.pyc

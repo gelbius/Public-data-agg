@@ -1,0 +1,53 @@
+# Daily robot: download fresh public data, check the site still builds, and
+# commit the new data. Cloudflare Pages sees the commit and redeploys the site.
+name: Refresh data
+
+on:
+  schedule:
+    - cron: "17 14 * * *"   # every day at 14:17 UTC, after most US data releases (8:30 ET)
+  workflow_dispatch: {}      # also runnable by hand from the Actions tab
+  pull_request: {}           # on pull requests: just check the build works
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download latest data
+        if: github.event_name != 'pull_request'
+        env:
+          BLS_API_KEY: ${{ secrets.BLS_API_KEY }}   # optional; works without it
+        run: |
+          for d in dashboards/*/; do
+            name=$(basename "$d")
+            [ -f "$d/sources.json" ] && python3 pipeline/fetch.py "$name"
+          done
+
+      - name: Build the site (fails if any number can't be computed)
+        run: python3 pipeline/build.py
+
+      - name: Commit new data
+        if: github.event_name != 'pull_request'
+        run: |
+          git add data/
+          if git diff --cached --quiet; then
+            echo "No new data today."
+            exit 0
+          fi
+          git config user.name "data-refresh-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Refresh data ($(date -u +%Y-%m-%d))"
+          git push
