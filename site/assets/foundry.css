@@ -207,8 +207,48 @@ h3 { font-size: 1.15rem; letter-spacing: -.01em; }
   padding: 3px 8px; border-radius: 2px; font: 500 .72rem/1.2 var(--sans);
   background: var(--panel-2); color: var(--ink-soft); border: 1px solid var(--line);
 }
-.pill.good { background: var(--good-wash); color: var(--good); border-color: transparent; }
-.pill.bad { background: var(--bad-wash); color: var(--bad); border-color: transparent; }
+/* graded change badges: hue = better/worse, strength = size of the change */
+.pill.good, .pill.bad, .dk-sw.good, .dk-sw.bad { border-color: transparent; }
+.pill.good { color: var(--good); } .pill.bad { color: var(--bad); }
+.good.s1 { background: color-mix(in srgb, var(--good) 10%, transparent); }
+.good.s2 { background: color-mix(in srgb, var(--good) 22%, transparent); }
+.good.s3 { background: color-mix(in srgb, var(--good) 38%, transparent); }
+.bad.s1  { background: color-mix(in srgb, var(--bad) 10%, transparent); }
+.bad.s2  { background: color-mix(in srgb, var(--bad) 22%, transparent); }
+.bad.s3  { background: color-mix(in srgb, var(--bad) 38%, transparent); }
+.pill.s3 { font-weight: 600; }
+:root[data-theme="dark"] .pill.s3 { color: var(--ink); }
+@media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) .pill.s3 { color: var(--ink); } }
+.delta-key { display: inline-flex; align-items: center; gap: 3px; font: 400 .7rem/1 var(--mono); color: var(--ink-dim); }
+.delta-key { flex-wrap: wrap; row-gap: 6px; }
+.delta-key .dk-cap { margin-right: 8px; }
+.delta-key .dk-label { margin: 0 5px; }
+.delta-key .dk-sw { width: 14px; height: 10px; border-radius: 2px; }
+.card .head-row { max-width: 860px; }
+.head-row { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 10px 20px; }
+
+/* budget bars: ranked spending list (replaces the flow diagram on phones) */
+.budget { max-width: 860px; list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 4px; }
+.b-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 4px 12px;
+  width: 100%; padding: 10px 10px; border: 1px solid transparent; border-radius: var(--r); background: none;
+  color: inherit; font: inherit; text-align: left; }
+button.b-row { cursor: pointer; }
+button.b-row:hover { background: var(--panel-2); }
+button.b-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.b-name { font-weight: 500; font-size: .92rem; display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.b-name .chev { color: var(--accent-ink); font: 500 .8rem var(--mono); transition: transform .2s var(--ease); }
+button.b-row[aria-expanded="true"] .chev { transform: rotate(90deg); }
+.b-amt { font-weight: 600; font-size: .92rem; }
+.b-track { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; }
+.b-bar { height: 8px; border-radius: 0 4px 4px 0; background: var(--s-accent); min-width: 2px; }
+.b-share { font: 400 .72rem/1 var(--mono); color: var(--ink-dim); }
+.b-kids { list-style: none; margin: 0 0 6px 18px; padding: 0 0 0 10px; border-left: 1px solid var(--line-2); display: grid; gap: 2px; }
+.b-kids[hidden] { display: none; }
+.b-kids .b-row { padding: 7px 8px; }
+.b-kids .b-name, .b-kids .b-amt { font-size: .85rem; font-weight: 400; }
+.b-kids .b-bar { background: var(--chart-muted); height: 6px; }
+.b-row .pill { font-size: .7rem; padding: 2px 6px; }
+@media (max-width: 639px) { .hide-sm { display: none !important; } }
 
 /* ---------- grids */
 .trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
@@ -224,7 +264,7 @@ h3 { font-size: 1.15rem; letter-spacing: -.01em; }
 .stat .w { font: 400 .7rem/1.4 var(--mono); color: var(--ink-dim); margin-top: 4px; }
 
 /* spending pills under the Sankey */
-.pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; padding: 0; list-style: none; }
+.pills-unused { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; padding: 0; list-style: none; }
 .pills li { display: inline-flex; gap: 8px; align-items: baseline; padding: 7px 10px; border: 1px solid var(--line); border-radius: 2px; background: var(--panel); font-size: .8rem; color: var(--ink-soft); }
 .pills b { color: var(--ink); font-weight: 600; }
 .pills .chg { font: 400 .72rem/1 var(--mono); color: var(--ink-dim); }

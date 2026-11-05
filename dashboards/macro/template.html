@@ -69,7 +69,10 @@
   <section class="section wrap" id="sec-kpis">
     <div class="card-head">
       <span class="eyebrow"><span class="tick">+</span> Key numbers</span>
-      <h2 data-k="kpis.headline"></h2>
+      <div class="head-row">
+        <h2 data-k="kpis.headline"></h2>
+        <span id="key-kpis"></span>
+      </div>
     </div>
     <div class="kpis" id="kpis"></div>
     <div class="card-foot" data-src="kpis"></div>
@@ -160,8 +163,12 @@
         <h2 data-k="sankey.headline"></h2>
         <p class="sub" data-k="sankey.sub"></p>
       </div>
-      <div class="chart tall" id="c-sankey" role="img" aria-label="Flow diagram of average household spending by category"></div>
-      <ul class="pills" id="sankey-pills"></ul>
+      <div class="chart tall hide-sm" id="c-sankey" role="img" aria-label="Flow diagram of average household spending by category"></div>
+      <div class="head-row">
+        <h3 data-k="sankey.listTitle"></h3>
+        <span id="key-budget"></span>
+      </div>
+      <ul class="budget" id="budget" aria-label="Spending by category, largest first"></ul>
       <ul class="caveats" id="sankey-notes"></ul>
       <details class="data" id="t-sankey"><summary>Show the data</summary></details>
       <div class="card-foot" data-src="sankey"></div>

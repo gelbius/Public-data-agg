@@ -57,21 +57,14 @@
   // ---- KPI tiles
   const KPI_COLOR = { CPIAUCSL: "cpi", FEDFUNDS: "ff", UNRATE: "ur" };
   const grid = $("#kpis");
+  viz.deltaKey($("#key-kpis"), "Change vs a year ago:");
   S.kpis.tiles.forEach((t) => {
     const el = document.createElement("div");
     el.className = "tile";
     const label = document.createElement("div"); label.className = "label"; label.textContent = t.label;
     const value = document.createElement("div"); value.className = "value"; value.textContent = t.value;
     el.append(label, value);
-    if (t.delta) {
-      const pill = document.createElement("span");
-      const up = t.delta.value > 0, flat = Math.abs(t.delta.value) < 0.005;
-      const good = t.good_up == null || flat ? null : up === t.good_up;
-      pill.className = "pill" + (good === true ? " good" : good === false ? " bad" : "");
-      pill.textContent = `${flat ? "■" : up ? "▲" : "▼"} ${t.delta.text}`;
-      pill.title = good == null ? "Neither good nor bad by itself" : good ? "Better for households" : "Worse for households";
-      el.append(pill);
-    }
+    if (t.delta) el.append(viz.deltaBadge(t.delta.value, { goodUp: t.good_up, full: t.delta.full, text: t.delta.text, when: "vs a year ago" }));
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("aria-hidden", "true");
     viz.sparkline(svg, t.spark, KPI_COLOR[t.id] || "accent");
@@ -168,13 +161,45 @@
   // ---- SANKEY
   const K = S.sankey;
   viz.sankey($("#c-sankey"), K);
-  K.pills.forEach((p) => {
+  // budget bars: ranked list, tap a group to see what's inside it
+  viz.deltaKey($("#key-budget"), `Change vs ${K.prev}:`);
+  const maxShare = Math.max(...K.rows.map((r) => r.share));
+  const budgetRow = (r, tag, scale) => {
+    const row = document.createElement(tag);
+    row.className = "b-row";
+    if (tag === "button") row.type = "button";
+    const name = document.createElement("span"); name.className = "b-name";
+    if (tag === "button") { const c = document.createElement("span"); c.className = "chev"; c.textContent = "›"; name.append(c); }
+    name.append(r.name);
+    const amt = document.createElement("span"); amt.className = "b-amt"; amt.textContent = FMT.usd0(r.value);
+    const badge = r.change == null ? document.createElement("span")
+      : viz.deltaBadge(r.change, { goodUp: K.good_up, full: K.full, text: `${Math.abs(r.change).toFixed(1)}%`, when: `vs ${K.prev}` });
+    const track = document.createElement("span"); track.className = "b-track";
+    const bar = document.createElement("span"); bar.className = "b-bar"; bar.style.width = `${(r.share / scale) * 82}%`;
+    const share = document.createElement("span"); share.className = "b-share"; share.textContent = `${r.share.toFixed(1)}%`;
+    track.append(bar, share);
+    row.append(name, amt, badge, track);
+    return row;
+  };
+  K.rows.forEach((r, i) => {
     const li = document.createElement("li");
-    const b = document.createElement("b"); b.textContent = FMT.usd0(p.value);
-    const chg = document.createElement("span"); chg.className = "chg";
-    chg.textContent = p.change == null ? "" : `${p.change >= 0 ? "▲" : "▼"} ${Math.abs(p.change).toFixed(1)}% vs ${K.prev}`;
-    li.append(`${p.name} `, b, chg);
-    $("#sankey-pills").append(li);
+    const hasKids = r.children.length > 0;
+    const row = budgetRow(r, hasKids ? "button" : "div", maxShare);
+    li.append(row);
+    if (hasKids) {
+      const kids = document.createElement("ul");
+      kids.className = "b-kids"; kids.hidden = true; kids.id = `b-kids-${i}`;
+      r.children.forEach((c) => { const kl = document.createElement("li"); kl.append(budgetRow(c, "div", maxShare)); kids.append(kl); });
+      row.setAttribute("aria-expanded", "false");
+      row.setAttribute("aria-controls", kids.id);
+      row.addEventListener("click", () => {
+        const open = row.getAttribute("aria-expanded") !== "true";
+        row.setAttribute("aria-expanded", String(open));
+        kids.hidden = !open;
+      });
+      li.append(kids);
+    }
+    $("#budget").append(li);
   });
   K.notes.forEach((n) => { const li = document.createElement("li"); li.textContent = n; $("#sankey-notes").append(li); });
   viz.table($("#t-sankey"), ["From", "To", `${K.year} ($)`, "Share of total"],

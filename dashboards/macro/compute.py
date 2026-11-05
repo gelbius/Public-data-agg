@@ -90,14 +90,15 @@ def compute(data_dir):
     # ------------------------------------------------------------------ KPIs
     gas = S["GASREGW"]
     tiles = [
-        _tile("Unemployment rate", ur, "pct1", good_up=False, unit="pp"),
-        _tile_from_derived("Inflation (CPI, year over year)", cpi, "CPIAUCSL", good_up=False),
-        _tile("Fed funds rate", ff, "pct2", good_up=None, unit="pp"),
-        _tile("30-year mortgage rate", S["MORTGAGE30US"], "pct2", good_up=False, unit="pp", weekly=True),
-        _tile("Credit card APR", S["TERMCBCCALLNS"], "pct2", good_up=False, unit="pp"),
-        _tile("Personal saving rate", S["PSAVERT"], "pct1", good_up=True, unit="pp"),
-        _tile("Regular gas, per gallon", gas, "usd", good_up=False, unit="pct", weekly=True),
-        _tile("Consumer sentiment", S["UMCSENT"], "num1", good_up=True, unit="pct"),
+        # full = the year-over-year change that earns the strongest color (see viz.deltaBadge)
+        _tile("Unemployment rate", ur, "pct1", good_up=False, unit="pp", full=0.6),
+        _tile_from_derived("Inflation (CPI, year over year)", cpi, "CPIAUCSL", good_up=False, full=1.5),
+        _tile("Fed funds rate", ff, "pct2", good_up=None, unit="pp", full=1.0),
+        _tile("30-year mortgage rate", S["MORTGAGE30US"], "pct2", good_up=False, unit="pp", weekly=True, full=1.0),
+        _tile("Credit card APR", S["TERMCBCCALLNS"], "pct2", good_up=False, unit="pp", full=1.0),
+        _tile("Personal saving rate", S["PSAVERT"], "pct1", good_up=True, unit="pp", full=1.5),
+        _tile("Regular gas, per gallon", gas, "usd", good_up=False, unit="pct", weekly=True, full=25),
+        _tile("Consumer sentiment", S["UMCSENT"], "num1", good_up=True, unit="pct", full=15),
     ]
     sec["kpis"] = {"headline": "Eight numbers that define the consumer right now.",
                    "tiles": tiles,
@@ -240,25 +241,28 @@ def _when(d, weekly):
     return f"week of {day_label(d)}" if weekly else month_label(d)
 
 
-def _tile(label, s, kind, good_up, unit, weekly=False):
+def _tile(label, s, kind, good_up, unit, weekly=False, full=1.0):
     d, v = s.last
     ago = s.year_ago()
     delta = None
     if ago:
         if unit == "pp":
-            delta = {"value": round(v - ago[1], 2), "text": f"{v - ago[1]:+.2f} pt vs a year ago"}
+            delta = {"value": round(v - ago[1], 2), "text": f"{v - ago[1]:+.2f} pt"}
         else:
-            delta = {"value": round((v / ago[1] - 1) * 100, 1), "text": f"{(v / ago[1] - 1) * 100:+.1f}% vs a year ago"}
+            delta = {"value": round((v / ago[1] - 1) * 100, 1), "text": f"{(v / ago[1] - 1) * 100:+.1f}%"}
     spark_src = s.monthly_mean() if weekly else s
     spark = [[dd, round(vv, 2)] for dd, vv in spark_src.obs[-25:]]
+    if delta:
+        delta["full"] = full
     return {"label": label, "value": _fmt(v, kind), "when": _when(d, weekly), "delta": delta,
             "good_up": good_up, "spark": spark, "id": s.id}
 
 
-def _tile_from_derived(label, yoy, sid, good_up):
+def _tile_from_derived(label, yoy, sid, good_up, full=1.0):
     d, v = yoy.last
     ago = yoy.get(f"{int(d[:4]) - 1}{d[4:]}")
-    delta = {"value": round(v - ago, 2), "text": f"{v - ago:+.2f} pt vs a year ago"} if ago is not None else None
+    delta = ({"value": round(v - ago, 2), "text": f"{v - ago:+.2f} pt", "full": full}
+             if ago is not None else None)
     return {"label": label, "value": f"{v:.1f}%", "when": month_label(d), "delta": delta,
             "good_up": good_up, "spark": [[dd, round(vv, 2)] for dd, vv in yoy.obs[-25:]], "id": sid}
 
@@ -341,40 +345,60 @@ def _sankey(ce, meta):
         return ce.get(sid, {}).get(y)
 
     total = val(total_id, yr)
-    nodes, links, pills = [{"name": "Average household"}], [], []
+
+    def chg(v, pv):
+        return round((v / pv - 1) * 100, 1) if v is not None and pv else None
+
+    nodes, links, rows = [{"name": "Average household"}], [], []
     named = 0
     for name, sid, kids in SANKEY_GROUPS:
         v = val(sid, yr)
+        pv = val(sid, prev) if prev else None
         named += v
         nodes.append({"name": name})
         links.append({"source": "Average household", "target": name, "value": v})
-        pv = val(sid, prev) if prev else None
-        pills.append({"name": name, "value": v, "share": round(v / total * 100, 1),
-                      "change": round((v / pv - 1) * 100, 1) if pv else None})
+        row = {"name": name, "value": v, "share": round(v / total * 100, 1), "change": chg(v, pv), "children": []}
         if kids:
-            kid_sum = 0
+            kid_sum = kid_prev = 0
             for kname, kid in kids:
                 kv = val(kid, yr)
                 if kv is None:
                     continue
+                kpv = val(kid, prev) if prev else None
                 kid_sum += kv
+                kid_prev += kpv or 0
                 nodes.append({"name": kname})
                 links.append({"source": name, "target": kname, "value": kv})
+                row["children"].append({"name": kname, "value": kv, "share": round(kv / total * 100, 1),
+                                        "change": chg(kv, kpv)})
             rem = v - kid_sum
             if name in REMAINDER_LABEL and rem > 0:
-                nodes.append({"name": REMAINDER_LABEL[name]})
-                links.append({"source": name, "target": REMAINDER_LABEL[name], "value": rem})
+                rlabel = REMAINDER_LABEL[name]
+                nodes.append({"name": rlabel})
+                links.append({"source": name, "target": rlabel, "value": rem})
+                rprev = (pv - kid_prev) if pv and kid_prev else None
+                row["children"].append({"name": rlabel, "value": rem, "share": round(rem / total * 100, 1),
+                                        "change": chg(rem, rprev)})
+            row["children"].sort(key=lambda c: -c["value"])
+        rows.append(row)
     other = total - named
     nodes.append({"name": "Everything else"})
     links.append({"source": "Average household", "target": "Everything else", "value": other})
     ptotal = val(total_id, prev) if prev else None
-    big3 = sum(p["value"] for p in pills[:3]) / total * 100
+    pother = (ptotal - sum(val(g[1], prev) for g in SANKEY_GROUPS)) if ptotal else None
+    rows.sort(key=lambda r: -r["value"])
+    rows.append({"name": "Everything else", "value": other, "share": round(other / total * 100, 1),
+                 "change": chg(other, pother), "children": []})  # always last
+    big3 = sum(val(g[1], yr) for g in SANKEY_GROUPS[:3]) / total * 100
     return {
         "year": yr, "prev": prev, "total": total,
         "headline": f"Where the average household's ${total:,.0f} went in {yr}.",
         "sub": (f"Housing, transportation and food took {big3:.0f}% of spending."
                 + (f" Total spending was {((total / ptotal - 1) * 100):+.1f}% vs {prev}." if ptotal else "")),
-        "nodes": nodes, "links": links, "pills": pills,
+        "listTitle": "Every category, ranked",
+        "nodes": nodes, "links": links, "rows": rows,
+        # spending more on a category = costlier for households, so up is "worse"
+        "good_up": False, "full": 8,
         "notes": [f"{REMAINDER_LABEL['Transportation']} is transportation minus vehicle purchases and public & other "
                   "transport. BLS's separate gasoline line has no usable values after 2022.",
                   "\"Everything else\" is total spending minus the named groups (education, personal care, "

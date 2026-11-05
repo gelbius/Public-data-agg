@@ -273,6 +273,34 @@
       `<circle cx="${x(vals.length - 1)}" cy="${y(vals[vals.length - 1])}" r="3.5" fill="var(--s-${colorVar})" stroke="var(--panel)" stroke-width="2"/>`;
   }
 
+  /* ---------- change badge, color-graded by direction AND size
+     Green = better for households, red = worse, gray = neutral/flat.
+     Three intensity steps: |change| / full -> under 1/3, 1/3-2/3, 2/3+.
+     The arrow (▲▼■) always carries direction too, so color is never the only cue. */
+  function deltaBadge(value, opts = {}) {
+    const { goodUp = null, full = 1, text } = opts;
+    const el = document.createElement("span");
+    const flat = Math.abs(value) < 0.005;
+    const good = goodUp == null || flat ? null : (value > 0) === goodUp;
+    const r = Math.min(1, Math.abs(value) / full);
+    const step = r >= 2 / 3 ? 3 : r >= 1 / 3 ? 2 : 1;
+    el.className = "pill" + (good == null ? "" : ` ${good ? "good" : "bad"} s${step}`);
+    el.textContent = `${flat ? "■" : value > 0 ? "▲" : "▼"} ${text}`;
+    el.title = (good == null ? "Neither better nor worse by itself" : `${good ? "Better" : "Worse"} for households`) + (opts.when ? ` · ${opts.when}` : "");
+    return el;
+  }
+
+  /* Small "Better ← → Worse" scale explaining the badge colors. */
+  function deltaKey(container, caption) {
+    container.className = "delta-key";
+    if (caption) { const c = document.createElement("span"); c.className = "dk-cap"; c.textContent = caption; container.appendChild(c); }
+    container.setAttribute("aria-label", "Badge colors: green is better for households, red is worse; stronger color means a bigger change");
+    const add = (cls, txt) => { const s = document.createElement("span"); s.className = cls; if (txt) s.textContent = txt; container.appendChild(s); };
+    add("dk-label", "Better");
+    ["good s3", "good s2", "good s1", "bad s1", "bad s2", "bad s3"].forEach((c) => add(`dk-sw ${c}`));
+    add("dk-label", "Worse");
+  }
+
   /* ---------- data table twin */
   function table(details, columns, rows) {
     const wrap = document.createElement("div");
@@ -338,5 +366,5 @@
     sync();
   }
 
-  window.viz = { lineChart, sankey, sparkline, table, initThemeToggle, FMT, esc, monthLabel, dayLabel, quarterLabel, theme, cssVar };
+  window.viz = { lineChart, sankey, deltaBadge, deltaKey, sparkline, table, initThemeToggle, FMT, esc, monthLabel, dayLabel, quarterLabel, theme, cssVar };
 })();
