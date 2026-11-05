@@ -54,14 +54,12 @@
         <h2 data-k="hero.headline"></h2>
         <p class="sub" data-k="hero.sub"></p>
       </div>
-      <ul class="legend">
-        <li><i class="key" style="color:var(--s-cpi)"></i>Inflation (CPI, year over year)</li>
-        <li><i class="key dashed" style="color:var(--s-cpi)"></i>Core inflation (ex food &amp; energy)</li>
-        <li><i class="key" style="color:var(--s-ff)"></i>Fed funds rate</li>
-        <li><i class="key" style="color:var(--s-ur)"></i>Unemployment rate</li>
+      <ul class="legend" id="lg-hero">
         <li><i class="key swatch" style="background:var(--band-2)"></i>Phase (our interpretation)</li>
       </ul>
+      <p class="legend-hint">Tap a series to show or hide it.</p>
       <div class="chart tall" id="c-hero" role="img" aria-label="Line chart of inflation, core inflation, the fed funds rate and unemployment since 2019"></div>
+      <ol class="band-key" id="key-hero" aria-label="Phases"></ol>
       <details class="data" id="t-hero"><summary>Show the data</summary></details>
       <div class="card-foot" data-src="hero"></div>
     </article>

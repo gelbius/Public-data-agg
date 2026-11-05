@@ -37,11 +37,12 @@
   viz.lineChart($("#c-hero"), {
     fmt: "pct1", bands: H.phases, bandLabels: true, alternate: true, notes: H.notes,
     xMin: H.series.cpi[0][0], top: 44,
+    legendEl: $("#lg-hero"), bandKeyEl: $("#key-hero"),
     series: [
-      { key: "cpi", name: "Inflation (CPI)", short: "Inflation", color: "cpi", rows: H.series.cpi },
-      { key: "core", name: "Core inflation", short: "Core", color: "cpi", rows: H.series.core, dashed: true },
-      { key: "fedfunds", name: "Fed funds rate", short: "Fed funds", color: "ff", rows: H.series.fedfunds },
-      { key: "unrate", name: "Unemployment", short: "Unemployment", color: "ur", rows: H.series.unrate },
+      { key: "cpi", name: "Inflation (CPI)", legend: "Inflation (CPI, year over year)", short: "Inflation", color: "cpi", rows: H.series.cpi },
+      { key: "core", name: "Core inflation", legend: "Core inflation (ex food & energy)", short: "Core", color: "cpi", rows: H.series.core, dashed: true, hidden: true },
+      { key: "fedfunds", name: "Fed funds rate", legend: "Fed funds rate", short: "Fed funds", color: "ff", rows: H.series.fedfunds },
+      { key: "unrate", name: "Unemployment", legend: "Unemployment rate", short: "Unemployment", color: "ur", rows: H.series.unrate },
     ],
   });
   {

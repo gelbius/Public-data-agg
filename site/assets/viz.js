@@ -83,22 +83,30 @@
     return h;
   }
 
-  /* Bands (phases or recessions) as a markArea on an invisible helper series. */
+  /* Bands (phases or recessions) as a markArea on an invisible helper series.
+     labels: false | "full" (text inside each band; narrow bands get it above the plot)
+           | "numbers" (1, 2, 3… for small screens, paired with an HTML key). */
   function bandSeries(t, bands, { labels = false, alternate = false } = {}) {
     const monthsBetween = (a, b) => (+b.slice(0, 4) - +a.slice(0, 4)) * 12 + (+b.slice(5, 7) - +a.slice(5, 7));
-    bands = bands.map((b) => ({ ...b, wide: monthsBetween(b.start, b.end) >= 4 }));
+    const base = { color: t.dim, fontFamily: t.mono, fontSize: 10, lineHeight: 13 };
+    const labelFor = (b, i) => {
+      if (!labels || !b.label) return { show: false };
+      if (labels === "numbers") return { ...base, show: true, position: "top", distance: 6, fontSize: 11, color: t.soft };
+      if (monthsBetween(b.start, b.end) >= 4) {
+        return { ...base, show: true, position: "insideTop", overflow: "break", width: 70, distance: 4 };
+      }
+      return { ...base, show: true, position: "top", distance: 4 }; // too thin to hold text: sit above the plot
+    };
     return {
       type: "line", data: [], silent: true, tooltip: { show: false },
       markArea: {
         silent: true,
         data: bands.map((b, i) => [
           {
-            xAxis: b.start, name: labels && b.wide ? b.label : "",
+            xAxis: b.start,
+            name: labels === "numbers" ? String(i + 1) : labels ? b.label || "" : "",
             itemStyle: { color: alternate && i % 2 ? t.band2 : t.band },
-            label: labels && b.wide ? {
-              show: true, position: "insideTop", color: t.dim, fontFamily: t.mono, fontSize: 10,
-              overflow: "break", width: 70, lineHeight: 13, distance: 4,
-            } : { show: false },
+            label: labelFor(b, i),
           },
           { xAxis: b.end },
         ]),
@@ -120,13 +128,18 @@
 
   /* ---------- line chart: one y-axis, any number of same-unit series */
   function lineChart(el, cfg) {
-    register(el, () => {
+    // series the viewer has switched off (tappable legend); seeded from `hidden: true`
+    const off = new Set(cfg.series.filter((s) => s.hidden).map((s) => s.name));
+    const entry = register(el, () => {
       const t = theme();
       const fmt = FMT[cfg.fmt] || FMT.pct1;
       const opt = baseOption(t, cfg.fmt, cfg);
       const narrow = window.innerWidth < 640;
       const series = [];
-      if (cfg.bands) series.push(bandSeries(t, cfg.bands, { labels: !narrow && cfg.bandLabels, alternate: cfg.alternate }));
+      if (cfg.bands) {
+        const mode = cfg.bandLabels ? (narrow ? "numbers" : "full") : false;
+        series.push(bandSeries(t, cfg.bands, { labels: mode, alternate: cfg.alternate }));
+      }
       for (const s of cfg.series) {
         const color = t.series(s.color);
         const notes = (cfg.notes || []).filter((n) => n.series === s.key);
@@ -151,6 +164,9 @@
       }
       if (cfg.extraSeries) series.push(...cfg.extraSeries(t));
       opt.series = series;
+      // a hidden legend component lets us switch series on/off and rescale the axis
+      opt.legend = { show: false, data: cfg.series.map((s) => s.name),
+        selected: Object.fromEntries(cfg.series.map((s) => [s.name, !off.has(s.name)])) };
       opt.tooltip.formatter = (ps) => {
         const shown = ps.filter((p) => p.seriesName && !p.seriesName.startsWith("_"));
         if (!shown.length) return "";
@@ -162,6 +178,42 @@
       };
       return opt;
     });
+    if (cfg.legendEl) toggleLegend(cfg.legendEl, cfg.series, off, entry);
+    if (cfg.bandKeyEl && cfg.bands) {
+      cfg.bands.forEach((b) => {
+        const li = document.createElement("li");
+        li.textContent = b.label;
+        cfg.bandKeyEl.appendChild(li);
+      });
+    }
+  }
+
+  /* Legend whose entries are buttons: tap to show/hide a series (at least one stays on). */
+  function toggleLegend(ul, seriesCfg, off, entry) {
+    const t = theme();
+    const anchor = ul.firstChild;
+    seriesCfg.forEach((s) => {
+      const li = document.createElement("li");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "lg-btn";
+      const key = document.createElement("i");
+      key.className = "key" + (s.dashed ? " dashed" : "");
+      key.style.color = `var(--s-${s.color})`;
+      btn.append(key, s.legend || s.name);
+      const sync = () => btn.setAttribute("aria-pressed", String(!off.has(s.name)));
+      btn.addEventListener("click", () => {
+        const turningOff = !off.has(s.name);
+        if (turningOff && off.size >= seriesCfg.length - 1) return; // keep one line visible
+        turningOff ? off.add(s.name) : off.delete(s.name);
+        sync();
+        if (entry.chart) entry.chart.dispatchAction({ type: turningOff ? "legendUnSelect" : "legendSelect", name: s.name });
+      });
+      sync();
+      li.appendChild(btn);
+      ul.insertBefore(li, anchor);
+    });
+    ul.classList.add("toggles");
   }
 
   /* ---------- Sankey */
@@ -251,6 +303,7 @@
       if (items.some((i) => i.isIntersecting)) { io.disconnect(); draw(entry); }
     }, { rootMargin: "200px" });
     io.observe(el);
+    return entry;
   }
   function draw(entry) {
     if (entry.chart) entry.chart.dispose();
