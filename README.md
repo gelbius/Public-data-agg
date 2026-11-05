@@ -77,6 +77,8 @@ In the Cloudflare dashboard: **Workers & Pages → Create → Pages → Connect 
 
 Every push to `main` (including the daily data commit) redeploys the site.
 
+**Troubleshooting:** if Cloudflare stops deploying new commits (its Deployments page shows a "disconnected from your Git account" warning), the repo was probably renamed or the Cloudflare GitHub app lost access. Fix it under **Settings → Builds → Git repository → Manage**, make sure this repo is selected, then push a new commit. Pushes made while it was disconnected are not redeployed automatically.
+
 ## Add a new dashboard
 
 1. Create `dashboards/<name>/` with `sources.json`, `compute.py` (a `compute(data_dir)` function returning `title`, `slug`, `description`, `fetched`, `hub_headline` and your sections), `template.html` and `page.js`. Copying `macro/` is the easiest start.
