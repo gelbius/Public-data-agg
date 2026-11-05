@@ -244,9 +244,9 @@
           emphasis: { focus: "adjacency" },
           data: cfg.nodes.map((n) => ({
             name: n.name,
-            itemStyle: { color: level[n.name] === 0 ? t.ink : level[n.name] === 1 ? t.series("accent") : t.muted, borderWidth: 0 },
+            itemStyle: { color: level[n.name] === 0 ? t.ink : cfg.colorOf ? cfg.colorOf(n.name) : level[n.name] === 1 ? t.series("accent") : t.muted, borderWidth: 0 },
           })),
-          links: cfg.links.map((l) => ({ ...l, lineStyle: { color: level[l.source] === 0 ? t.series("accent") : t.muted } })),
+          links: cfg.links.map((l) => ({ ...l, lineStyle: { color: cfg.colorOf ? cfg.colorOf(l.target) : level[l.source] === 0 ? t.series("accent") : t.muted } })),
           lineStyle: { opacity: 0.2, curveness: 0.5 },
           label: {
             color: t.ink, fontSize: narrow ? 10 : 12, fontFamily: t.sans,
@@ -273,32 +273,143 @@
       `<circle cx="${x(vals.length - 1)}" cy="${y(vals[vals.length - 1])}" r="3.5" fill="var(--s-${colorVar})" stroke="var(--panel)" stroke-width="2"/>`;
   }
 
-  /* ---------- change badge, color-graded by direction AND size
-     Green = better for households, red = worse, gray = neutral/flat.
-     Three intensity steps: |change| / full -> under 1/3, 1/3-2/3, 2/3+.
-     The arrow (▲▼■) always carries direction too, so color is never the only cue. */
+  /* ---------- better/worse color scale (one rule for every change on every dashboard)
+     Hue = direction (green better for households, red worse, gray neutral).
+     Strength = size: |value| / full, continuous from faint to full color.
+     Arrows (▲▼■) always carry direction too, so color is never the only cue. */
+  function judge(value, goodUp, full) {
+    const flat = Math.abs(value) < 0.005;
+    const good = goodUp == null || flat ? null : (value > 0) === goodUp;
+    return { flat, good, r: Math.min(1, Math.abs(value) / (full || 1)) };
+  }
+  const hexToRgb = (h) => { h = h.replace("#", ""); if (h.length === 3) h = h.split("").map((c) => c + c).join(""); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); };
+  const mix = (a, b, t) => { const A = hexToRgb(a), B = hexToRgb(b); return "#" + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, "0")).join(""); };
+
+  /* Solid color for a mark (node, bar): neutral gray -> full green/red as |change| grows. */
+  function deltaColor(value, goodUp, full) {
+    const t = theme(), j = judge(value, goodUp, full);
+    if (j.good == null) return t.muted;
+    return mix(t.muted, j.good ? t.good : t.bad, 0.25 + 0.75 * j.r);
+  }
+
   function deltaBadge(value, opts = {}) {
     const { goodUp = null, full = 1, text } = opts;
     const el = document.createElement("span");
-    const flat = Math.abs(value) < 0.005;
-    const good = goodUp == null || flat ? null : (value > 0) === goodUp;
-    const r = Math.min(1, Math.abs(value) / full);
-    const step = r >= 2 / 3 ? 3 : r >= 1 / 3 ? 2 : 1;
-    el.className = "pill" + (good == null ? "" : ` ${good ? "good" : "bad"} s${step}`);
-    el.textContent = `${flat ? "■" : value > 0 ? "▲" : "▼"} ${text}`;
-    el.title = (good == null ? "Neither better nor worse by itself" : `${good ? "Better" : "Worse"} for households`) + (opts.when ? ` · ${opts.when}` : "");
+    const j = judge(value, goodUp, full);
+    el.className = "pill" + (j.good == null ? "" : j.good ? " good" : " bad");
+    if (j.good != null) {
+      el.style.background = `color-mix(in srgb, var(--${j.good ? "good" : "bad"}) ${Math.round(8 + 34 * j.r)}%, transparent)`;
+      if (j.r > 0.66) el.classList.add("strong");
+    }
+    const dir = opts.arrowValue ?? value; // arrow can follow a different number than the color
+    el.textContent = `${Math.abs(dir) < 0.005 ? "■" : dir > 0 ? "▲" : "▼"} ${text}`;
+    el.title = (opts.title || (j.good == null ? "Neither better nor worse by itself" : `${j.good ? "Better" : "Worse"} for households`)) + (opts.when ? ` · ${opts.when}` : "");
     return el;
   }
 
-  /* Small "Better ← → Worse" scale explaining the badge colors. */
-  function deltaKey(container, caption) {
+  /* Legend for the scale: caption + "Better [gradient] Worse" (labels configurable). */
+  function deltaKey(container, caption, labels = ["Better", "Worse"]) {
     container.className = "delta-key";
-    if (caption) { const c = document.createElement("span"); c.className = "dk-cap"; c.textContent = caption; container.appendChild(c); }
-    container.setAttribute("aria-label", "Badge colors: green is better for households, red is worse; stronger color means a bigger change");
-    const add = (cls, txt) => { const s = document.createElement("span"); s.className = cls; if (txt) s.textContent = txt; container.appendChild(s); };
-    add("dk-label", "Better");
-    ["good s3", "good s2", "good s1", "bad s1", "bad s2", "bad s3"].forEach((c) => add(`dk-sw ${c}`));
-    add("dk-label", "Worse");
+    container.textContent = "";
+    container.setAttribute("aria-label", `${caption || ""} green means ${labels[0].toLowerCase()}, red means ${labels[1].toLowerCase()}; deeper color means a bigger difference`);
+    const add = (cls, txt) => { const e = document.createElement("span"); e.className = cls; if (txt) e.textContent = txt; container.appendChild(e); };
+    if (caption) add("dk-cap", caption);
+    add("dk-label", labels[0]);
+    add("dk-grad");
+    add("dk-label", labels[1]);
+  }
+
+  /* ---------- vertical flow story (phones): an overview, then one cluster per scroll step.
+     cfg: {total, groups:[{name, short, value, vs, children:[{name, short, value, vs}]}],
+           steps:[{key, group?}], colorOf(node)->color, fmt(v)->text, label}
+     Returns setStep(i). Layout is plain SVG so it can be sticky and cross-fade smoothly. */
+  function flowStory(svgHost, cfg) {
+    const NS = "http://www.w3.org/2000/svg";
+    let step = 0, built = null;
+    const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
+    const text = (parent, x, y, str, cls, anchor = "middle") => { const tn = el("text", { x, y, class: cls, "text-anchor": anchor }, parent); tn.textContent = str; return tn; };
+    const ribbon = (sx0, sx1, ys, tx0, tx1, yt) => {
+      const m = (ys + yt) / 2;
+      return `M${sx0},${ys} C${sx0},${m} ${tx0},${m} ${tx0},${yt} L${tx1},${yt} C${tx1},${m} ${sx1},${m} ${sx1},${ys} Z`;
+    };
+    // place labels under nodes in two staggered rows, clamped inside the chart
+    const labelRows = (g, nodes, y, W, rowGap, showAll) => {
+      nodes.forEach((n, i) => {
+        if (!showAll && !n.big) return;
+        const row = nodes.length > 3 ? i % 2 : 0;
+        const cx = Math.max(34, Math.min(W - 34, (n.x0 + n.x1) / 2));
+        const ly = y + 18 + row * rowGap;
+        if (row) el("line", { x1: (n.x0 + n.x1) / 2, x2: (n.x0 + n.x1) / 2, y1: y + 4, y2: ly - 11, class: "fs-tick" }, g);
+        text(g, cx, ly, n.short, "fs-name");
+        text(g, cx, ly + 13, cfg.fmt(n.value), "fs-val");
+      });
+    };
+
+    function build() {
+      svgHost.textContent = "";
+      const W = svgHost.clientWidth || 340, H = svgHost.clientHeight || 420;
+      const svg = el("svg", { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: "img", "aria-label": cfg.label }, svgHost);
+      const gap = 5, nodeH = 8;
+      const y0 = 30, y1 = Math.round(H * 0.34), y2 = H - 76;
+      const G = cfg.groups, sum = G.reduce((a, g) => a + g.value, 0);
+      // level 1: groups side by side across the width
+      let x = 0;
+      const usable = W - gap * (G.length - 1);
+      const L1 = G.map((g) => { const w = (g.value / sum) * usable; const n = { ...g, x0: x, x1: x + w, big: w > 26 }; x += w + gap; return n; });
+      // root bar segmented in the same order
+      let rx = 0;
+      const seg = G.map((g) => { const w = (g.value / sum) * W; const s0 = rx; rx += w; return [s0, rx]; });
+
+      const gRoot = el("g", {}, svg);
+      text(gRoot, W / 2, y0 - 10, `Average household · ${cfg.fmt(cfg.total)}`, "fs-root");
+      el("rect", { x: 0, y: y0, width: W, height: nodeH, rx: 2, class: "fs-rootbar" }, gRoot);
+
+      const ribbons1 = L1.map((n, i) => el("path", { d: ribbon(seg[i][0], seg[i][1], y0 + nodeH, n.x0, n.x1, y1), class: "fs-ribbon", fill: cfg.colorOf(n) }, svg));
+      const nodes1 = L1.map((n) => el("rect", { x: n.x0, y: y1, width: Math.max(1, n.x1 - n.x0), height: nodeH, rx: 2, fill: cfg.colorOf(n), class: "fs-node" }, svg));
+      const overviewLabels = el("g", { class: "fs-layer" }, svg);
+      labelRows(overviewLabels, L1, y1 + nodeH, W, 30, true);
+
+      // one layer per cluster: ribbons from its group node to its children spread across the width
+      const clusters = G.map((g, gi) => {
+        if (!g.children || !g.children.length) return null;
+        const layer = el("g", { class: "fs-layer" }, svg);
+        const n1 = L1[gi];
+        const ksum = g.children.reduce((a, c) => a + c.value, 0);
+        const kUsable = W - gap * (g.children.length - 1);
+        let kx = 0, sx = n1.x0;
+        const kids = g.children.map((c) => {
+          const w = (c.value / ksum) * kUsable, sw = (c.value / ksum) * (n1.x1 - n1.x0);
+          const k = { ...c, x0: kx, x1: kx + w, s0: sx, s1: sx + sw, big: true };
+          kx += w + gap; sx += sw; return k;
+        });
+        kids.forEach((k) => el("path", { d: ribbon(k.s0, k.s1, y1 + nodeH, k.x0, k.x1, y2), class: "fs-ribbon fs-ribbon-2", fill: cfg.colorOf(k) }, layer));
+        kids.forEach((k) => el("rect", { x: k.x0, y: y2, width: Math.max(1, k.x1 - k.x0), height: nodeH, rx: 2, fill: cfg.colorOf(k), class: "fs-node" }, layer));
+        // active group's name as a pill just under its node
+        const cx = Math.max(60, Math.min(W - 60, (n1.x0 + n1.x1) / 2));
+        const pill = el("g", {}, layer);
+        const label = `${g.short} · ${cfg.fmt(g.value)}`;
+        el("rect", { x: cx - label.length * 3.4 - 8, y: y1 + nodeH + 6, width: label.length * 6.8 + 16, height: 20, rx: 2, class: "fs-pill" }, pill);
+        text(pill, cx, y1 + nodeH + 20, label, "fs-name");
+        labelRows(layer, kids, y2 + nodeH, W, 28, true);
+        return layer;
+      });
+      built = { ribbons1, nodes1, overviewLabels, clusters };
+      apply();
+    }
+
+    function apply() {
+      if (!built) return;
+      const s = cfg.steps[step] || cfg.steps[0];
+      const active = s.group;
+      built.overviewLabels.classList.toggle("on", active == null);
+      built.clusters.forEach((c, i) => c && c.classList.toggle("on", i === active));
+      built.ribbons1.forEach((r, i) => r.classList.toggle("dim", active != null && i !== active));
+      built.nodes1.forEach((r, i) => r.classList.toggle("dim", active != null && i !== active));
+    }
+
+    build();
+    let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(build, 200); });
+    return { setStep(i) { step = i; apply(); }, rebuild: build };
   }
 
   /* ---------- data table twin */
@@ -361,10 +472,11 @@
       try { localStorage.setItem("theme", root.dataset.theme); } catch (e) { /* ignore */ }
       sync();
       redrawAll();
+      document.dispatchEvent(new Event("themechange"));
     });
-    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { sync(); redrawAll(); });
+    matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => { sync(); redrawAll(); document.dispatchEvent(new Event("themechange")); });
     sync();
   }
 
-  window.viz = { lineChart, sankey, deltaBadge, deltaKey, sparkline, table, initThemeToggle, FMT, esc, monthLabel, dayLabel, quarterLabel, theme, cssVar };
+  window.viz = { lineChart, sankey, deltaBadge, deltaKey, deltaColor, flowStory, sparkline, table, initThemeToggle, FMT, esc, monthLabel, dayLabel, quarterLabel, theme, cssVar };
 })();

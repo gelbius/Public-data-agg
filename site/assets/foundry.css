@@ -223,7 +223,9 @@ h3 { font-size: 1.15rem; letter-spacing: -.01em; }
 .delta-key { flex-wrap: wrap; row-gap: 6px; }
 .delta-key .dk-cap { margin-right: 8px; }
 .delta-key .dk-label { margin: 0 5px; }
-.delta-key .dk-sw { width: 14px; height: 10px; border-radius: 2px; }
+.delta-key .dk-grad { width: 64px; height: 10px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--good), color-mix(in srgb, var(--good) 10%, transparent) 46%, color-mix(in srgb, var(--bad) 10%, transparent) 54%, var(--bad)); }
+.pill.strong { font-weight: 600; }
 .card .head-row { max-width: 860px; }
 .head-row { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 10px 20px; }
 
@@ -316,3 +318,38 @@ thead th { position: sticky; top: 0; background: var(--panel-2); font-weight: 60
   @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 }
 @media print { .topbar, .theme-btn, details.data { display: none; } .card { box-shadow: none; break-inside: avoid; } }
+
+/* ---------- scroll-driven flow story (phones) */
+.show-sm { display: none; }
+@media (max-width: 639px) { .show-sm { display: block; } }
+.scrolly { position: relative; margin: 6px -16px 0; }
+.scrolly-graphic { position: sticky; top: 56px; z-index: 2; height: 58vh; min-height: 360px; max-height: 560px;
+  background: var(--panel); padding: 8px 12px 0; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; }
+.scrolly-graphic .delta-key { margin: 0 0 4px; }
+.fs-host { flex: 1; min-height: 0; }
+.scrolly-steps { position: relative; z-index: 1; padding: 0 12px; }
+.fs-step { min-height: 62vh; display: flex; align-items: flex-start; padding-top: 18px; }
+.fs-step:last-child { min-height: 40vh; }
+.fs-card { width: 100%; background: var(--panel-2); border: 1px solid var(--line-2); border-radius: var(--r); padding: 14px 14px 12px; }
+.fs-card h4 { margin: 0 0 6px; font: 500 1.15rem/1.2 var(--serif); letter-spacing: -.01em; }
+.fs-card p { margin: 0; font-size: .9rem; color: var(--ink-soft); }
+.fs-card .fs-kids { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
+.fs-card .fs-kids li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 10px; align-items: center; font-size: .84rem; }
+.fs-card .fs-kids b { font-weight: 600; }
+.fs-card .pill { font-size: .7rem; padding: 2px 6px; }
+.fs-progress { font: 400 .68rem/1 var(--mono); color: var(--ink-dim); margin-bottom: 6px; letter-spacing: .06em; }
+.fs-host svg { display: block; overflow: visible; }
+.fs-root { font: 600 12px var(--sans); fill: var(--ink); }
+.fs-rootbar { fill: var(--ink); }
+.fs-ribbon { opacity: .22; transition: opacity .5s var(--ease); }
+.fs-ribbon.dim { opacity: .05; }
+.fs-ribbon-2 { opacity: .3; }
+.fs-node { transition: opacity .5s var(--ease); }
+.fs-node.dim { opacity: .28; }
+.fs-layer { opacity: 0; transition: opacity .45s var(--ease); pointer-events: none; }
+.fs-layer.on { opacity: 1; }
+.fs-name { font: 500 11px var(--sans); fill: var(--ink); }
+.fs-val { font: 400 10px var(--mono); fill: var(--ink-dim); }
+.fs-tick { stroke: var(--line-2); stroke-width: 1; }
+.fs-pill { fill: var(--panel); stroke: var(--line-2); }
+@media (prefers-reduced-motion: reduce) { .fs-layer, .fs-node, .fs-ribbon { transition: none; } }

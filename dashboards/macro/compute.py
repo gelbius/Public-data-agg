@@ -218,6 +218,7 @@ def compute(data_dir):
 
     # ------------------------------------------------------------------ household spending (Sankey)
     sec["sankey"] = _sankey(json.loads((data_dir / "bls_ce.json").read_text()), meta_raw)
+    _add_inflation_context(sec["sankey"], S["CPIAUCSL"])
 
     # ------------------------------------------------------------------ methodology
     sources = json.loads((Path(__file__).parent / "sources.json").read_text())
@@ -332,6 +333,16 @@ SANKEY_GROUPS = [
     ("Cash gifts & donations", "CXUCASHCONTLB0101M", []),
     ("Clothing", "CXUAPPARELLB0101M", []),
 ]
+# Short names for the phone flow chart, where labels sit under narrow nodes.
+SHORT = {"Housing": "Housing", "Transportation": "Transport", "Food": "Food",
+         "Insurance & pensions": "Insurance", "Healthcare": "Health", "Entertainment": "Entertainment",
+         "Cash gifts & donations": "Gifts", "Clothing": "Clothing", "Everything else": "Everything else",
+         "Shelter": "Shelter", "Utilities & fuels": "Utilities", "Furnishings, supplies & services": "Furnishings",
+         "Vehicle purchases": "Vehicles", "Public & other transport": "Transit",
+         "Gas, upkeep & insurance (derived)": "Gas & upkeep*", "Groceries": "Groceries", "Eating out": "Eating out"}
+SMALL_CLUSTER = "Smaller categories"
+VS_FULL = 6.0  # points above/below inflation that earn the strongest color
+
 REMAINDER_LABEL = {"Housing": "Furnishings, supplies & services",
                    "Transportation": "Gas, upkeep & insurance (derived)"}
 
@@ -385,20 +396,21 @@ def _sankey(ce, meta):
     nodes.append({"name": "Everything else"})
     links.append({"source": "Average household", "target": "Everything else", "value": other})
     ptotal = val(total_id, prev) if prev else None
+    pother_note = None
     pother = (ptotal - sum(val(g[1], prev) for g in SANKEY_GROUPS)) if ptotal else None
     rows.sort(key=lambda r: -r["value"])
     rows.append({"name": "Everything else", "value": other, "share": round(other / total * 100, 1),
                  "change": chg(other, pother), "children": []})  # always last
     big3 = sum(val(g[1], yr) for g in SANKEY_GROUPS[:3]) / total * 100
     return {
-        "year": yr, "prev": prev, "total": total,
+        "year": yr, "prev": prev, "total": total, "prev_total": ptotal,
         "headline": f"Where the average household's ${total:,.0f} went in {yr}.",
         "sub": (f"Housing, transportation and food took {big3:.0f}% of spending."
                 + (f" Total spending was {((total / ptotal - 1) * 100):+.1f}% vs {prev}." if ptotal else "")),
         "listTitle": "Every category, ranked",
         "nodes": nodes, "links": links, "rows": rows,
         # spending more on a category = costlier for households, so up is "worse"
-        "good_up": False, "full": 8,
+        "good_up": False, "full": 8,  # superseded by the vs-inflation coloring when CPI is available
         "notes": [f"{REMAINDER_LABEL['Transportation']} is transportation minus vehicle purchases and public & other "
                   "transport. BLS's separate gasoline line has no usable values after 2022.",
                   "\"Everything else\" is total spending minus the named groups (education, personal care, "
@@ -406,3 +418,68 @@ def _sankey(ce, meta):
         "source": {"ids": [total_id] + [g[1] for g in SANKEY_GROUPS], "latest": {total_id: f"{yr} annual"},
                    "fetched": meta.get("bls_ce", {}).get("fetched"), "via": meta.get("bls_ce", {}).get("source")},
     }
+
+
+def _add_inflation_context(k, cpi):
+    """Compare each spending change with inflation (annual-average CPI), and build the
+    phone flow story: an overview step, then one step per cluster of sub-categories."""
+    yr, prev = k["year"], k["prev"]
+    if not prev:
+        return
+
+    def avg(y):
+        vals = [v for d, v in cpi.obs if d[:4] == y]
+        return (sum(vals) / len(vals), len(vals)) if vals else (None, 0)
+
+    a, n = avg(yr)
+    b, _ = avg(prev)
+    if not (a and b):
+        return
+    infl = (a / b - 1) * 100
+    k["inflation"] = {"value": round(infl, 1), "months": n,
+                      "text": f"Prices (CPI, annual average) rose {infl:.1f}% in {yr}"}
+
+    def tag(r):
+        r["vs"] = round(r["change"] - infl, 1) if r.get("change") is not None else None
+        r["short"] = SHORT.get(r["name"], r["name"])
+        for c in r.get("children", []):
+            tag(c)
+
+    for r in k["rows"]:
+        tag(r)
+    k["vs_full"] = VS_FULL
+    total_chg = (k["total"] / k["prev_total"] - 1) * 100 if k.get("prev_total") else None
+    faster = sum(1 for r in k["rows"] if r["vs"] is not None and r["vs"] > 0)
+
+    # clusters: groups with sub-categories get their own step; single categories under 7% share
+    # are bundled into one "smaller categories" cluster so the overview stays readable
+    big = [r for r in k["rows"] if r["children"] or r["share"] >= 7]
+    small = [r for r in k["rows"] if r not in big]
+    groups = [dict(r) for r in big]
+    if small:
+        sv = sum(r["value"] for r in small)
+        sp = sum(r["value"] / (1 + r["change"] / 100) for r in small if r["change"] is not None)
+        schg = round((sv / sp - 1) * 100, 1) if sp else None
+        groups.append({"name": SMALL_CLUSTER, "short": "Smaller", "value": sv,
+                       "share": round(sv / k["total"] * 100, 1), "change": schg,
+                       "vs": round(schg - infl, 1) if schg is not None else None,
+                       "children": [dict(r, children=[]) for r in small]})
+
+    def story(g):
+        kids = sorted(g["children"], key=lambda c: -abs(c["vs"] or 0))
+        lead = kids[0]
+        speed = "faster" if lead["vs"] > 0 else "slower"
+        head = (f"{g['name']}: ${g['value']:,.0f}, "
+                + (f"{'up' if g['change'] >= 0 else 'down'} {abs(g['change']):.1f}%." if g["change"] is not None else ""))
+        return head + (f" {lead['name']} moved most: {lead['change']:+.1f}%, "
+                       f"{abs(lead['vs']):.1f} points {speed} than prices.")
+
+    steps = [{"key": "overview", "title": f"${k['total']:,.0f} a year",
+              "text": (f"Average household spending {'rose' if (total_chg or 0) >= 0 else 'fell'} "
+                       f"{abs(total_chg):.1f}% in {yr}, while prices rose {infl:.1f}%. "
+                       f"{faster} of {len(k['rows'])} categories "
+                       f"grew faster than prices (red); the rest grew slower (green).")}]
+    for i, g in enumerate(groups):
+        if g["children"]:
+            steps.append({"key": g["name"], "group": i, "title": g["name"], "text": story(g)})
+    k["flow"] = {"groups": groups, "steps": steps}

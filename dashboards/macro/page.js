@@ -160,9 +160,59 @@
 
   // ---- SANKEY
   const K = S.sankey;
-  viz.sankey($("#c-sankey"), K);
+  // color every spending node by how its change compares with inflation
+  const VS = {};
+  K.rows.forEach((r) => { VS[r.name] = r.vs; r.children.forEach((c) => { VS[c.name] = c.vs; }); });
+  const hasInfl = !!K.inflation;
+  const vsColor = (v) => (v == null ? viz.theme().muted : viz.deltaColor(v, false, K.vs_full));
+  const keyCaption = hasInfl ? `vs ${K.inflation.value}% inflation:` : `Change vs ${K.prev}:`;
+  const keyLabels = hasInfl ? ["Slower", "Faster"] : ["Better", "Worse"];
+  const spendBadge = (r) => hasInfl && r.vs != null
+    ? viz.deltaBadge(r.vs, { goodUp: false, full: K.vs_full, arrowValue: r.change, text: `${Math.abs(r.change).toFixed(1)}%`,
+        title: `${r.change >= 0 ? "Up" : "Down"} ${Math.abs(r.change).toFixed(1)}% vs ${K.prev}: ${Math.abs(r.vs).toFixed(1)} points ${r.vs > 0 ? "faster" : "slower"} than prices` })
+    : viz.deltaBadge(r.change, { goodUp: K.good_up, full: K.full, text: `${Math.abs(r.change).toFixed(1)}%`, when: `vs ${K.prev}` });
+  viz.deltaKey($("#key-sankey"), keyCaption, keyLabels);
+  viz.sankey($("#c-sankey"), { ...K, colorOf: hasInfl ? (name) => (name in VS ? vsColor(VS[name]) : null) : null });
+
+  // phones: scroll-driven vertical flow (overview, then one cluster per step)
+  if (K.flow) {
+    viz.deltaKey($("#key-flow"), keyCaption, keyLabels);
+    const story = viz.flowStory($("#flow-svg"), {
+      total: K.total, groups: K.flow.groups, steps: K.flow.steps,
+      colorOf: (n) => vsColor(n.vs), fmt: (v) => `$${(v / 1000).toFixed(1)}K`,
+      label: `Average household spending of ${FMT.usd0(K.total)} flowing into categories`,
+    });
+    const stepsEl = $("#flow-steps");
+    K.flow.steps.forEach((st, i) => {
+      const wrap = document.createElement("div"); wrap.className = "fs-step"; wrap.dataset.i = i;
+      const card = document.createElement("div"); card.className = "fs-card";
+      const prog = document.createElement("div"); prog.className = "fs-progress";
+      prog.textContent = i === 0 ? "OVERVIEW · SCROLL FOR DETAILS" : `DETAIL ${i} OF ${K.flow.steps.length - 1}`;
+      const h = document.createElement("h4"); h.textContent = st.title;
+      const p = document.createElement("p"); p.textContent = st.text;
+      card.append(prog, h, p);
+      if (st.group != null) {
+        const ul = document.createElement("ul"); ul.className = "fs-kids";
+        K.flow.groups[st.group].children.forEach((c) => {
+          const li = document.createElement("li");
+          const b = document.createElement("b"); b.textContent = FMT.usd0(c.value);
+          const nm = document.createElement("span"); nm.textContent = c.name;
+          li.append(nm, b, c.change == null ? document.createElement("span") : spendBadge(c));
+          ul.append(li);
+        });
+        card.append(ul);
+      }
+      wrap.append(card);
+      stepsEl.append(wrap);
+    });
+    const io = new IntersectionObserver((items) => {
+      items.forEach((it) => { if (it.isIntersecting) story.setStep(+it.target.dataset.i); });
+    }, { rootMargin: "-62% 0px -30% 0px" });
+    stepsEl.querySelectorAll(".fs-step").forEach((w) => io.observe(w));
+    document.addEventListener("themechange", () => story.rebuild());
+  }
   // budget bars: ranked list, tap a group to see what's inside it
-  viz.deltaKey($("#key-budget"), `Change vs ${K.prev}:`);
+  viz.deltaKey($("#key-budget"), keyCaption, keyLabels);
   const maxShare = Math.max(...K.rows.map((r) => r.share));
   const budgetRow = (r, tag, scale) => {
     const row = document.createElement(tag);
@@ -172,8 +222,7 @@
     if (tag === "button") { const c = document.createElement("span"); c.className = "chev"; c.textContent = "›"; name.append(c); }
     name.append(r.name);
     const amt = document.createElement("span"); amt.className = "b-amt"; amt.textContent = FMT.usd0(r.value);
-    const badge = r.change == null ? document.createElement("span")
-      : viz.deltaBadge(r.change, { goodUp: K.good_up, full: K.full, text: `${Math.abs(r.change).toFixed(1)}%`, when: `vs ${K.prev}` });
+    const badge = r.change == null ? document.createElement("span") : spendBadge(r);
     const track = document.createElement("span"); track.className = "b-track";
     const bar = document.createElement("span"); bar.className = "b-bar"; bar.style.width = `${(r.share / scale) * 82}%`;
     const share = document.createElement("span"); share.className = "b-share"; share.textContent = `${r.share.toFixed(1)}%`;

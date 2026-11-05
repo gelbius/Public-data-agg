@@ -163,12 +163,20 @@
         <h2 data-k="sankey.headline"></h2>
         <p class="sub" data-k="sankey.sub"></p>
       </div>
-      <div class="chart tall hide-sm" id="c-sankey" role="img" aria-label="Flow diagram of average household spending by category"></div>
-      <div class="head-row">
+      <div class="hide-sm" style="margin-bottom:8px"><span id="key-sankey"></span></div>
+      <div class="chart tall hide-sm" id="c-sankey" role="img" aria-label="Flow diagram of average household spending by category, colored by whether each category grew faster or slower than prices"></div>
+      <div class="scrolly show-sm" id="flow">
+        <div class="scrolly-graphic">
+          <span id="key-flow"></span>
+          <div class="fs-host" id="flow-svg"></div>
+        </div>
+        <div class="scrolly-steps" id="flow-steps"></div>
+      </div>
+      <div class="head-row hide-sm">
         <h3 data-k="sankey.listTitle"></h3>
         <span id="key-budget"></span>
       </div>
-      <ul class="budget" id="budget" aria-label="Spending by category, largest first"></ul>
+      <ul class="budget hide-sm" id="budget" aria-label="Spending by category, largest first"></ul>
       <ul class="caveats" id="sankey-notes"></ul>
       <details class="data" id="t-sankey"><summary>Show the data</summary></details>
       <div class="card-foot" data-src="sankey"></div>

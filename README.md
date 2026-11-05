@@ -30,7 +30,8 @@ A GitHub Action (`.github/workflows/refresh-data.yml`) runs steps 1–3 every da
 - Every chart cites its exact source series and latest observation date, and has a "Show the data" table.
 - Chart colors are tested for color-blind safety in both light and dark mode.
 - **Every change badge (vs a year ago, vs last year) is color-graded:** green = better for households, red = worse, gray = neutral. Bigger changes get stronger color (3 steps), and an ▲/▼ arrow always shows direction too. Use `viz.deltaBadge(value, {goodUp, full, text})`, where `goodUp` says whether up is good and `full` is the change size that earns the strongest color. Add `viz.deltaKey()` near the badges as the legend.
-- On phones, swap wide charts (like flow diagrams) for simpler forms such as ranked bar lists.
+- Where a fair benchmark exists, color against it instead of zero. For example, household spending is colored by whether it grew **faster or slower than inflation**, not just up or down.
+- On phones, swap wide charts for phone-native forms. The spending flow becomes a scroll-driven vertical flow (`viz.flowStory`): an overview, then one cluster of sub-categories per scroll step.
 
 ## Repo layout
 
