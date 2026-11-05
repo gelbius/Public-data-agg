@@ -1,8 +1,8 @@
 {
  "bls_ce": {
   "fetched": "2026-11-05",
-  "latest_year": "2024",
-  "source": "fred"
+  "latest_year": "2025",
+  "source": "bls"
  },
  "fetched": "2026-11-05",
  "fred": {
