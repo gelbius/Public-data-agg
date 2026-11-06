@@ -127,7 +127,7 @@ em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var
 }
 .eyebrow .tick { color: var(--accent-ink); font-size: .95rem; }
 h1, h2, h3 { font-family: var(--serif); font-weight: 500; letter-spacing: -.02em; line-height: 1.06; margin: 0; }
-h1 { font-size: clamp(2.4rem, 5.6vw, 4.4rem); }
+h1 { font-size: clamp(2.2rem, 4.6vw, 3.1rem); }
 h2 { font-size: clamp(1.6rem, 3vw, 2.35rem); }
 h3 { font-size: 1.15rem; letter-spacing: -.01em; }
 .lead { color: var(--ink-soft); font-size: 1.06rem; max-width: 66ch; margin: 14px 0 0; }
@@ -135,7 +135,7 @@ h3 { font-size: 1.15rem; letter-spacing: -.01em; }
 /* ---------- page header */
 .masthead { padding-block: 64px 28px; }
 @media (max-width: 640px) { .masthead { padding-block: 36px 16px; } }
-.masthead h1 { margin-top: 18px; max-width: 21ch; }
+.masthead h1 { margin-top: 18px; }
 .meta-row { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 22px; font: 400 .78rem/1.4 var(--mono); color: var(--ink-dim); }
 .meta-row b { color: var(--ink); font-weight: 500; }
 .chip {
