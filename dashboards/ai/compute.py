@@ -55,16 +55,14 @@ def compute(data_dir):
     history_txt = ""
     if old_use:
         o0, o1 = old_use[0], old_use[-1]
-        history_txt = (f" On the earlier, narrower question (AI \"in producing goods or services\"), use rose from "
-                       f"{_pct(o0[1])} in {month_label(o0[0])} to {_pct(o1[1])} in {month_label(o1[0])}. The jump between "
-                       f"the two lines mostly reflects the broader new wording, not a sudden surge.")
+        history_txt = (f" Gray: the narrower earlier question, {o0[1]:.0f}% → {o1[1]:.0f}% "
+                       f"({o0[0][:4]}–{o1[0][:4]}); the jump is mostly the rewording.")
         gaps = [{"start": o1[0], "end": first[0], "label": "Question reworded"}]
 
     hero = {
         "headline": f"{last[1]:.0f}% of US businesses now use AI.",
-        "sub": (f"In the two weeks ending {day_label(last[0])}, {_pct(last[1])} of employer businesses used AI in at least "
-                f"one business function, up from {_pct(base[1])} {base_txt}. {_pct(expect)} expect to be using it within "
-                f"six months." + history_txt),
+        "sub": (f"Up from {_pct(base[1])} in {month_label(base[0])}; {_pct(expect)} expect to within six months."
+                + history_txt),
         "series": {"use": use, "next6": nxt, "use_v1": old_use, "next6_v1": old_next}, "gaps": gaps,
         "break": first[0] if old_use else None,
     }
@@ -96,8 +94,7 @@ def compute(data_dir):
     top, bottom = rows[0], rows[-1]
     industries = {
         "headline": f"{top['name']} leads: {top['value']:.0f}% of firms use AI, vs {bottom['value']:.0f}% in {bottom['name'].lower()}.",
-        "sub": (f"AI use by industry in the two weeks ending {day_label(last[0])}. The national rate is {_pct(last[1])}. "
-                f"Industries whose estimates Census suppressed for that wave are not shown."),
+        "sub": f"Latest two weeks. National rate {_pct(last[1])}; suppressed estimates omitted.",
         "rows": rows, "national": last[1],
     }
 
@@ -113,9 +110,8 @@ def compute(data_dir):
     jobs = {
         "headline": ("So far, AI is barely moving headcount." if abs(net_hc) < 5 else
                      ("AI users are adding staff." if net_hc > 0 else "AI users are cutting staff.")),
-        "sub": (f"Asked how AI affected their workforce over the last six months, {_pct(hc['no_change'])} of businesses reported "
-                f"no change in headcount; {_pct(hc['increased'])} said it increased and {_pct(hc['decreased'])} said it decreased. "
-                f"For new hiring: {_pct(hi['increased'])} more, {_pct(hi['decreased'])} fewer."),
+        "sub": (f"Last six months: {_pct(hc['no_change'])} saw no headcount change; {_pct(hc['increased'])} grew, "
+                f"{_pct(hc['decreased'])} shrank."),
         "rows": [{"label": "Total headcount", **hc}, {"label": "New hires", **hi}],
     }
 

@@ -65,14 +65,13 @@ def compute(data_dir):
     direction = "rising again" if jan is not None and last_cpi[1] > jan + 0.25 else (
         "cooling" if jan is not None and last_cpi[1] < jan - 0.25 else "holding steady")
     hero_head = f"Inflation is {direction}."
-    hero_sub = (f"Consumer prices rose {pct(last_cpi[1])} in the year to {month_label(last_cpi[0])}"
-                + (f", up from {pct(jan)} in January" if jan is not None and direction != "holding steady" else "")
-                + f". Unemployment is {pct(ur.last[1])}, and the Fed's policy rate is {pct(ff_now[1], 2)}.")
+    hero_sub = (f"CPI {pct(last_cpi[1])} ({month_label(last_cpi[0])})"
+                + (f", from {pct(jan)} in January" if jan is not None and direction != "holding steady" else "")
+                + f". Unemployment {pct(ur.last[1])}. Fed funds {pct(ff_now[1], 2)}")
     if ff_prev_change and ff_prev_change.get("previous_same_dir"):
-        verb = "rising" if ff_prev_change["direction"] == "up" else "falling"
-        noun = "increase" if ff_prev_change["direction"] == "up" else "decrease"
-        hero_sub += (f" The rate started {verb} in {month_label(ff_prev_change['run_start'])}, its first "
-                     f"{noun} since {month_label(ff_prev_change['previous_same_dir'])}.")
+        noun = "rise" if ff_prev_change["direction"] == "up" else "cut"
+        hero_sub += f", first {noun} since {month_label(ff_prev_change['previous_same_dir'])}"
+    hero_sub += "."
     sec["hero"] = {
         "headline": hero_head, "sub": hero_sub,
         "series": {"cpi": cpi_h.rows(), "core": core_h.rows(), "fedfunds": ff_h.rows(), "unrate": ur_h.rows()},
@@ -117,9 +116,9 @@ def compute(data_dir):
         wage_head = "Prices are outrunning paychecks again."
     else:
         wage_head = "Paychecks are outpacing prices."
-    wage_sub = f"Hourly pay is up {pct(lw[1])} from a year earlier, against prices up {pct(lc)}."
+    wage_sub = f"Pay up {pct(lw[1])} vs prices up {pct(lc)}."
     if streak >= 2 and since:
-        wage_sub += f" The last run at least this long ended in {month_label(since)}."
+        wage_sub += f" Longest run since {month_label(since)}."
     # Stimulus checks show up in disposable income, not in hourly wages.
     dpi = S["DSPIC96"]
     mom = [(d, (v / dpi.obs[i - 1][1] - 1) * 100) for i, (d, v) in enumerate(dpi.obs) if i]
@@ -147,10 +146,9 @@ def compute(data_dir):
     squeeze_head = ("Borrowing costs near a record, savings thinning."
                     if apr.last[1] >= apr_max[1] - 1 and sav.last[1] < sav.mean_between("2014-01-01", "2019-12-01")
                     else "Borrowing costs and savings, side by side.")
-    squeeze_sub = (f"Card APRs are {pct(apr.last[1], 2)}, {apr_max[1] - apr.last[1]:.2f} points below the record "
-                   f"{pct(apr_max[1], 2)} set in {month_label(apr_max[0])}. Revolving balances are "
-                   f"${rev.last[1] / 1e6:.2f} trillion. The saving rate is {pct(sav.last[1])}"
-                   + (f", the lowest since {month_label(sav_low_since)}." if sav_low_since else ", a record low."))
+    squeeze_sub = (f"Card APR {pct(apr.last[1], 2)} (record {pct(apr_max[1], 2)}). Balances ${rev.last[1] / 1e6:.2f}T. "
+                   f"Saving rate {pct(sav.last[1])}"
+                   + (f", lowest since {month_label(sav_low_since)}." if sav_low_since else ", a record low."))
     sec["squeeze"] = {
         "headline": squeeze_head, "sub": squeeze_sub,
         "panels": [
@@ -176,9 +174,7 @@ def compute(data_dir):
         dq_head = f"Card delinquencies have fallen {dq_streak} quarters in a row."
     else:
         dq_head = "Card delinquencies, three decades of context."
-    dq_sub = (f"{pct(dq.last[1], 2)} of card balances were 30+ days past due in {quarter_label(dq.last[0])}"
-              + (f", still above the 2019 average of {pct(avg19, 2)}." if dq.last[1] > avg19 else
-                 f", below the 2019 average of {pct(avg19, 2)}."))
+    dq_sub = f"{pct(dq.last[1], 2)} 30+ days late ({quarter_label(dq.last[0])}). 2019: {pct(avg19, 2)}."
     tdsp19 = tdsp.mean_between("2019-01-01", "2019-12-31")
     sec["delinq"] = {
         "headline": dq_head, "sub": dq_sub,
@@ -206,10 +202,9 @@ def compute(data_dir):
         sent_head = f"Consumer sentiment hit {low[1]:.1f}, the lowest in {span_years} years of records."
     else:
         sent_head = f"{span_years} years of consumer sentiment."
-    sent_sub = (f"The University of Michigan index has run since {first}. Its record low of {low[1]:.1f} came in "
-                f"{month_label(low[0])}." + (f" {_count_word(n_this_year)} of the five lowest readings ever came in {year}."
-                                              if n_this_year >= 2 else "")
-                + f" The latest reading is {um.last[1]:.1f} ({month_label(um.last[0])}).")
+    sent_sub = (f"Record low {low[1]:.1f} ({month_label(low[0])})."
+                + (f" {n_this_year} of the 5 lowest came in {year}." if n_this_year >= 2 else "")
+                + f" Latest: {um.last[1]:.1f}.")
     sec["sentiment"] = {
         "headline": sent_head, "sub": sent_sub,
         "rows": um.rows(1), "recessions": spans(S["USREC"]),
@@ -421,8 +416,8 @@ def _sankey(ce, meta):
     return {
         "year": yr, "prev": prev, "total": total, "prev_total": ptotal,
         "headline": f"Where the average household's ${total:,.0f} went in {yr}.",
-        "sub": (f"Housing, transportation and food took {big3:.0f}% of spending."
-                + (f" Total spending was {((total / ptotal - 1) * 100):+.1f}% vs {prev}." if ptotal else "")),
+        "sub": (f"Housing, transport, food: {big3:.0f}%."
+                + (f" Spending {((total / ptotal - 1) * 100):+.1f}%." if ptotal else "")),
         "listTitle": "Every category, ranked",
         "nodes": nodes, "links": links, "rows": rows,
         # spending more on a category = costlier for households, so up is "worse"
@@ -540,9 +535,8 @@ def _add_inflation_context(k, cpi):
         "downs": [{"name": r["name"], "delta": r["delta"]} for r in downs],
     }
     k["deltaTitle"] = f"Where the extra ${dtot:,.0f} went"
-    k["deltaSub"] = (f"{top['name']} took ${top['delta']:,.0f} ({top['delta'] / dtot * 100:.0f}%) of the increase. "
-                     f"Overall inflation explains about ${from_prices:,.0f} of it."
-                     + "".join(f" {d['name']} fell ${-d['delta']:,.0f}, so it is not shown." for d in k["delta_flow"]["downs"]))
+    k["deltaSub"] = (f"{top['name']} took {top['delta'] / dtot * 100:.0f}%. Inflation explains ~${from_prices:,.0f}."
+                     + "".join(f" Not shown: {d['name']} (−${-d['delta']:,.0f})." for d in k["delta_flow"]["downs"]))
     k["flow"] = {"groups": groups, "steps": steps}
 
 
@@ -593,14 +587,12 @@ def _prices(B, meta):
     loaded = p_6 >= 50
     head = (f"{p_now:.0f}% of businesses are paying more for what they buy."
             if not loaded else f"The price pipeline is still loaded: {p_6:.0f}% of businesses expect to pay more.")
-    sub = (f"In the two weeks ending {day_label(last_end)}, {p_now:.1f}% of businesses paid more for inputs and "
-           f"{c_now:.1f}% raised their own prices. Looking six months out, {p_6:.1f}% expect to pay more and "
-           f"{c_6:.1f}% expect to charge more.")
+    sub = (f"Now: {p_now:.0f}% paying more, {c_now:.0f}% raising prices. "
+           f"In six months: {p_6:.0f}% and {c_6:.0f}%.")
     full = [r for r in retail_years if r["waves"] >= 20]  # skip the partial first survey year
     if full and retail_years[-1] is not full[0]:
         a, b = full[0], retail_years[-1]
-        sub += (f" In retail, the share raising prices averaged {a['avg']:.1f}% in {a['year']} and "
-                f"{b['avg']:.1f}% so far in {b['year']}.")
+        sub += f" Retail raising prices: {a['avg']:.0f}% ({a['year']}) → {b['avg']:.0f}% ({b['year']})."
     return {
         "headline": head, "sub": sub,
         "series": {"pay": pay, "charge": charge, "pay6": pay6, "charge6": charge6},
@@ -688,13 +680,10 @@ def _housing(data_dir, mort, meta):
     if base:
         p_chg = (full["price"] / base["price"] - 1) * 100
         i_chg = (full["income"] / base["income"] - 1) * 100
-        sub = (f"The typical home sold for ${full['price']:,.0f} in {full['year']}, {'up' if p_chg >= 0 else 'down'} "
-               f"{abs(p_chg):.0f}% from 2019, while median household income rose {i_chg:.0f}% (to ${full['income']:,.0f}). "
-               f"Mortgage rates went from {base['rate']:.2f}% to {full['rate']:.2f}%, so the monthly payment rose from "
-               f"${payment(base['price'], base['rate']):,.0f} to ${payment(full['price'], full['rate']):,.0f}. ")
-    sub += (f"The {peak['year']} share, {peak['share']:.1f}%, is the highest in data back to {first_year}"
-            + (f", above the {bubble['year']} housing-bubble peak ({bubble['share']:.1f}%)." if peak["share"] > bubble["share"]
-               else "."))
+        sub = (f"Since 2019: prices {p_chg:+.0f}%, income {i_chg:+.0f}%, rates {base['rate']:.2f}% → {full['rate']:.2f}%. "
+               f"Payment ${payment(base['price'], base['rate']):,.0f} → ${payment(full['price'], full['rate']):,.0f}/mo. ")
+    sub += (f"{peak['year']} peak {peak['share']:.1f}%"
+            + (f", above {bubble['year']}'s bubble." if peak["share"] > bubble["share"] else "."))
     return {
         "headline": head, "sub": sub, "years": years, "latest": latest,
         "peak": {"year": peak["year"], "share": peak["share"]}, "bubble": {"year": bubble["year"], "share": bubble["share"]},
