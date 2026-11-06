@@ -68,6 +68,10 @@
     "MEHOINUSA646N": {
       "start": "1999-01-01",
       "name": "Median household income (Census)"
+    },
+    "MSPUS": {
+      "start": "1999-01-01",
+      "name": "Median sales price of new houses sold (Census/HUD)"
     }
   },
   "bls_ce": {

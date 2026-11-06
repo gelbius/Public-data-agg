@@ -630,6 +630,7 @@ def _housing(data_dir, mort, meta):
     z = Series("ZILLOW", [(d, float(v)) for d, v in rows])
     cs = Series.load(data_dir, "CSUSHPISA")
     inc = Series.load(data_dir, "MEHOINUSA646N")
+    newhome = Series.load(data_dir, "MSPUS") if (data_dir / "fred" / "MSPUS.csv").exists() else None
 
     def annual(s, y):
         v = [x for d, x in s.obs if d[:4] == str(y)]
@@ -651,9 +652,14 @@ def _housing(data_dir, mort, meta):
         price = annual(z, y) if y >= first_z else (annual(cs, y) * ratio if annual(cs, y) else None)
         if not (income and rate and price):
             continue
-        years.append({"year": y, "price": round(price), "rate": round(rate, 2), "income": round(income),
-                      "share": round(12 * payment(price, rate) / income * 100, 1),
-                      "p2i": round(price / income, 2), "estimated": y < first_z})
+        row = {"year": y, "price": round(price), "rate": round(rate, 2), "income": round(income),
+               "share": round(12 * payment(price, rate) / income * 100, 1),
+               "p2i": round(price / income, 2), "estimated": y < first_z}
+        new = annual(newhome, y) if newhome else None  # comparison only: Census median for NEW homes
+        if new:
+            row.update({"new_price": round(new), "new_share": round(12 * payment(new, rate) / income * 100, 1),
+                        "new_p2i": round(new / income, 2)})
+        years.append(row)
 
     # latest 12 months: Zillow price and mortgage rate averaged over the same months, latest income year
     last = z.last[0]
@@ -671,35 +677,50 @@ def _housing(data_dir, mort, meta):
     peak = max(years, key=lambda r: r["share"])
     bubble = max((r for r in years if 2004 <= r["year"] <= 2008), key=lambda r: r["share"])
     base = by.get(2019)
-    now = latest or years[-1]
-    above_bubble = now["share"] > bubble["share"]
-    head = f"A typical home's mortgage payment now takes {now['share']:.0f}% of median income."
-    sub = ((f"Up from {base['share']:.1f}% in 2019. " if base else "")
-           + (f"That is higher than at the {bubble['year']} housing-bubble peak ({bubble['share']:.1f}%). " if above_bubble
-              else f"The {bubble['year']} housing-bubble peak was {bubble['share']:.1f}%. ")
-           + f"A median-priced home costs {now['p2i']:.1f}× median household income"
-           + (f", vs {base['p2i']:.1f}× in 2019." if base else "."))
+    full = years[-1]                     # latest full calendar year: the headline year
+    now = latest or full                 # latest 12 months: shown as the newest point
+    first_year = years[0]["year"]
+
+    # headline: latest full year vs 2019, then "what changed" (prices vs incomes vs rates)
+    head = (f"A typical home's mortgage payment takes {full['share']:.0f}% of median household income"
+            + (f", up from {base['share']:.0f}% in 2019." if base else "."))
+    sub = ""
+    if base:
+        p_chg = (full["price"] / base["price"] - 1) * 100
+        i_chg = (full["income"] / base["income"] - 1) * 100
+        sub = (f"The typical home sold for ${full['price']:,.0f} in {full['year']}, {'up' if p_chg >= 0 else 'down'} "
+               f"{abs(p_chg):.0f}% from 2019, while median household income rose {i_chg:.0f}% (to ${full['income']:,.0f}). "
+               f"Mortgage rates went from {base['rate']:.2f}% to {full['rate']:.2f}%, so the monthly payment rose from "
+               f"${payment(base['price'], base['rate']):,.0f} to ${payment(full['price'], full['rate']):,.0f}. ")
+    sub += (f"The {peak['year']} share, {peak['share']:.1f}%, is the highest in data back to {first_year}"
+            + (f", above the {bubble['year']} housing-bubble peak ({bubble['share']:.1f}%)." if peak["share"] > bubble["share"]
+               else "."))
     return {
         "headline": head, "sub": sub, "years": years, "latest": latest,
         "peak": {"year": peak["year"], "share": peak["share"]}, "bubble": {"year": bubble["year"], "share": bubble["share"]},
         "first_zillow_year": first_z,
+        "full_year": full["year"],
         "stats": [
-            {"label": "Payment as % of median income", "value": f"{now['share']:.1f}%",
-             "when": now.get("label", str(now.get("year"))) + (f" · 2019: {base['share']:.1f}%" if base else "")},
-            {"label": "Price-to-income", "value": f"{now['p2i']:.2f}×",
-             "when": f"{bubble['year']}: {bubble.get('p2i', by[bubble['year']]['p2i']):.2f}×"},
-            {"label": "Typical home price (Zillow median sale)", "value": f"${now['price']:,.0f}",
-             "when": f"at {now['rate']:.2f}% average 30-yr rate"},
+            {"label": f"Payment as % of median income, {full['year']}", "value": f"{full['share']:.1f}%",
+             "when": (f"2019: {base['share']:.1f}% · " if base else "")
+                     + (f"{now['label']}: {now['share']:.1f}% (est.)" if latest else "")},
+            {"label": f"Price-to-income, {full['year']}", "value": f"{full['p2i']:.2f}×",
+             "when": (f"2019: {base['p2i']:.2f}× · " if base else "") + f"{bubble['year']}: {by[bubble['year']]['p2i']:.2f}×"},
+            {"label": f"Typical home price, {full['year']} (Zillow median sale)", "value": f"${full['price']:,.0f}",
+             "when": f"at {full['rate']:.2f}% average 30-yr rate"},
         ],
         "notes": [
-            "Payment = principal and interest on a 30-year fixed loan with 20% down, at that year's average Freddie Mac "
-            "rate, divided by Census median household income. Taxes and insurance are not included.",
+            "Zillow's median runs below the National Association of Realtors' widely cited median existing-home price, "
+            "so these levels are conservative; the trend is the same.",
             f"Price = Zillow Research's U.S. median sale price (single-family homes and condos). Years before {first_z} are "
-            "estimated by scaling the Case-Shiller national index to Zillow's level. Zillow's median runs below the "
-            "National Association of Realtors' median existing-home price, so these shares are conservative.",
-            f"The latest point uses {inc_last[0][:4]} income, the most recent Census release.",
+            "estimated by scaling the S&P CoreLogic Case-Shiller national index to Zillow's level.",
+            "Payment = principal and interest on a 30-year fixed loan with 20% down, at that year's average Freddie Mac "
+            "rate, divided by Census median household income. Taxes and insurance are not included. Income is published "
+            f"each September, so the newest point ({now.get('label', '')}) uses {inc_last[0][:4]} income.",
+            "The dashed line uses the Census median price of new homes only. New homes are a minority of sales and are "
+            "usually pricier, so it sits higher.",
         ],
-        "source": {"ids": ["ZILLOW", "CSUSHPISA", "MEHOINUSA646N", "MORTGAGE30US"],
+        "source": {"ids": ["ZILLOW", "CSUSHPISA", "MSPUS", "MEHOINUSA646N", "MORTGAGE30US"],
                    "latest": {"ZILLOW": last, "MEHOINUSA646N": inc_last[0]}, "fetched": meta.get("fetched"),
-                   "label": "Zillow Research (median sale price, used with attribution) · CSUSHPISA · MEHOINUSA646N · MORTGAGE30US"},
+                   "label": "Zillow Research (median sale price, used with attribution) · CSUSHPISA · MSPUS · MEHOINUSA646N · MORTGAGE30US"},
     }

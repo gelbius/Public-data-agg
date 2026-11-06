@@ -35,6 +35,7 @@
   --s-wage: #008C85;
   --s-accent: #9A6A00;
   --s-in: #7A4FA8;
+  --s-ref: var(--chart-muted);
   --shadow: 0 30px 70px -55px rgba(28, 24, 20, .5);
   --serif: "Fraunces", Georgia, serif;
   --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;

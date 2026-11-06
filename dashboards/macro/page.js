@@ -141,18 +141,32 @@
     const est = Hs.first_zillow_year;
     const bands = [{ start: `${pts[0].year}-01-01`, end: `${est - 1}-12-31`, label: "Estimated from Case-Shiller" }];
     const bub = pts.find((p) => p.year === Hs.bubble.year);
+    const pk = pts.find((p) => p.year === Hs.peak.year);
+    const y19 = pts.find((p) => p.year === 2019);
+    const newPts = pts.filter((p) => p.new_share != null);
+    const shareNotes = [
+      bub && { date: bub.date, value: bub.share, series: "share", text: `${Hs.bubble.year} bubble ${FMT.pct1(bub.share)}`, position: "top" },
+      pk && { date: pk.date, value: pk.share, series: "share", text: `${Hs.peak.year} high ${FMT.pct1(pk.share)}`, position: "top" },
+      y19 && { date: y19.date, value: y19.share, series: "share", text: `2019 ${FMT.pct1(y19.share)}`, position: "bottom" },
+    ].filter(Boolean);
     viz.lineChart($("#c-housing-share"), {
-      fmt: "pct1", rightPad: 56, top: 30, dateLabel: label, bands, bandLabels: false, yMin: 0,
-      notes: bub ? [{ date: bub.date, value: bub.share, series: "share", text: `${Hs.bubble.year} bubble ${FMT.pct1(bub.share)}`, position: "top" }] : [],
-      series: [{ key: "share", name: "Payment share", short: "", color: "accent", rows: pts.map((p) => [p.date, p.share]), area: true }],
+      fmt: "pct1", rightPad: 56, top: 30, dateLabel: label, bands, bandLabels: false, yMin: 0, notes: shareNotes,
+      series: [
+        { key: "share", name: "Typical home", short: "", color: "accent", rows: pts.map((p) => [p.date, p.share]), area: true },
+        { key: "new", name: "New homes only", short: "", color: "ref", dashed: true, rows: newPts.map((p) => [p.date, p.new_share]) },
+      ],
     });
     viz.lineChart($("#c-housing-p2i"), {
       fmt: "mult", rightPad: 56, top: 30, dateLabel: label, bands, bandLabels: false, yMin: 0,
-      series: [{ key: "p2i", name: "Price-to-income", short: "", color: "accent", rows: pts.map((p) => [p.date, p.p2i]), area: true }],
+      series: [
+        { key: "p2i", name: "Typical home", short: "", color: "accent", rows: pts.map((p) => [p.date, p.p2i]), area: true },
+        { key: "new", name: "New homes only", short: "", color: "ref", dashed: true, rows: newPts.map((p) => [p.date, p.new_p2i]) },
+      ],
     });
     const now = Hs.latest || Hs.years[Hs.years.length - 1];
-    $("#housing-now-share").textContent = `${FMT.pct1(now.share)} · ${now.label || now.year}`;
-    $("#housing-now-p2i").textContent = `${FMT.mult(now.p2i)} · ${now.label || now.year}`;
+    const fy = Hs.years[Hs.years.length - 1];
+    $("#housing-now-share").textContent = `${FMT.pct1(fy.share)} · ${fy.year}` + (Hs.latest ? ` (${Hs.latest.label}: ${FMT.pct1(Hs.latest.share)} est.)` : "");
+    $("#housing-now-p2i").textContent = `${FMT.mult(fy.p2i)} · ${fy.year}`;
     Hs.stats.forEach((s) => {
       const el = document.createElement("div"); el.className = "stat";
       const v = document.createElement("div"); v.className = "v"; v.textContent = s.value;
@@ -161,8 +175,9 @@
       el.append(v, l, w); $("#housing-stats").append(el);
     });
     Hs.notes.forEach((n) => { const li = document.createElement("li"); li.textContent = n; $("#housing-notes").append(li); });
-    viz.table($("#t-housing"), ["Period", "Typical price", "30-yr rate", "Median income", "Payment share", "Price ÷ income"],
-      pts.map((p) => [label(p.date), FMT.usd0(p.price), FMT.pct2(p.rate), FMT.usd0(p.income), FMT.pct1(p.share), FMT.mult(p.p2i)]));
+    viz.table($("#t-housing"), ["Period", "Typical price", "30-yr rate", "Median income", "Payment share", "Price ÷ income", "New-home price", "New-home share"],
+      pts.map((p) => [label(p.date), FMT.usd0(p.price), FMT.pct2(p.rate), FMT.usd0(p.income), FMT.pct1(p.share), FMT.mult(p.p2i),
+        p.new_price ? FMT.usd0(p.new_price) : "", p.new_share != null ? FMT.pct1(p.new_share) : ""]));
   }
 
   // ---- SQUEEZE: three small multiples, each with its own single axis
