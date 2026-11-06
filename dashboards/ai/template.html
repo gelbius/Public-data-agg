@@ -49,7 +49,9 @@
         <h2 data-k="hero.headline"></h2>
         <p class="sub" data-k="hero.sub"></p>
       </div>
-      <ul class="legend" id="lg-hero"></ul>
+      <ul class="legend" id="lg-hero">
+        <li><i class="key swatch" style="background:var(--band-2)"></i>Question reworded</li>
+      </ul>
       <p class="legend-hint">Share of employer businesses. Tap a series to show or hide it.</p>
       <div class="chart" id="c-hero" role="img" aria-label="Share of US businesses using AI, and expecting to within six months, by survey wave"></div>
       <details class="data" id="t-hero"><summary>Show the data</summary></details>
@@ -101,7 +103,8 @@
       <ul class="caveats">
         <li>Source: U.S. Census Bureau, Business Trends and Outlook Survey (BTOS), national and sector estimates. A new two-week wave is published about every other week, and this page refreshes daily.</li>
         <li>Shares count businesses, not workers. A small shop and a large employer each count once.</li>
-        <li>Census now words the question as "Super Intelligence or SI (formerly referred to as Artificial Intelligence or AI)". The series in this form starts in November 2025, so long-run comparisons with earlier AI questions aren't shown.</li>
+        <li><b>The question changed in November 2025.</b> From September 2023 to September 2025, Census asked whether a business used AI "in producing goods or services". Since November 2025 it asks about AI "in any of its business functions" (and calls it "Super Intelligence or SI, formerly AI"). The new wording is broader, so the two series are drawn separately (the earlier one in gray) and are not joined; the jump between them is mostly the change in wording. There was no survey in October 2025.</li>
+        <li>Census no longer publishes the earlier series in its current downloads. It comes from an archived copy of Census's National.xlsx (Internet Archive, October 2025) and is stored in this repository as fixed history (<code>data/ai/btos_history_v1.json</code>).</li>
         <li>The effect-on-jobs questions have only been asked in the most recent wave, so they're shown as a snapshot, not a trend.</li>
         <li>Industry estimates that Census suppressed for reliability are left out rather than estimated.</li>
       </ul>

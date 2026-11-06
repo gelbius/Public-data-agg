@@ -37,7 +37,7 @@ def compute(data_dir):
     year_ago = min(use, key=lambda r: abs((date.fromisoformat(r[0]) - target).days))
     has_year = abs((date.fromisoformat(year_ago[0]) - target).days) <= 10
     base = year_ago if has_year else first
-    base_txt = "a year earlier" if has_year else f"in {month_label(first[0])}, when the question started"
+    base_txt = "a year earlier" if has_year else f"in {month_label(first[0])}, when the current wording started"
 
     gaps = []
     for (a, _), (b, _) in zip(use, use[1:]):
@@ -48,12 +48,25 @@ def compute(data_dir):
     genai_last = genai[max(genai)] if genai else None
     expect = nxt[-1][1]
 
+    # frozen history of the earlier, narrower question (Sep 2023 - Sep 2025), if present
+    hist_path = data_dir / "btos_history_v1.json"
+    hist = json.loads(hist_path.read_text()) if hist_path.exists() else None
+    old_use, old_next = (hist["use"], hist["next6"]) if hist else ([], [])
+    history_txt = ""
+    if old_use:
+        o0, o1 = old_use[0], old_use[-1]
+        history_txt = (f" On the earlier, narrower question (AI \"in producing goods or services\"), use rose from "
+                       f"{_pct(o0[1])} in {month_label(o0[0])} to {_pct(o1[1])} in {month_label(o1[0])}. The jump between "
+                       f"the two lines mostly reflects the broader new wording, not a sudden surge.")
+        gaps = [{"start": o1[0], "end": first[0], "label": "Question reworded"}]
+
     hero = {
         "headline": f"{last[1]:.0f}% of US businesses now use AI.",
         "sub": (f"In the two weeks ending {day_label(last[0])}, {_pct(last[1])} of employer businesses used AI in at least "
                 f"one business function, up from {_pct(base[1])} {base_txt}. {_pct(expect)} expect to be using it within "
-                f"six months."),
-        "series": {"use": use, "next6": nxt}, "gaps": gaps,
+                f"six months." + history_txt),
+        "series": {"use": use, "next6": nxt, "use_v1": old_use, "next6_v1": old_next}, "gaps": gaps,
+        "break": first[0] if old_use else None,
     }
 
     def tile(label, value, sub, delta=None):
@@ -111,10 +124,13 @@ def compute(data_dir):
                     + (f" · published {day_label(published)}" if published else "")}
     for sct in (hero, industries, jobs):
         sct["source"] = src
+    if old_use:  # credit the frozen pre-Nov-2025 history on the chart that uses it
+        hero["source"] = {**src, "label": src["label"] + " · Sep 2023 – Sep 2025 from an archived copy of National.xlsx (Internet Archive)"}
     return {
         "title": TITLE, "slug": SLUG, "description": DESCRIPTION, "fetched": meta.get("fetched"),
         "hub_headline": hero["headline"] + " " + industries["headline"],
         "sections": {"hero": hero, "kpis": {"tiles": tiles, "source": src}, "industries": industries, "jobs": jobs},
         "question": N["ai_use"]["question"],
+        "question_v1": hist["question_use"] if hist else None,
         "effect_question": N["ai_headcount"]["question"],
     }

@@ -28,11 +28,15 @@
     series: [
       { key: "use", name: "Using AI", legend: "Using AI (last two weeks)", short: "Using", color: "accent", rows: H.series.use, area: true },
       { key: "next6", name: "Expect to use within 6 months", legend: "Expect to use within six months", short: "Expect", color: "accent", rows: H.series.next6, dashed: true },
-    ],
+    ].concat(H.series.use_v1 && H.series.use_v1.length ? [
+      { key: "use_v1", name: "Using AI (earlier question)", legend: "Earlier question: using AI", short: "", color: "ref", rows: H.series.use_v1 },
+      { key: "next6_v1", name: "Expect within 6 months (earlier question)", legend: "Earlier question: expect to use", short: "", color: "ref", rows: H.series.next6_v1, dashed: true },
+    ] : []),
   });
-  const nx = Object.fromEntries(H.series.next6);
-  viz.table($("#t-hero"), ["Two weeks ending", "Using AI", "Expect within 6 months"],
-    H.series.use.map(([d, v]) => [dayLabel(d), FMT.pct0(v), nx[d] != null ? FMT.pct0(nx[d]) : ""]));
+  const nx = Object.fromEntries(H.series.next6.concat(H.series.next6_v1 || []));
+  const v1 = new Set((H.series.use_v1 || []).map((r) => r[0]));
+  viz.table($("#t-hero"), ["Two weeks ending", "Question", "Using AI", "Expect within 6 months"],
+    (H.series.use_v1 || []).concat(H.series.use).map(([d, v]) => [dayLabel(d), v1.has(d) ? "Earlier (goods/services)" : "Current (any function)", FMT.pct0(v), nx[d] != null ? FMT.pct0(nx[d]) : ""]));
 
   // key numbers
   S.kpis.tiles.forEach((t) => {
@@ -93,5 +97,5 @@
     $("#jobs").append(wrap);
   });
   $("#jobs-note").textContent = `Share of all employer businesses, two weeks ending ${dayLabel(J.rows[0].when)}. Asked once so far, so this is a snapshot, not a trend.`;
-  $("#q-text").textContent = `Survey question: "${D.question}"`;
+  $("#q-text").textContent = `Current question: "${D.question}"` + (D.question_v1 ? ` Earlier question (Sep 2023 – Sep 2025): "${D.question_v1}"` : "");
 })();
