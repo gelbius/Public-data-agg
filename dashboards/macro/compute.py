@@ -110,7 +110,10 @@ def compute(data_dir):
     w_h, c_h = wages.since(HERO_START), cpi.since(HERO_START)
     gap = [(d, w - c_h.map[d]) for d, w in w_h.obs if d in c_h.map]
     streak, since = _negative_streak(gap)
-    lw, lc = w_h.last, c_h.map.get(w_h.last[0])
+    # Pay and CPI are released on different days, so one can run a month ahead of the other.
+    # Compare them in the latest month where both exist.
+    both = gap[-1][0]
+    lw, lc = (both, w_h.map[both]), c_h.map[both]
     if streak >= 2:
         wage_head = f"Real wages have fallen for {streak} straight months."
     elif gap and gap[-1][1] < 0:
