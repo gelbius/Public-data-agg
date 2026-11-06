@@ -11,6 +11,7 @@ from series import Series, spans, month_label, quarter_label, day_label
 
 TITLE = "The Consumer: An Economic State of the Union"
 SLUG = "macro"
+ORDER = 1
 DESCRIPTION = ("Inflation, rates, jobs, wages, credit and sentiment for the US household, "
                "from public Federal Reserve, BLS, BEA and EIA data.")
 
@@ -216,6 +217,15 @@ def compute(data_dir):
         "source": _src(S, ["UMCSENT", "USREC"], meta_raw),
     }
 
+    # ------------------------------------------------------------------ price pipeline (Census BTOS)
+    btos_path = data_dir / "btos.json"
+    if btos_path.exists():
+        sec["prices"] = _prices(json.loads(btos_path.read_text()), meta_raw)
+
+    # ------------------------------------------------------------------ housing affordability
+    if (data_dir / "zillow_us.csv").exists():
+        sec["housing"] = _housing(data_dir, S["MORTGAGE30US"], meta_raw)
+
     # ------------------------------------------------------------------ household spending (Sankey)
     sec["sankey"] = _sankey(json.loads((data_dir / "bls_ce.json").read_text()), meta_raw)
     _add_inflation_context(sec["sankey"], S["CPIAUCSL"])
@@ -225,6 +235,11 @@ def compute(data_dir):
     out["series_index"] = [
         {"id": sid, "name": spec["name"], "latest": meta_raw["fred"].get(sid, {}).get("latest")}
         for sid, spec in sources["fred"].items() if not sid.startswith("_")]
+    out["extra_sources"] = [
+        {"id": "BTOS", "name": "Census Business Trends and Outlook Survey"},
+        {"id": "ZILLOW", "name": "Zillow Research U.S. median sale price"},
+        {"id": "CXU…LB0101M", "name": "BLS Consumer Expenditure Survey"},
+    ]
     out["hub_headline"] = hero_head + " " + wage_head
     return out
 
@@ -529,3 +544,162 @@ def _add_inflation_context(k, cpi):
                      f"Overall inflation explains about ${from_prices:,.0f} of it."
                      + "".join(f" {d['name']} fell ${-d['delta']:,.0f}, so it is not shown." for d in k["delta_flow"]["downs"]))
     k["flow"] = {"groups": groups, "steps": steps}
+
+
+# ---------------------------------------------------------------------- price pipeline
+def btos_series(answers, answer="Increased"):
+    return answers.get(answer, {})
+
+
+def btos_dated(series_by_code, waves):
+    """{wave code: value} -> sorted [[reference-period end date, value]]."""
+    out = [[waves[c]["end"], v] for c, v in series_by_code.items() if c in waves and waves[c].get("end")]
+    return sorted(out)
+
+
+def btos_gaps(rows, days=21):
+    """Spans with no survey (consecutive waves more than `days` apart), for a 'No survey' band."""
+    from datetime import date
+    gaps = []
+    for (a, _), (b, _) in zip(rows, rows[1:]):
+        if (date.fromisoformat(b) - date.fromisoformat(a)).days > days:
+            gaps.append({"start": a, "end": b, "label": "No survey"})
+    return gaps
+
+
+def _prices(B, meta):
+    W, N = B["waves"], B["national"]
+    pay = btos_dated(btos_series(N["pay_now"]["answers"]), W)
+    charge = btos_dated(btos_series(N["charge_now"]["answers"]), W)
+    pay6 = btos_dated(btos_series(N["pay_6m"]["answers"]), W)
+    charge6 = btos_dated(btos_series(N["charge_6m"]["answers"]), W)
+    last_end = pay[-1][0]
+    last_code = max(c for c in N["pay_now"]["answers"]["Increased"])
+    published = W.get(last_code, {}).get("published")
+
+    idx_in = btos_dated(B["index"]["Input prices"], W)
+    idx_out = btos_dated(B["index"]["Output prices"], W)
+    idx_max = max(idx_in, key=lambda r: r[1])
+
+    # retail (NAICS 44-45): calendar-year average share raising prices
+    retail = B["sector"]["charge_now"]["by_sector"].get("44", {}).get("Increased", {})
+    by_year = {}
+    for c, v in retail.items():
+        if c in W and W[c].get("end"):
+            by_year.setdefault(W[c]["end"][:4], []).append(v)
+    retail_years = [{"year": y, "avg": round(sum(v) / len(v), 1), "waves": len(v)} for y, v in sorted(by_year.items())]
+
+    p_now, p_6, c_now, c_6 = pay[-1][1], pay6[-1][1], charge[-1][1], charge6[-1][1]
+    loaded = p_6 >= 50
+    head = (f"{p_now:.0f}% of businesses are paying more for what they buy."
+            if not loaded else f"The price pipeline is still loaded: {p_6:.0f}% of businesses expect to pay more.")
+    sub = (f"In the two weeks ending {day_label(last_end)}, {p_now:.1f}% of businesses paid more for inputs and "
+           f"{c_now:.1f}% raised their own prices. Looking six months out, {p_6:.1f}% expect to pay more and "
+           f"{c_6:.1f}% expect to charge more.")
+    full = [r for r in retail_years if r["waves"] >= 20]  # skip the partial first survey year
+    if full and retail_years[-1] is not full[0]:
+        a, b = full[0], retail_years[-1]
+        sub += (f" In retail, the share raising prices averaged {a['avg']:.1f}% in {a['year']} and "
+                f"{b['avg']:.1f}% so far in {b['year']}.")
+    return {
+        "headline": head, "sub": sub,
+        "series": {"pay": pay, "charge": charge, "pay6": pay6, "charge6": charge6},
+        "gaps": btos_gaps(pay),
+        "stats": [
+            {"label": "Input-price index (50 = as many firms see increases as decreases)",
+             "value": f"{idx_in[-1][1]:.1f}", "when": f"high {idx_max[1]:.1f} ({day_label(idx_max[0])})"},
+            {"label": "Output-price index", "value": f"{idx_out[-1][1]:.1f}", "when": f"two weeks ending {day_label(last_end)}"},
+            {"label": "Retail: share raising prices",
+             "value": f"{retail_years[-1]['avg']:.1f}%" if retail_years else "n/a",
+             "when": " → ".join(f"{r['year']}: {r['avg']:.1f}%" for r in retail_years if r["waves"] >= 10)},
+        ],
+        "retail": retail_years,
+        "source": {"ids": ["BTOS"], "latest": {"BTOS": last_end}, "fetched": meta.get("btos", {}).get("fetched"),
+                   "label": "Census Bureau, Business Trends and Outlook Survey (National.xlsx, Sector.xlsx)"
+                            + (f" · published {day_label(published)}" if published else "")},
+    }
+
+
+# ---------------------------------------------------------------------- housing affordability
+HOUSING_START = 2000
+
+
+def _housing(data_dir, mort, meta):
+    import csv as _csv
+    rows = list(_csv.reader((data_dir / "zillow_us.csv").open()))[1:]
+    z = Series("ZILLOW", [(d, float(v)) for d, v in rows])
+    cs = Series.load(data_dir, "CSUSHPISA")
+    inc = Series.load(data_dir, "MEHOINUSA646N")
+
+    def annual(s, y):
+        v = [x for d, x in s.obs if d[:4] == str(y)]
+        return sum(v) / len(v) if v else None
+
+    # Zillow starts Feb 2008: extend back with Case-Shiller, scaled on the 2009-2011 overlap
+    overlap = [y for y in (2009, 2010, 2011) if annual(z, y) and annual(cs, y)]
+    ratio = sum(annual(z, y) / annual(cs, y) for y in overlap) / len(overlap)
+    first_z = int(z.obs[0][0][:4]) + 1  # first full Zillow year
+
+    def payment(price, rate):  # principal & interest, 30-yr fixed, 20% down
+        loan, r = 0.8 * price, rate / 1200
+        return loan * r / (1 - (1 + r) ** -360)
+
+    years = []
+    for y in range(HOUSING_START, int(z.last[0][:4]) + 1):
+        income = inc.get(f"{y}-01-01")
+        rate = annual(mort, y)
+        price = annual(z, y) if y >= first_z else (annual(cs, y) * ratio if annual(cs, y) else None)
+        if not (income and rate and price):
+            continue
+        years.append({"year": y, "price": round(price), "rate": round(rate, 2), "income": round(income),
+                      "share": round(12 * payment(price, rate) / income * 100, 1),
+                      "p2i": round(price / income, 2), "estimated": y < first_z})
+
+    # latest 12 months: Zillow price and mortgage rate averaged over the same months, latest income year
+    last = z.last[0]
+    window = [v for d, v in z.obs[-12:]]
+    m12 = [v for d, v in mort.obs if z.obs[-12][0][:7] <= d[:7] <= last[:7]]
+    inc_last = inc.last
+    latest = None
+    if len(window) == 12 and m12:
+        lp, lr = sum(window) / 12, sum(m12) / len(m12)
+        latest = {"label": f"12 months to {month_label(last)}", "date": last, "price": round(lp), "rate": round(lr, 2),
+                  "income": round(inc_last[1]), "income_year": inc_last[0][:4],
+                  "share": round(12 * payment(lp, lr) / inc_last[1] * 100, 1), "p2i": round(lp / inc_last[1], 2)}
+
+    by = {r["year"]: r for r in years}
+    peak = max(years, key=lambda r: r["share"])
+    bubble = max((r for r in years if 2004 <= r["year"] <= 2008), key=lambda r: r["share"])
+    base = by.get(2019)
+    now = latest or years[-1]
+    above_bubble = now["share"] > bubble["share"]
+    head = f"A typical home's mortgage payment now takes {now['share']:.0f}% of median income."
+    sub = ((f"Up from {base['share']:.1f}% in 2019. " if base else "")
+           + (f"That is higher than at the {bubble['year']} housing-bubble peak ({bubble['share']:.1f}%). " if above_bubble
+              else f"The {bubble['year']} housing-bubble peak was {bubble['share']:.1f}%. ")
+           + f"A median-priced home costs {now['p2i']:.1f}× median household income"
+           + (f", vs {base['p2i']:.1f}× in 2019." if base else "."))
+    return {
+        "headline": head, "sub": sub, "years": years, "latest": latest,
+        "peak": {"year": peak["year"], "share": peak["share"]}, "bubble": {"year": bubble["year"], "share": bubble["share"]},
+        "first_zillow_year": first_z,
+        "stats": [
+            {"label": "Payment as % of median income", "value": f"{now['share']:.1f}%",
+             "when": now.get("label", str(now.get("year"))) + (f" · 2019: {base['share']:.1f}%" if base else "")},
+            {"label": "Price-to-income", "value": f"{now['p2i']:.2f}×",
+             "when": f"{bubble['year']}: {bubble.get('p2i', by[bubble['year']]['p2i']):.2f}×"},
+            {"label": "Typical home price (Zillow median sale)", "value": f"${now['price']:,.0f}",
+             "when": f"at {now['rate']:.2f}% average 30-yr rate"},
+        ],
+        "notes": [
+            "Payment = principal and interest on a 30-year fixed loan with 20% down, at that year's average Freddie Mac "
+            "rate, divided by Census median household income. Taxes and insurance are not included.",
+            f"Price = Zillow Research's U.S. median sale price (single-family homes and condos). Years before {first_z} are "
+            "estimated by scaling the Case-Shiller national index to Zillow's level. Zillow's median runs below the "
+            "National Association of Realtors' median existing-home price, so these shares are conservative.",
+            f"The latest point uses {inc_last[0][:4]} income, the most recent Census release.",
+        ],
+        "source": {"ids": ["ZILLOW", "CSUSHPISA", "MEHOINUSA646N", "MORTGAGE30US"],
+                   "latest": {"ZILLOW": last, "MEHOINUSA646N": inc_last[0]}, "fetched": meta.get("fetched"),
+                   "label": "Zillow Research (median sale price, used with attribution) · CSUSHPISA · MEHOINUSA646N · MORTGAGE30US"},
+    }

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI at Work</title>
+<meta name="description" content="__DESCRIPTION__">
+<meta property="og:title" content="AI at Work: How US Businesses Are Adopting It">
+<meta property="og:description" content="__DESCRIPTION__">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/foundry.css">
+<script>try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <svg class="mark" width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 11 V5 H11"/><path d="M21 5 H27 V11"/><path d="M27 21 V27 H21"/><path d="M11 27 H5 V21"/><path d="M18 7.5 L11.5 16.5 H15 L14 24 L21.5 14.5 H17.5 Z" fill="#E8A24A" stroke="none"/></svg>
+      Public Data <small>/ AI at work</small>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#sec-hero">Adoption</a><a href="#sec-kpis">Key numbers</a><a href="#sec-industries">By industry</a>
+      <a href="#sec-jobs">Jobs</a><a href="#sec-method">Method</a>
+    </nav>
+    <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle dark mode">☾</button>
+  </div>
+</header>
+
+<main>
+  <section class="masthead wrap rise">
+    <span class="eyebrow"><span class="tick">+</span> Dashboard 02 · AI at work</span>
+    <h1>AI at work: <em>how US businesses are adopting it.</em></h1>
+    <p class="lead">Every two weeks the Census Bureau asks a large sample of US employer businesses whether they use AI, whether they plan to, and what it has done to their workforce.</p>
+    <div class="meta-row">
+      <span class="chip"><span class="dot"></span> Refreshed automatically</span>
+      <span>Data fetched <b id="m-fetched"></b></span>
+      <span>Source <b>U.S. Census Bureau · Business Trends and Outlook Survey</b></span>
+    </div>
+  </section>
+
+  <section class="section wrap" id="sec-hero">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Adoption over time</span>
+        <h2 data-k="hero.headline"></h2>
+        <p class="sub" data-k="hero.sub"></p>
+      </div>
+      <ul class="legend" id="lg-hero"></ul>
+      <p class="legend-hint">Share of employer businesses. Tap a series to show or hide it.</p>
+      <div class="chart" id="c-hero" role="img" aria-label="Share of US businesses using AI, and expecting to within six months, by survey wave"></div>
+      <details class="data" id="t-hero"><summary>Show the data</summary></details>
+      <div class="card-foot" data-src="hero"></div>
+    </article>
+  </section>
+
+  <section class="section wrap" id="sec-kpis">
+    <div class="card-head">
+      <span class="eyebrow"><span class="tick">+</span> Key numbers</span>
+      <h2>Three numbers on AI at work right now.</h2>
+    </div>
+    <div class="kpis kpis-3" id="kpis"></div>
+    <div class="card-foot" data-src="kpis"></div>
+  </section>
+
+  <section class="section wrap" id="sec-industries">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> By industry</span>
+        <h2 data-k="industries.headline"></h2>
+        <p class="sub" data-k="industries.sub"></p>
+      </div>
+      <ul class="budget" id="industries" aria-label="AI use by industry, highest first"></ul>
+      <details class="data" id="t-industries"><summary>Show the data</summary></details>
+      <div class="card-foot" data-src="industries"></div>
+    </article>
+  </section>
+
+  <section class="section wrap" id="sec-jobs">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Effect on jobs</span>
+        <h2 data-k="jobs.headline"></h2>
+        <p class="sub" data-k="jobs.sub"></p>
+      </div>
+      <div class="diverge" id="jobs"></div>
+      <p class="footnote" id="jobs-note"></p>
+      <div class="card-foot" data-src="jobs"></div>
+    </article>
+  </section>
+
+  <section class="section wrap" id="sec-method">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Method</span>
+        <h2>One public survey, <em>read carefully.</em></h2>
+      </div>
+      <ul class="caveats">
+        <li>Source: U.S. Census Bureau, Business Trends and Outlook Survey (BTOS), national and sector estimates. A new two-week wave is published about every other week, and this page refreshes daily.</li>
+        <li>Shares count businesses, not workers. A small shop and a large employer each count once.</li>
+        <li>Census now words the question as "Super Intelligence or SI (formerly referred to as Artificial Intelligence or AI)". The series in this form starts in November 2025, so long-run comparisons with earlier AI questions aren't shown.</li>
+        <li>The effect-on-jobs questions have only been asked in the most recent wave, so they're shown as a snapshot, not a trend.</li>
+        <li>Industry estimates that Census suppressed for reliability are left out rather than estimated.</li>
+      </ul>
+      <p class="footnote" id="q-text"></p>
+    </article>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span class="built"><svg width="14" height="14" viewBox="0 0 32 32" aria-hidden="true"><path d="M18 7.5 L11.5 16.5 H15 L14 24 L21.5 14.5 H17.5 Z" fill="#E8A24A"/></svg> Built with Claude from public Census Bureau data · <a href="https://foundrysolutions.ai">Foundry Solutions</a></span>
+    <span>Code MIT-licensed · <a href="https://github.com/gelbius/Public-data-agg">Source on GitHub</a></span>
+  </div>
+</footer>
+
+<script id="data" type="application/json">__DATA__</script>
+<script src="../assets/vendor/echarts-5.6.0.min.js"></script>
+<script src="../assets/viz.js"></script>
+<script src="page.js"></script>
+</body>
+</html>

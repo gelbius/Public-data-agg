@@ -4,7 +4,8 @@ Dashboards built only from **public government data**. They refresh themselves e
 
 | # | Dashboard | What it shows |
 |---|---|---|
-| 01 | [The Consumer: an economic state of the union](dashboards/macro/) | Inflation, rates, jobs, wages, credit, sentiment and household spending in the US |
+| 01 | [The Consumer: an economic state of the union](dashboards/macro/) | Inflation, rates, jobs, wages, business price pressure, housing affordability, credit, sentiment and household spending in the US |
+| 02 | [AI at work](dashboards/ai/) | How many US businesses use AI, which industries lead, and its effect on jobs so far (Census BTOS) |
 
 Design follows the [Foundry Solutions](https://foundrysolutions.ai) brand. Charts use [Apache ECharts](https://echarts.apache.org).
 
@@ -26,6 +27,7 @@ A GitHub Action (`.github/workflows/refresh-data.yml`) runs steps 1–3 every da
 
 **Ground rules**
 - Only public data. No API keys are required (an optional free `BLS_API_KEY` raises the BLS rate limit).
+- Sources so far: FRED (Federal Reserve Bank of St. Louis), BLS, BEA, EIA, Freddie Mac, University of Michigan, the Census Bureau's Business Trends and Outlook Survey, and Zillow Research (free with attribution). We avoid data whose terms restrict reprinting (e.g. NAR's tables).
 - Every number on a page comes from `compute.py`. Templates never contain hand-typed statistics.
 - Every chart cites its exact source series and latest observation date, and has a "Show the data" table.
 - Chart colors are tested for color-blind safety in both light and dark mode.
@@ -37,11 +39,14 @@ A GitHub Action (`.github/workflows/refresh-data.yml`) runs steps 1–3 every da
 
 ```
 pipeline/            shared tools
-  fetch.py           download a dashboard's data
+  fetch.py           download a dashboard's data (FRED, BLS, Census BTOS, Zillow)
+  btos.py            extract Census BTOS questions by wording
+  xlsx.py            tiny Excel reader (standard library only)
   series.py          time-series helpers (year-over-year, streaks, "lowest since"…)
   build.py           build every dashboard + the home page into dist/
 dashboards/
   macro/             dashboard 01
+  ai/                dashboard 02 (same four files)
     sources.json     which series to download
     compute.py       all the math and headline sentences
     template.html    page layout

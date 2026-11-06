@@ -22,9 +22,11 @@
     usd: (v) => `$${v.toFixed(2)}`,
     usd0: (v) => `$${Math.round(v).toLocaleString("en-US")}`,
     tn: (v) => `$${v.toFixed(2)}T`,
+    mult: (v) => `${v.toFixed(2)}×`,
+    pct0: (v) => `${v.toFixed(1)}%`,
   };
   const AXIS_FMT = {
-    pct1: (v) => `${v}%`, pct2: (v) => `${v}%`, num1: (v) => `${v}`, usd: (v) => `$${v}`, tn: (v) => `$${v.toFixed(1)}T`,
+    pct1: (v) => `${v}%`, pct2: (v) => `${v}%`, pct0: (v) => `${v}%`, num1: (v) => `${v}`, usd: (v) => `$${v}`, tn: (v) => `$${v.toFixed(1)}T`, mult: (v) => `${v}×`,
   };
 
   function theme() {
@@ -137,7 +139,7 @@
       const narrow = window.innerWidth < 640;
       const series = [];
       if (cfg.bands) {
-        const mode = cfg.bandLabels ? (narrow ? "numbers" : "full") : false;
+        const mode = cfg.bandLabels ? (narrow ? (cfg.bandKeyEl ? "numbers" : false) : "full") : false;
         series.push(bandSeries(t, cfg.bands, { labels: mode, alternate: cfg.alternate }));
       }
       for (const s of cfg.series) {

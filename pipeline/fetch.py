@@ -18,6 +18,7 @@ import csv
 import io
 import json
 import os
+import re
 import sys
 import time
 import urllib.error
@@ -32,14 +33,15 @@ BLS_V1 = "https://api.bls.gov/publicAPI/v1/timeseries/data/"
 BLS_V2 = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
 
 
-def http_get(url, data=None, headers=None, tries=4):
+def http_get(url, data=None, headers=None, tries=4, binary=False):
     """GET (or POST when data is given) with simple exponential backoff."""
     hdrs = {"User-Agent": USER_AGENT, **(headers or {})}
     for attempt in range(tries):
         try:
             req = urllib.request.Request(url, data=data, headers=hdrs)
-            with urllib.request.urlopen(req, timeout=60) as resp:
-                return resp.read().decode("utf-8")
+            with urllib.request.urlopen(req, timeout=120) as resp:
+                body = resp.read()
+                return body if binary else body.decode("utf-8")
         except (urllib.error.URLError, TimeoutError) as exc:
             if attempt == tries - 1:
                 raise
@@ -134,6 +136,48 @@ def fetch_bls_ce(dash_dir, series, meta):
     return []
 
 
+def fetch_btos(dash_dir, spec, meta):
+    """Census BTOS workbooks -> data/<dash>/btos.json (only the questions the dashboard uses).
+    The raw workbooks are downloaded to a temporary folder and not kept."""
+    import tempfile
+    import btos
+    print("  Census BTOS (National.xlsx, Sector.xlsx)")
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            nat, sec = Path(tmp) / "National.xlsx", Path(tmp) / "Sector.xlsx"
+            nat.write_bytes(http_get(btos.NATIONAL_URL, binary=True))
+            sec.write_bytes(http_get(btos.SECTOR_URL, binary=True) if spec.get("sector") else b"")
+            data = btos.extract(nat, sec if spec.get("sector") else None, spec)
+    except Exception as exc:  # keep the previous extract; a wording change must be fixed by hand
+        print(f"    FAILED: {exc}")
+        return ["btos"]
+    (dash_dir / "btos.json").write_text(json.dumps(data, indent=1, sort_keys=True) + "\n")
+    codes = sorted({c for q in data["national"].values() for a in q["answers"].values() for c in a})
+    meta["btos"] = {"fetched": today(), "latest_wave": codes[-1] if codes else None}
+    return []
+
+
+def fetch_zillow(dash_dir, spec, meta):
+    """Zillow Research public CSV -> data/<dash>/zillow_us.csv (the 'United States' row only)."""
+    print("  Zillow Research (U.S. median sale price)")
+    try:
+        rows = list(csv.reader(io.StringIO(http_get(spec["url"]))))
+        hdr = rows[0]
+        us = next(r for r in rows[1:] if r[hdr.index("RegionName")] == spec.get("region", "United States"))
+        obs = [(d, float(v)) for d, v in zip(hdr, us) if re.fullmatch(r"\d{4}-\d{2}-\d{2}", d) and v not in ("",)]
+        if len(obs) < 100:
+            raise ValueError(f"only {len(obs)} observations")
+    except Exception as exc:
+        print(f"    FAILED: {exc}")
+        return ["zillow"]
+    with (dash_dir / "zillow_us.csv").open("w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["date", "value"])
+        w.writerows(obs)
+    meta["zillow"] = {"fetched": today(), "latest": obs[-1][0], "count": len(obs)}
+    return []
+
+
 def today():
     return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
@@ -153,10 +197,15 @@ def main():
     failed = fetch_fred(dash_dir, sources.get("fred", {}), meta)
     if "bls_ce" in sources:
         failed += fetch_bls_ce(dash_dir, sources["bls_ce"], meta)
+    if "btos" in sources:
+        failed += fetch_btos(dash_dir, sources["btos"], meta)
+    if "zillow" in sources:
+        failed += fetch_zillow(dash_dir, sources["zillow"], meta)
     meta["fetched"] = today()
     meta_path.write_text(json.dumps(meta, indent=1, sort_keys=True) + "\n")
 
-    missing = [s for s in failed if not (dash_dir / "fred" / f"{s}.csv").exists()]
+    files = {"btos": "btos.json", "zillow": "zillow_us.csv"}
+    missing = [s for s in failed if not (dash_dir / files.get(s, f"fred/{s}.csv")).exists()]
     if failed:
         print(f"Some downloads failed (kept previous data): {', '.join(failed)}")
     if missing:

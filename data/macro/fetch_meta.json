@@ -1,85 +1,104 @@
 {
  "bls_ce": {
-  "fetched": "2026-11-05",
+  "fetched": "2026-11-06",
   "latest_year": "2025",
   "source": "bls"
  },
- "fetched": "2026-11-05",
+ "btos": {
+  "fetched": "2026-11-06",
+  "latest_wave": "202622"
+ },
+ "fetched": "2026-11-06",
  "fred": {
   "CES0500000003": {
    "count": 165,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-09-01"
   },
   "CPIAUCSL": {
    "count": 164,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-09-01"
   },
   "CPILFESL": {
    "count": 164,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-09-01"
+  },
+  "CSUSHPISA": {
+   "count": 332,
+   "fetched": "2026-11-06",
+   "latest": "2026-08-01"
   },
   "DRCCLACBS": {
    "count": 142,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-04-01"
   },
   "DSPIC96": {
    "count": 153,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-09-01"
   },
   "FEDFUNDS": {
    "count": 154,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-10-01"
   },
   "GASREGW": {
    "count": 1884,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-11-02"
+  },
+  "MEHOINUSA646N": {
+   "count": 27,
+   "fetched": "2026-11-06",
+   "latest": "2025-01-01"
   },
   "MORTGAGE30US": {
    "count": 2902,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-11-05"
   },
   "PSAVERT": {
    "count": 813,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-09-01"
   },
   "REVOLSL": {
    "count": 152,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-08-01"
   },
   "TDSP": {
    "count": 86,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-04-01"
   },
   "TERMCBCCALLNS": {
    "count": 128,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-08-01"
   },
   "UMCSENT": {
    "count": 677,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-09-01"
   },
   "UNRATE": {
    "count": 152,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-09-01"
   },
   "USREC": {
    "count": 898,
-   "fetched": "2026-11-05",
+   "fetched": "2026-11-06",
    "latest": "2026-10-01"
   }
+ },
+ "zillow": {
+  "count": 223,
+  "fetched": "2026-11-06",
+  "latest": "2026-08-31"
  }
 }

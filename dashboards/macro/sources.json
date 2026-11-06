@@ -60,6 +60,14 @@
     "DSPIC96": {
       "start": "2014-01-01",
       "name": "Real disposable personal income"
+    },
+    "CSUSHPISA": {
+      "start": "1999-01-01",
+      "name": "S&P CoreLogic Case-Shiller U.S. National Home Price Index"
+    },
+    "MEHOINUSA646N": {
+      "start": "1999-01-01",
+      "name": "Median household income (Census)"
     }
   },
   "bls_ce": {
@@ -79,5 +87,27 @@
     "CXUCASHCONTLB0101M": "Cash contributions",
     "CXUAPPARELLB0101M": "Apparel",
     "CXUPUBTRANSLB0101M": "Public & other transportation"
+  },
+  "btos": {
+    "_doc": "Census Business Trends and Outlook Survey. Questions are matched by wording; see pipeline/btos.py.",
+    "national": {
+      "charge_now": "how did the prices this business charges for its own goods or services change",
+      "pay_now": "how did the prices this business pays for goods or services change",
+      "charge_6m": "six months from now, how do you think the prices this business charges",
+      "pay_6m": "six months from now, how do you think the prices this business pays"
+    },
+    "index": [
+      "Input prices",
+      "Output prices",
+      "Future input prices",
+      "Future output prices"
+    ],
+    "sector": {
+      "charge_now": "how did the prices this business charges for its own goods or services change"
+    }
+  },
+  "zillow": {
+    "_doc": "Zillow Research public data (free with attribution). Only the United States row is kept.",
+    "url": "https://files.zillowstatic.com/research/public_csvs/median_sale_price/Metro_median_sale_price_uc_sfrcondo_month.csv"
   }
 }

@@ -27,7 +27,7 @@
     </a>
     <nav class="nav" aria-label="Sections">
       <a href="#sec-hero">Overview</a><a href="#sec-kpis">Key numbers</a><a href="#sec-wages">Wages</a>
-      <a href="#sec-squeeze">The squeeze</a><a href="#sec-delinq">Delinquency</a><a href="#sec-sentiment">Sentiment</a>
+      <a href="#sec-prices">Prices</a><a href="#sec-squeeze">The squeeze</a><a href="#sec-housing">Housing</a><a href="#sec-delinq">Delinquency</a><a href="#sec-sentiment">Sentiment</a>
       <a href="#sec-sankey">Spending</a><a href="#sec-method">Method</a>
     </nav>
     <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle dark mode">☾</button>
@@ -42,7 +42,7 @@
     <div class="meta-row">
       <span class="chip"><span class="dot"></span> Refreshed automatically</span>
       <span>Data fetched <b id="m-fetched"></b></span>
-      <span>Sources <b>FRED · BLS · BEA · EIA · Freddie Mac · Univ. of Michigan</b></span>
+      <span>Sources <b>FRED · BLS · BEA · EIA · Census · Freddie Mac · Univ. of Michigan · Zillow Research</b></span>
     </div>
   </section>
 
@@ -99,6 +99,30 @@
     </article>
   </section>
 
+  <!-- PRICE PIPELINE -->
+  <section class="section wrap" id="sec-prices">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> The price pipeline · the business side of the counter</span>
+        <h2 data-k="prices.headline"></h2>
+        <p class="sub" data-k="prices.sub"></p>
+      </div>
+      <div class="split">
+        <div>
+          <ul class="legend" id="lg-prices">
+            <li><i class="key swatch" style="background:var(--band-2)"></i>No survey (shutdown)</li>
+          </ul>
+          <p class="legend-hint">Share of businesses reporting price increases. Solid = last two weeks, dashed = expected in six months. Tap a series to show or hide it.</p>
+          <div class="chart" id="c-prices" role="img" aria-label="Share of businesses paying more for inputs and raising their own prices, now and expected in six months"></div>
+        </div>
+        <div class="stats" id="prices-stats"></div>
+      </div>
+      <p class="footnote">These are business survey data. They count how many firms saw prices rise, not by how much.</p>
+      <details class="data" id="t-prices"><summary>Show the data</summary></details>
+      <div class="card-foot" data-src="prices"></div>
+    </article>
+  </section>
+
   <!-- SQUEEZE -->
   <section class="section wrap" id="sec-squeeze">
     <article class="card">
@@ -110,6 +134,35 @@
       <div class="trio" id="squeeze"></div>
       <details class="data" id="t-squeeze"><summary>Show the data</summary></details>
       <div class="card-foot" data-src="squeeze"></div>
+    </article>
+  </section>
+
+  <!-- HOUSING -->
+  <section class="section wrap" id="sec-housing">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Housing affordability</span>
+        <h2 data-k="housing.headline"></h2>
+        <p class="sub" data-k="housing.sub"></p>
+      </div>
+      <div class="split">
+        <div class="trio duo">
+          <div class="panel">
+            <h3>Mortgage payment, % of median income</h3>
+            <div class="now" id="housing-now-share"></div>
+            <div class="chart short" id="c-housing-share" role="img" aria-label="Mortgage payment on a typical home as a share of median household income since 2000"></div>
+          </div>
+          <div class="panel">
+            <h3>Home price ÷ median income</h3>
+            <div class="now" id="housing-now-p2i"></div>
+            <div class="chart short" id="c-housing-p2i" role="img" aria-label="Typical home price divided by median household income since 2000"></div>
+          </div>
+        </div>
+        <div class="stats" id="housing-stats"></div>
+      </div>
+      <ul class="caveats" id="housing-notes"></ul>
+      <details class="data" id="t-housing"><summary>Show the data</summary></details>
+      <div class="card-foot" data-src="housing"></div>
     </article>
   </section>
 

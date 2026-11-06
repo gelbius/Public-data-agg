@@ -18,7 +18,7 @@
   // ---- SOURCE footers
   document.querySelectorAll("[data-src]").forEach((el) => {
     const src = S[el.dataset.src].source;
-    const ids = src.ids.join(" · ");
+    const ids = src.label || src.ids.join(" · ");
     const latest = Object.values(src.latest).sort().pop();
     const via = src.via === "fred" ? " (via FRED mirror)" : src.via === "bls" ? " (BLS API)" : "";
     const a = document.createElement("span");
@@ -102,6 +102,67 @@
     });
     viz.table($("#t-wages"), ["Month", "Hourly pay y/y", "CPI y/y", "Gap (pt)"],
       rows.map(([d, w]) => [monthLabel(d), FMT.pct2(w), FMT.pct2(cmap[d]), (w - cmap[d]).toFixed(2)]));
+  }
+
+  // ---- PRICE PIPELINE (Census BTOS)
+  if (S.prices) {
+    const P = S.prices;
+    const twoWeeks = (d) => `Two weeks ending ${dayLabel(d)}`;
+    viz.lineChart($("#c-prices"), {
+      fmt: "pct0", bands: P.gaps, bandLabels: true, legendEl: $("#lg-prices"), dateLabel: twoWeeks, yMin: 0,
+      xMin: P.series.pay[0][0], top: 34,
+      series: [
+        { key: "pay", name: "Paying more", legend: "Paying more for inputs", short: "Paying more", color: "in", rows: P.series.pay },
+        { key: "pay6", name: "Expect to pay more", legend: "Expect to pay more (6 mo)", short: "Expect to pay", color: "in", rows: P.series.pay6, dashed: true },
+        { key: "charge", name: "Raising prices", legend: "Raising own prices", short: "Raising", color: "cpi", rows: P.series.charge },
+        { key: "charge6", name: "Expect to raise", legend: "Expect to raise (6 mo)", short: "Expect to raise", color: "cpi", rows: P.series.charge6, dashed: true },
+      ],
+    });
+    P.stats.forEach((s) => {
+      const el = document.createElement("div"); el.className = "stat";
+      const v = document.createElement("div"); v.className = "v"; v.textContent = s.value;
+      const l = document.createElement("div"); l.className = "l"; l.textContent = s.label;
+      const w = document.createElement("div"); w.className = "w"; w.textContent = s.when;
+      el.append(v, l, w); $("#prices-stats").append(el);
+    });
+    const m = (rows) => Object.fromEntries(rows);
+    const [a, b, c, d] = [P.series.pay, P.series.pay6, P.series.charge, P.series.charge6].map(m);
+    const f = (v) => (v == null ? "" : FMT.pct0(v));
+    viz.table($("#t-prices"), ["Two weeks ending", "Paying more", "Expect to pay more", "Raising prices", "Expect to raise"],
+      P.series.pay.map(([dt]) => [dayLabel(dt), f(a[dt]), f(b[dt]), f(c[dt]), f(d[dt])]));
+  }
+
+  // ---- HOUSING AFFORDABILITY
+  if (S.housing) {
+    const Hs = S.housing;
+    const pts = Hs.years.map((r) => ({ ...r, date: `${r.year}-07-01` }));
+    if (Hs.latest) pts.push({ ...Hs.latest, date: Hs.latest.date, latestPoint: true });
+    const label = (d) => { const p = pts.find((x) => x.date === d); return p ? (p.latestPoint ? p.label : `${p.year}${p.estimated ? " (estimated)" : ""}`) : d.slice(0, 4); };
+    const est = Hs.first_zillow_year;
+    const bands = [{ start: `${pts[0].year}-01-01`, end: `${est - 1}-12-31`, label: "Estimated from Case-Shiller" }];
+    const bub = pts.find((p) => p.year === Hs.bubble.year);
+    viz.lineChart($("#c-housing-share"), {
+      fmt: "pct1", rightPad: 56, top: 30, dateLabel: label, bands, bandLabels: false, yMin: 0,
+      notes: bub ? [{ date: bub.date, value: bub.share, series: "share", text: `${Hs.bubble.year} bubble ${FMT.pct1(bub.share)}`, position: "top" }] : [],
+      series: [{ key: "share", name: "Payment share", short: "", color: "accent", rows: pts.map((p) => [p.date, p.share]), area: true }],
+    });
+    viz.lineChart($("#c-housing-p2i"), {
+      fmt: "mult", rightPad: 56, top: 30, dateLabel: label, bands, bandLabels: false, yMin: 0,
+      series: [{ key: "p2i", name: "Price-to-income", short: "", color: "accent", rows: pts.map((p) => [p.date, p.p2i]), area: true }],
+    });
+    const now = Hs.latest || Hs.years[Hs.years.length - 1];
+    $("#housing-now-share").textContent = `${FMT.pct1(now.share)} · ${now.label || now.year}`;
+    $("#housing-now-p2i").textContent = `${FMT.mult(now.p2i)} · ${now.label || now.year}`;
+    Hs.stats.forEach((s) => {
+      const el = document.createElement("div"); el.className = "stat";
+      const v = document.createElement("div"); v.className = "v"; v.textContent = s.value;
+      const l = document.createElement("div"); l.className = "l"; l.textContent = s.label;
+      const w = document.createElement("div"); w.className = "w"; w.textContent = s.when;
+      el.append(v, l, w); $("#housing-stats").append(el);
+    });
+    Hs.notes.forEach((n) => { const li = document.createElement("li"); li.textContent = n; $("#housing-notes").append(li); });
+    viz.table($("#t-housing"), ["Period", "Typical price", "30-yr rate", "Median income", "Payment share", "Price ÷ income"],
+      pts.map((p) => [label(p.date), FMT.usd0(p.price), FMT.pct2(p.rate), FMT.usd0(p.income), FMT.pct1(p.share), FMT.mult(p.p2i)]));
   }
 
   // ---- SQUEEZE: three small multiples, each with its own single axis
@@ -268,7 +329,7 @@
     K.links.slice().reverse().map((l) => [l.source, l.target, FMT.usd0(l.value), `${((l.value / K.total) * 100).toFixed(1)}%`]));
 
   // ---- METHOD: series index
-  D.series_index.forEach((s) => {
+  (D.extra_sources || []).concat(D.series_index).forEach((s) => {
     const row = document.createElement("div");
     const code = document.createElement("code"); code.textContent = s.id;
     const name = document.createElement("span"); name.textContent = s.name;

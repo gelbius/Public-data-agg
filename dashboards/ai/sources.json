@@ -1,0 +1,16 @@
+{
+  "_doc": "Dashboard 02: AI at work. Census BTOS only.",
+  "fred": {},
+  "btos": {
+    "national": {
+      "ai_use": "in the last two weeks, did this business use super intelligence",
+      "ai_genai_staff": "employees use generative super intelligence",
+      "ai_next6": "during the next six months, do you think this business will be using super intelligence",
+      "ai_headcount": "affect the number of employees (total headcount)",
+      "ai_hiring": "affect the number of new employees hired"
+    },
+    "sector": {
+      "ai_use": "in the last two weeks, did this business use super intelligence"
+    }
+  }
+}

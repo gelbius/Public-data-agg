@@ -38,6 +38,7 @@ def embed_json(obj):
 def build_dashboard(dash_dir):
     mod = load_compute(dash_dir)
     data = mod.compute(ROOT / "data" / dash_dir.name)
+    data["order"] = getattr(mod, "ORDER", 99)
     out_dir = DIST / data["slug"]
     out_dir.mkdir(parents=True, exist_ok=True)
     page = (dash_dir / "template.html").read_text()
@@ -64,10 +65,11 @@ def build_hub(dashboards):
       </a>""")
     cards.append("""
       <div class="card hub-card soon" aria-label="More dashboards coming">
-        <span class="num">DASHBOARD 02</span>
+        <span class="num">DASHBOARD __NEXT__</span>
         <h2>Next up</h2>
         <p>More public-data dashboards will land here, built on the same pipeline and design system.</p>
       </div>""")
+    cards[-1] = cards[-1].replace("__NEXT__", f"{len(dashboards) + 1:02d}")
     tpl = (ROOT / "site" / "hub.html").read_text()
     (DIST / "index.html").write_text(tpl.replace("__CARDS__", "".join(cards)))
     print("  built / (home)")
@@ -83,8 +85,9 @@ def main():
             shutil.copy(ROOT / "site" / f, DIST / f)
     print("Building site")
     built = []
-    for dash_dir in sorted(p for p in (ROOT / "dashboards").iterdir() if (p / "compute.py").exists()):
+    for dash_dir in (p for p in (ROOT / "dashboards").iterdir() if (p / "compute.py").exists()):
         built.append(build_dashboard(dash_dir))
+    built.sort(key=lambda d: d.get("order", 99))  # dashboard number on the home page
     build_hub(built)
     print(f"Done: {DIST}")
 
