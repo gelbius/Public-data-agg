@@ -18,6 +18,18 @@
   document.querySelectorAll("[data-k]").forEach((n) => { const [s, k] = n.dataset.k.split("."); n.textContent = S[s][k] || ""; });
   viz.deltaKey($("#key-summary"), "Value change:", ["Up", "Down"]);
 
+  // ---- time key: a mini version of the trail, labelled with real months
+  (function timeKey(host) {
+    const stops = [["12", monthLabel(D.dates["12m"])], ["6", monthLabel(D.dates["6m"])], ["now", "Now"]];
+    stops.forEach(([cls, label], i) => {
+      if (i) host.append(el("i", `tk-seg ${i === 1 ? "first" : "last"}`));
+      const stop = el("span", "tk-stop");
+      const dotBox = el("span", "tk-dot"); dotBox.append(el("i", `dd dd-${cls}`));
+      stop.append(dotBox, el("span", "", label));
+      host.append(stop);
+    });
+  })($("#time-key"));
+
   const valueBadge = (v, label) => v == null ? el("span", "", "—")
     : viz.deltaBadge(v, { goodUp: true, full: VALUE_FULL, text: `${Math.abs(v).toFixed(0)}%`, title: `${label}: ${v >= 0 ? "+" : ""}${v.toFixed(1)}%` });
 
@@ -30,12 +42,15 @@
       const head = el("div", "db-head");
       head.append(el("span", "db-name", c.name), valueBadge(c.value_chg["6m"], "6-month value change"));
       const track = el("div", "db-track");
-      const vals = ["12m", "6m", "now"].map((k) => c[key][k]).filter((v) => v != null);
-      if (vals.length) {
-        const lo = Math.min(...vals), hi = Math.max(...vals);
-        const bar = el("span", "db-bar"); bar.style.left = `${(lo / max) * 100}%`; bar.style.width = `${((hi - lo) / max) * 100}%`;
-        track.append(bar);
-      }
+      // fading trail: each leg brightens toward the newer point; an arrowhead points into "now"
+      const pts = ["12m", "6m", "now"].map((k) => [k, c[key][k]]).filter(([, v]) => v != null);
+      pts.slice(1).forEach(([k, v], i) => {
+        const a = (pts[i][1] / max) * 100, b = (v / max) * 100;
+        const seg = el("span", `db-seg ${b >= a ? "r" : "l"} ${k === "now" ? "last" : "first"}`);
+        seg.style.left = `${Math.min(a, b)}%`; seg.style.width = `${Math.abs(b - a)}%`;
+        if (k === "now" && Math.abs(b - a) > 4) seg.classList.add("arrow");
+        track.append(seg);
+      });
       ["12m", "6m", "now"].forEach((k) => {
         const v = c[key][k];
         if (v == null) return;
