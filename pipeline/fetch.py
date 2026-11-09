@@ -178,15 +178,29 @@ def fetch_zillow(dash_dir, spec, meta):
     return []
 
 
+def fetch_sec(dash_dir, spec, meta):
+    """SEC EDGAR financials for the dashboard's tickers -> data/<dash>/sec/<TICKER>.json."""
+    import sec
+    print(f"  SEC EDGAR company facts ({len(spec['tickers'])} companies)")
+    failed = sec.fetch(spec["tickers"], dash_dir / "sec")
+    if failed != ["sec"]:
+        meta["sec"] = {"fetched": today(), "failed": failed}
+    return [] if failed == ["sec"] else []  # missing SEC data keeps old files; compute flags gaps
+
+
 def today():
     return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 
 def main():
-    if len(sys.argv) != 2:
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    if len(args) != 1:
         sys.exit(__doc__)
-    name = sys.argv[1]
+    name = args[0]
     sources = json.loads((ROOT / "dashboards" / name / "sources.json").read_text())
+    if sources.get("manual_refresh") and "--force" not in sys.argv:
+        print(f"'{name}' is refreshed on request (manual snapshot); skipping. Use --force to refresh.")
+        return
     dash_dir = ROOT / "data" / name
     dash_dir.mkdir(parents=True, exist_ok=True)
     meta_path = dash_dir / "fetch_meta.json"
@@ -199,6 +213,8 @@ def main():
         failed += fetch_bls_ce(dash_dir, sources["bls_ce"], meta)
     if "btos" in sources:
         failed += fetch_btos(dash_dir, sources["btos"], meta)
+    if "sec" in sources:
+        failed += fetch_sec(dash_dir, sources["sec"], meta)
     if "zillow" in sources:
         failed += fetch_zillow(dash_dir, sources["zillow"], meta)
     meta["fetched"] = today()

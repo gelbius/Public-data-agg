@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tech Valuations & Deals</title>
+<meta name="description" content="__DESCRIPTION__">
+<meta property="og:title" content="Tech Valuations & Deals">
+<meta property="og:description" content="__DESCRIPTION__">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/foundry.css">
+<script>try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <svg class="mark" width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 11 V5 H11"/><path d="M21 5 H27 V11"/><path d="M27 21 V27 H21"/><path d="M11 27 H5 V21"/><path d="M18 7.5 L11.5 16.5 H15 L14 24 L21.5 14.5 H17.5 Z" fill="#E8A24A" stroke="none"/></svg>
+      Public Data <small>/ Tech valuations</small>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#sec-summary">Summary</a><a href="#sec-companies">Companies</a><a href="#sec-deals">Deals</a>
+      <a href="#sec-private">Private</a><a href="#sec-method">Method</a>
+    </nav>
+    <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle dark mode">☾</button>
+  </div>
+</header>
+
+<main>
+  <section class="masthead wrap rise">
+    <span class="eyebrow"><span class="tick">+</span> Dashboard 03 · Tech valuations</span>
+    <h1>Tech valuations <em>&amp; deals.</em></h1>
+    <p class="lead">What public tech companies are worth relative to their revenue and earnings, how that has shifted over 6 and 12 months, and the deals that set private-market prices.</p>
+    <div class="meta-row">
+      <span class="chip chip-snap"><span class="dot"></span> Snapshot · prices as of <b id="m-asof"></b></span>
+      <span>Multiples use <b>trailing 12 months (TTM)</b> of reported results</span>
+      <span>Sources <b>SEC filings · market prices · company announcements</b></span>
+    </div>
+  </section>
+
+  <section class="section wrap" id="sec-summary">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> What valuations are doing</span>
+        <h2 data-k="summary.headline"></h2>
+        <p class="sub" data-k="summary.sub"></p>
+      </div>
+      <div class="head-row">
+        <ul class="legend">
+          <li><i class="dd dd-12"></i>12 months ago</li>
+          <li><i class="dd dd-6"></i>6 months ago</li>
+          <li><i class="dd dd-now"></i>Now</li>
+        </ul>
+        <span id="key-summary"></span>
+      </div>
+      <div class="trio duo">
+        <div class="panel"><h3>EV / revenue (TTM), median</h3><div class="dumbbells" id="db-rev"></div></div>
+        <div class="panel"><h3>EV / EBITDA (TTM), median</h3><div class="dumbbells" id="db-ebitda"></div></div>
+      </div>
+      <p class="footnote">EV = enterprise value (market cap + debt − cash). Medians per category, so one outlier can't swing a group. Value change = change in the category's combined market value.</p>
+    </article>
+  </section>
+
+  <section class="section wrap" id="sec-companies">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Public companies</span>
+        <h2 data-k="companies.headline"></h2>
+        <p class="sub" data-k="companies.sub"></p>
+      </div>
+      <div class="filters" id="cat-filters" role="group" aria-label="Filter by category"></div>
+      <div class="table-scroll"><table class="comp" id="comp-table"></table></div>
+      <p class="footnote">Tap a column to sort. n/m = not meaningful (negative earnings or EBITDA). * EBITDA uses depreciation only (the company's amortization wasn't reported every quarter), so it's slightly understated. Multiple changes are shown neutral: a higher multiple isn't simply good or bad.</p>
+    </article>
+  </section>
+
+  <section class="section wrap" id="sec-deals">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Deals · last six months</span>
+        <h2 data-k="deals.headline"></h2>
+        <p class="sub" data-k="deals.sub"></p>
+      </div>
+      <div class="filters" id="deal-filters" role="group" aria-label="Filter deals by type"></div>
+      <div class="table-scroll"><table class="comp" id="deal-table"></table></div>
+      <p class="footnote">Value is enterprise value where announced; where only the equity value was announced and the target is public, EV adds its debt and subtracts its cash (marked †). Target financials and multiples come from the target's own SEC filings for the 12 months before the announcement. Blank = not disclosed.</p>
+    </article>
+  </section>
+
+  <section class="section wrap" id="sec-private">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Private valuations</span>
+        <h2 data-k="private.headline"></h2>
+        <p class="sub" data-k="private.sub"></p>
+      </div>
+      <div class="table-scroll"><table class="comp" id="priv-table"></table></div>
+    </article>
+  </section>
+
+  <section class="section wrap" id="sec-method">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Method</span>
+        <h2>How these numbers are built.</h2>
+      </div>
+      <ul class="caveats" id="method"></ul>
+    </article>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span class="built"><svg width="14" height="14" viewBox="0 0 32 32" aria-hidden="true"><path d="M18 7.5 L11.5 16.5 H15 L14 24 L21.5 14.5 H17.5 Z" fill="#E8A24A"/></svg> Built with Claude from SEC filings and public announcements · <a href="https://foundrysolutions.ai">Foundry Solutions</a></span>
+    <span>Not investment advice · <a href="https://github.com/gelbius/Public-data-agg">Source on GitHub</a></span>
+  </div>
+</footer>
+
+<script id="data" type="application/json">__DATA__</script>
+<script src="../assets/viz.js"></script>
+<script src="page.js"></script>
+</body>
+</html>

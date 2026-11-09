@@ -1,0 +1,20 @@
+{
+ "_doc": "Latest publicly reported valuations of large private AI companies. Funding-round valuations are set by investors in that round and are not comparable to public market caps. Updated by hand on request.",
+ "companies": [
+  {"name": "Anthropic", "category": "AI platforms", "date": "2026-05-28", "valuation": 965e9, "raised": 65e9, "round": "Series H",
+   "note": "Reported talks in September at a higher valuation were not confirmed as closed.",
+   "source": "https://valueaddvc.com/blog/biggest-ai-funding-rounds-of-2026-so-far-ranked"},
+  {"name": "OpenAI", "category": "AI platforms", "date": "2026-03-31", "valuation": 852e9, "raised": 122e9, "round": "Growth round",
+   "note": "Largest private round on record. Later reported talks at higher valuations were not confirmed.",
+   "source": "https://valueaddvc.com/blog/biggest-us-startup-funding-rounds-of-2026-tracked-and-ranked"},
+  {"name": "Databricks", "category": "Software", "date": "2026-08-13", "valuation": 190e9, "raised": 5e9, "round": "Strategic round",
+   "note": "Reported at about $188–190B.",
+   "source": "https://valueaddvc.com/blog/biggest-us-startup-funding-rounds-of-2026-tracked-and-ranked"},
+  {"name": "xAI", "category": "AI platforms", "date": "2026-02-02", "valuation": 250e9, "raised": null, "round": "Merged into SpaceX",
+   "note": "No longer a standalone private company: combined with SpaceX (reported $250B), which then went public in June 2026.",
+   "source": "https://valueaddvc.com/blog/the-ma-boom-in-tech-2026-antitrust-easing-and-the-deals-getting-done"},
+  {"name": "Cursor (Anysphere)", "category": "Software", "date": "2026-06-16", "valuation": 60e9, "raised": null, "round": "Acquired by SpaceX",
+   "note": "Acquired in an all-stock deal; completed August 14.",
+   "source": "https://www.bnnbloomberg.ca/business/artificial-intelligence/2026/06/16/spacex-to-buy-ai-coding-startup-cursor-for-us60-billion-in-enterprise-push/"}
+ ]
+}

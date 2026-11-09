@@ -1,0 +1,107 @@
+{
+  "_doc": "Dashboard 03: tech valuations & deals. Financials from SEC EDGAR (needs SEC_USER_AGENT); prices from data/tech/prices_snapshot.json (manual snapshot). manual_refresh: prices come from a manual snapshot, so the daily job skips this dashboard and SEC data is re-pulled together with prices on request (python3 pipeline/fetch.py tech --force, with SEC_USER_AGENT set).",
+  "fred": {},
+  "categories": {
+    "AI platforms": [
+      "GOOGL",
+      "META",
+      "MSFT",
+      "AMZN",
+      "AAPL",
+      "ORCL"
+    ],
+    "AI infrastructure & chips": [
+      "NVDA",
+      "AMD",
+      "AVGO",
+      "MU",
+      "MRVL",
+      "ANET",
+      "VRT",
+      "CRWV",
+      "SMCI"
+    ],
+    "Hardware": [
+      "DELL",
+      "HPQ",
+      "HPE",
+      "CSCO",
+      "WDC",
+      "STX"
+    ],
+    "Software": [
+      "CRM",
+      "NOW",
+      "ADBE",
+      "PLTR",
+      "SNOW",
+      "DDOG",
+      "INTU"
+    ],
+    "Consumer subscription": [
+      "NFLX",
+      "MTCH",
+      "BMBL",
+      "DUOL",
+      "GRND",
+      "LIF",
+      "COUR",
+      "CHGG"
+    ]
+  },
+  "sec": {
+    "tickers": [
+      "GOOGL",
+      "META",
+      "MSFT",
+      "AMZN",
+      "AAPL",
+      "ORCL",
+      "NVDA",
+      "AMD",
+      "AVGO",
+      "MU",
+      "MRVL",
+      "ANET",
+      "VRT",
+      "CRWV",
+      "SMCI",
+      "DELL",
+      "HPQ",
+      "HPE",
+      "CSCO",
+      "WDC",
+      "STX",
+      "CRM",
+      "NOW",
+      "ADBE",
+      "PLTR",
+      "SNOW",
+      "DDOG",
+      "INTU",
+      "NFLX",
+      "MTCH",
+      "BMBL",
+      "DUOL",
+      "GRND",
+      "LIF",
+      "COUR",
+      "CHGG",
+      "LITE",
+      "PTC",
+      "BRZE",
+      "CART",
+      "SYNA",
+      "ARX"
+    ]
+  },
+  "deal_targets": [
+    "LITE",
+    "PTC",
+    "BRZE",
+    "CART",
+    "SYNA",
+    "ARX"
+  ],
+  "manual_refresh": true
+}
