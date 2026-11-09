@@ -1,11 +1,12 @@
 # Public Data Dashboards
 
-Dashboards built only from **public government data**. They refresh themselves every day and compute every headline from the source numbers, so nothing on the pages is typed by hand.
+Dashboards built from **public data**. Every headline is computed from the source numbers, so nothing on the pages is typed by hand. Dashboards 01–02 use government data and refresh themselves every day; dashboard 03 is refreshed every Monday and Friday after the market close.
 
 | # | Dashboard | What it shows |
 |---|---|---|
 | 01 | [The Consumer: an economic state of the union](dashboards/macro/) | Inflation, rates, jobs, wages, business price pressure, housing affordability, credit, sentiment and household spending in the US |
 | 02 | [AI at work](dashboards/ai/) | How many US businesses use AI, which industries lead, and its effect on jobs so far (Census BTOS) |
+| 03 | [Tech valuations & deals](dashboards/tech/) | Valuation multiples (TTM) by tech category, how they moved over 6 and 12 months, notable deals of the last six months, and the biggest private AI valuations |
 
 Design follows the [Foundry Solutions](https://foundrysolutions.ai) brand. Charts use [Apache ECharts](https://echarts.apache.org).
 
@@ -39,7 +40,9 @@ A GitHub Action (`.github/workflows/refresh-data.yml`) runs steps 1–3 every da
 
 ```
 pipeline/            shared tools
-  fetch.py           download a dashboard's data (FRED, BLS, Census BTOS, Zillow)
+  fetch.py           download a dashboard's data (FRED, BLS, Census BTOS, Zillow, SEC)
+  sec.py             SEC EDGAR company financials (needs SEC_USER_AGENT, see below)
+  tech_snapshot.py   validate and write dashboard 03's price snapshot
   btos.py            extract Census BTOS questions by wording
   xlsx.py            tiny Excel reader (standard library only)
   series.py          time-series helpers (year-over-year, streaks, "lowest since"…)
@@ -47,6 +50,7 @@ pipeline/            shared tools
 dashboards/
   macro/             dashboard 01
   ai/                dashboard 02 (same four files)
+  tech/              dashboard 03 (plus fin.py: trailing-12-month math from SEC filings)
     sources.json     which series to download
     compute.py       all the math and headline sentences
     template.html    page layout
@@ -66,6 +70,25 @@ You need Python 3.10 or newer. Nothing else to install.
 python3 pipeline/fetch.py macro     # download fresh data (optional, data is committed)
 python3 pipeline/build.py           # build the site into dist/
 python3 -m http.server 8000 -d dist # open http://localhost:8000
+```
+
+## Refreshing dashboard 03 (tech)
+
+The daily GitHub job skips dashboard 03. A scheduled Claude session refreshes it every Monday and Friday at 5:47 PM Eastern, after the market close:
+
+1. Pulls market caps, share counts and split-adjusted closes (now, 6 and 12 months ago) through the owner's brokerage data connector, then runs `python3 pipeline/tech_snapshot.py build raw.json`. The script refuses to write if a ticker is missing or a market cap disagrees with shares × price.
+2. Re-pulls SEC filings: `python3 pipeline/fetch.py tech --force`. The SEC requires a contact email in the request header. It comes from the `SEC_USER_AGENT` environment variable, set privately on the cloud environment. Never commit it.
+3. Reviews the curated lists (`data/tech/deals.json`, `data/tech/private.json`). It drops deals older than six months and adds new ones only with a primary source link.
+4. Rebuilds, checks the page and pushes to `main`.
+
+To run it yourself:
+
+```bash
+export SEC_USER_AGENT="public-data-agg dashboard you@example.com"
+python3 pipeline/tech_snapshot.py dates          # the three dates to pull closes for
+python3 pipeline/tech_snapshot.py build raw.json # after writing raw.json (format in the script)
+python3 pipeline/fetch.py tech --force
+python3 pipeline/build.py
 ```
 
 ## Publish with Cloudflare Pages
