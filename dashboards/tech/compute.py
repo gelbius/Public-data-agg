@@ -28,7 +28,9 @@ NAMES = {"GOOGL": "Alphabet", "META": "Meta", "MSFT": "Microsoft", "AMZN": "Amaz
          "CSCO": "Cisco", "WDC": "Western Digital", "STX": "Seagate", "CRM": "Salesforce", "NOW": "ServiceNow",
          "ADBE": "Adobe", "PLTR": "Palantir", "SNOW": "Snowflake", "DDOG": "Datadog", "INTU": "Intuit",
          "NFLX": "Netflix", "MTCH": "Match Group", "BMBL": "Bumble", "DUOL": "Duolingo", "GRND": "Grindr",
-         "LIF": "Life360", "COUR": "Coursera", "CHGG": "Chegg"}
+         "LIF": "Life360", "COUR": "Coursera", "CHGG": "Chegg", "PTON": "Peloton", "HIMS": "Hims & Hers",
+         "ETSY": "Etsy", "TRIP": "Tripadvisor", "YELP": "Yelp", "ANGI": "Angi", "CMPR": "Cimpress", "NXDR": "Nextdoor"}
+WORDS = {2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine"}
 REPORT_LAG = 35  # days after a quarter ends before its results are assumed public
 
 
@@ -58,6 +60,26 @@ def _metrics(facts, mcap, asof):
             "growth": (_div(f["revenue"], f["revenue_prev"]) - 1) * 100 if f["revenue_prev"] else None,
             "margin": _div(f["ebitda"], f["revenue"]) * 100 if f["ebitda"] is not None else None,
             "cash": f["bs_cash"], "debt": f["bs_debt"], "debt_found": f["bs_debt_found"], "da_partial": f["da_partial"]}
+
+
+def _deal_row(dl, data_dir):
+    """A deal plus, for SEC-filing targets, the target's TTM financials and implied multiples before announcement."""
+    row = dict(dl)
+    t = dl.get("target_ticker")
+    if t and (data_dir / "sec" / f"{t}.json").exists() and dl["value"]:
+        facts = json.loads((data_dir / "sec" / f"{t}.json").read_text())["facts"]
+        lag = (date.fromisoformat(dl["date"]) - timedelta(days=REPORT_LAG)).isoformat()
+        f = fin.financials(facts, lag)
+        if f:
+            ev = dl["value"] if dl["value_kind"] == "ev" else dl["value"] + f["bs_debt"] - (f["bs_cash"] or 0)
+            row.update({"ev": ev, "ev_is_derived": dl["value_kind"] != "ev",
+                        "target_revenue": f["revenue"], "target_ebitda": f["ebitda"],
+                        "target_margin": _div(f["ebitda"], f["revenue"]) * 100 if f["ebitda"] is not None else None,
+                        "ev_rev": _pos_multiple(ev, f["revenue"]), "ev_ebitda": _pos_multiple(ev, f["ebitda"]),
+                        "ttm_end": f["ttm_end"], "da_partial": f["da_partial"]})
+    elif dl["value_kind"] == "ev":
+        row["ev"] = dl["value"]
+    return row
 
 
 def compute(data_dir):
@@ -124,24 +146,7 @@ def compute(data_dir):
 
     # ---- deals: compute multiples for public targets from their pre-announcement filings
     deals_src = json.loads((data_dir / "deals.json").read_text())
-    deals = []
-    for dl in deals_src["deals"]:
-        row = dict(dl)
-        t = dl.get("target_ticker")
-        if t and (data_dir / "sec" / f"{t}.json").exists() and dl["value"]:
-            facts = json.loads((data_dir / "sec" / f"{t}.json").read_text())["facts"]
-            lag = (date.fromisoformat(dl["date"]) - timedelta(days=REPORT_LAG)).isoformat()
-            f = fin.financials(facts, lag)
-            if f:
-                ev = dl["value"] if dl["value_kind"] == "ev" else dl["value"] + f["bs_debt"] - (f["bs_cash"] or 0)
-                row.update({"ev": ev, "ev_is_derived": dl["value_kind"] != "ev",
-                            "target_revenue": f["revenue"], "target_ebitda": f["ebitda"],
-                            "target_margin": _div(f["ebitda"], f["revenue"]) * 100 if f["ebitda"] is not None else None,
-                            "ev_rev": _pos_multiple(ev, f["revenue"]), "ev_ebitda": _pos_multiple(ev, f["ebitda"]),
-                            "ttm_end": f["ttm_end"], "da_partial": f["da_partial"]})
-        elif dl["value_kind"] == "ev":
-            row["ev"] = dl["value"]
-        deals.append(row)
+    deals = [_deal_row(dl, data_dir) for dl in deals_src["deals"]]
     deals.sort(key=lambda r: r["date"], reverse=True)
     mna = [r for r in deals if r["type"] != "Venture round"]
     public_multiples = [r["ev_rev"] for r in mna if r.get("ev_rev")]
@@ -152,6 +157,18 @@ def compute(data_dir):
     deal_sub = (f"Disclosed deal value about ${total_disclosed / 1e9:,.0f}B. Public targets sold at a median "
                 f"{_med(public_multiples):.1f}× trailing revenue (range {min(public_multiples):.1f}–{max(public_multiples):.1f}×). "
                 f"Plus {len(deals) - len(mna)} mega venture rounds.")
+
+    # ---- consumer precedents: older deals + this window's consumer deals
+    prec_src = json.loads((data_dir / "precedents.json").read_text())["deals"]
+    prec = [_deal_row(dl, data_dir) for dl in prec_src] + [r for r in deals if r["segment"].startswith("Consumer")
+                                                           and r["type"] != "Venture round" and r["segment"] != "Consumer internet"]
+    prec.sort(key=lambda r: r["date"], reverse=True)
+    pm = [r["ev_rev"] for r in prec if r.get("ev_rev")]
+    years = sorted({r["date"][:4] for r in prec})
+    prec_head = (f"Consumer deals have priced at {min(pm):.1f}–{max(pm):.1f}× trailing revenue."
+                 if len(pm) > 1 else "Consumer precedents.")
+    prec_sub = (f"{len(prec)} deals, {years[0]}–{years[-1]}. Multiples come from each target's filings before the "
+                f"announcement; private targets show the deal value only.")
 
     priv = json.loads((data_dir / "private.json").read_text())["companies"]
     priv.sort(key=lambda r: -(r["valuation"] or 0))
@@ -165,10 +182,11 @@ def compute(data_dir):
         "sections": {
             "summary": {"headline": headline, "sub": sub, "total_chg": total_chg, "med_chg": med_chg,
                         "med_evrev": med_evrev, "categories": cats},
-            "companies": {"headline": f"{len(companies)} public companies, five categories.",
+            "companies": {"headline": f"{len(companies)} public companies, {WORDS.get(len(cats), len(cats))} categories.",
                           "sub": f"Prices as of {day_label(as_of)} close; financials = latest 12 months reported.",
                           "rows": companies},
             "deals": {"headline": deal_head, "sub": deal_sub, "rows": deals, "window": deals_src["window"]},
+            "precedents": {"headline": prec_head, "sub": prec_sub, "rows": prec},
             "private": {"headline": "The biggest private AI valuations.",
                         "sub": "Set by investors in each round; not directly comparable to public market caps.",
                         "rows": priv},

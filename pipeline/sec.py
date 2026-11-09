@@ -47,7 +47,7 @@ def _get(url, ua):
     return json.loads(body)
 
 
-def fetch(tickers, out_dir):
+def fetch(tickers, out_dir, cik_overrides=None):
     ua = os.environ.get("SEC_USER_AGENT", "").strip()
     if not ua or "@" not in ua:
         print("    SEC_USER_AGENT not set (needs a contact email); keeping previous SEC files")
@@ -55,6 +55,7 @@ def fetch(tickers, out_dir):
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     ciks = {v["ticker"].upper(): int(v["cik_str"]) for v in _get(TICKERS_URL, ua).values()}
+    ciks.update({t.upper(): int(c) for t, c in (cik_overrides or {}).items()})  # delisted companies keep their filings
     failed = []
     for t in tickers:
         cik = ciks.get(t.upper())

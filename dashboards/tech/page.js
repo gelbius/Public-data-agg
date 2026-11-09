@@ -8,7 +8,7 @@
   const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
 
   // ---- formatting
-  const money = (v) => v == null ? "—" : Math.abs(v) >= 1e12 ? `$${(v / 1e12).toFixed(2)}T` : Math.abs(v) >= 1e9 ? `$${(v / 1e9).toFixed(v >= 1e11 ? 0 : 1)}B` : `$${(v / 1e6).toFixed(0)}M`;
+  const money = (v) => v == null ? "—" : v < 0 ? `−${money(-v)}` : Math.abs(v) >= 1e12 ? `$${(v / 1e12).toFixed(2)}T` : Math.abs(v) >= 1e9 ? `$${(v / 1e9).toFixed(v >= 1e11 ? 0 : 1)}B` : `$${(v / 1e6).toFixed(0)}M`;
   const mult = (v) => v == null ? "n/m" : v >= 100 ? `${v.toFixed(0)}×` : `${v.toFixed(1)}×`;
   const pct = (v) => v == null ? "—" : `${v.toFixed(0)}%`;
   const VALUE_FULL = 50; // a ±50% move earns the strongest color
@@ -118,8 +118,7 @@
       b.addEventListener("click", () => {
         current = o;
         host.querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x.textContent === o)));
-        tableEl._filter = o === "All" ? null : (r) => test(r, o);
-        tableEl._render();
+        [].concat(tableEl).forEach((t) => { t._filter = o === "All" ? null : (r) => test(r, o); t._render(); });
       });
       host.append(b);
     });
@@ -158,34 +157,72 @@
 
   // ---- deals
   const R = S.deals.rows;
+  const CONSUMER = new Set(S.summary.categories.map((c) => c.name).filter((n) => n.startsWith("Consumer")));
   const dealCell = (r) => {
     const s = el("span", "co");
     s.append(el("b", "", r.target), el("small", "", ` ← ${r.acquirer}`));
-    if (r.segment === "Consumer subscription") s.append(el("span", "tag", "Consumer subscription"));
+    if (CONSUMER.has(r.segment)) s.append(el("span", "tag", r.segment));
     return s;
   };
   const dealValue = (r) => {
     if (r.type === "Venture round") return `${money(r.raised)} at ${money(r.value)}`;
     if (r.value == null) return "Undisclosed";
     const v = r.ev != null ? money(r.ev) + (r.ev_is_derived ? "†" : "") : money(r.value);
-    return r.value_note ? `${v}+` : v;
+    return r.value_note ? `${v}+` : r.approx ? `~${v}` : v;
   };
   const link = (r) => { const a = el("a", "src-link", "Source ↗"); a.href = r.source; a.target = "_blank"; a.rel = "noopener"; return a; };
-  table($("#deal-table"), [
-    { key: "date", label: "Announced", sort: (r) => r.date, cell: (r) => r.date_precision === "month" ? monthLabel(r.date) : dayLabel(r.date) },
+  const announced = (r) => r.date_precision === "month" ? monthLabel(r.date) : dayLabel(r.date);
+  const dEvRev = (r) => r.ev_rev ? mult(r.ev_rev) : (r.target_revenue ? "n/m" : "—");
+  const dEvEbitda = (r) => r.ev_ebitda ? withMark(mult(r.ev_ebitda), r.da_partial) : (r.target_revenue ? "n/m" : "—");
+  const dMargin = (r) => r.target_revenue ? pct(r.target_margin) : "—";
+  // numbers first, so the financials are visible without scrolling
+  const dealCols = [
+    { key: "date", label: "Announced", sort: (r) => r.date, cell: announced },
     { key: "deal", label: "Target ← buyer", cls: "sticky", sort: (r) => r.target.toLowerCase(), cell: dealCell },
-    { key: "type", label: "Type", cls: "left", sort: (r) => r.type, cell: (r) => r.type },
-    { key: "seg", label: "Segment", cls: "left", sort: (r) => r.segment, cell: (r) => r.segment },
     { key: "value", label: "Value", sort: (r) => r.ev ?? r.value, cell: dealValue },
-    { key: "evrev", label: "EV/Rev", sort: (r) => r.ev_rev, cell: (r) => r.ev_rev ? mult(r.ev_rev) : (r.target_revenue ? "n/m" : "—") },
-    { key: "evebitda", label: "EV/EBITDA", sort: (r) => r.ev_ebitda, cell: (r) => r.ev_ebitda ? withMark(mult(r.ev_ebitda), r.da_partial) : (r.target_revenue ? "n/m" : "—") },
+    { key: "evrev", label: "EV/Rev", sort: (r) => r.ev_rev, cell: dEvRev },
+    { key: "evebitda", label: "EV/EBITDA", sort: (r) => r.ev_ebitda, cell: dEvEbitda },
     { key: "rev", label: "Target revenue", sort: (r) => r.target_revenue, cell: (r) => money(r.target_revenue) },
     { key: "ebitda", label: "Target EBITDA", sort: (r) => r.target_ebitda, cell: (r) => r.target_revenue ? money(r.target_ebitda) : "—" },
-    { key: "margin", label: "EBITDA margin", sort: (r) => r.target_margin, cell: (r) => r.target_revenue ? pct(r.target_margin) : "—" },
+    { key: "margin", label: "EBITDA margin", sort: (r) => r.target_margin, cell: dMargin },
+    { key: "type", label: "Type", cls: "left", sort: (r) => r.type, cell: (r) => r.type },
+    { key: "seg", label: "Segment", cls: "left", sort: (r) => r.segment, cell: (r) => r.segment },
     { key: "note", label: "Notes", cls: "left note", sort: null, cell: (r) => r.note || "" },
     { key: "src", label: "Source", sort: null, cell: link },
-  ], R, { key: "date", dir: -1 });
-  filters($("#deal-filters"), [...new Set(R.map((r) => r.type))], $("#deal-table"), (r, o) => r.type === o);
+  ];
+  // phone view: one card per deal, key numbers in a grid (no sideways scrolling)
+  function dealCards(host, rows) {
+    function render() {
+      host.textContent = "";
+      rows.filter((r) => !host._filter || host._filter(r)).forEach((r) => {
+        const card = el("article", "dcard");
+        const top = el("div", "dc-top"); top.append(el("span", "", announced(r)), el("span", "dc-type", r.type));
+        const name = el("div", "dc-name"); name.append(dealCell(r));
+        const stats = el("dl", "dc-stats");
+        const stat = (label, v) => { const d = el("div"); d.append(el("dt", "", label)); const dd = el("dd"); dd.append(v instanceof Node ? v : document.createTextNode(v)); d.append(dd); stats.append(d); };
+        stat("Value", dealValue(r));
+        if (r.target_revenue) {
+          stat("EV / revenue", dEvRev(r)); stat("EV / EBITDA", dEvEbitda(r));
+          stat("Revenue (TTM)", money(r.target_revenue)); stat("EBITDA", money(r.target_ebitda)); stat("EBITDA margin", dMargin(r));
+        }
+        card.append(top, name, stats);
+        if (!r.target_revenue && r.type !== "Venture round") card.append(el("p", "dc-nofin", "Target financials not published (private company)."));
+        if (r.note) card.append(el("p", "dc-note", r.note));
+        card.append(link(r));
+        host.append(card);
+      });
+    }
+    host._render = render;
+    render();
+  }
+  table($("#deal-table"), dealCols, R, { key: "date", dir: -1 });
+  dealCards($("#deal-cards"), R);
+  filters($("#deal-filters"), [...new Set(R.map((r) => r.type))], [$("#deal-table"), $("#deal-cards")], (r, o) => r.type === o);
+
+  // ---- consumer precedents
+  const PR = S.precedents.rows;
+  table($("#prec-table"), dealCols, PR, { key: "date", dir: -1 });
+  dealCards($("#prec-cards"), PR);
 
   // ---- private valuations
   table($("#priv-table"), [
@@ -204,7 +241,7 @@
     "All multiples use the trailing 12 months (TTM): the latest four reported quarters, from each company's SEC filings. Forward estimates aren't used (they come from paid analyst data).",
     "EBITDA = reported operating income + depreciation and amortization (GAAP; not the adjusted figures companies promote, so stock-based compensation and one-off charges are included).",
     "EV = market cap + total debt − cash and short-term investments, from the latest balance sheet. Past multiples use the financials that had been reported by then (results assumed public about 35 days after a quarter ends) and today's share count.",
-    "Universe: 36 US-listed companies chosen to represent each category. Foreign filers (e.g. TSMC, Arm, Spotify) are excluded because their reports use different accounting formats.",
+    `Universe: ${S.companies.rows.length} US-listed companies chosen to represent each category. Foreign filers (e.g. TSMC, Arm, Spotify) are excluded because their reports use different accounting formats.`,
     "Deals: a curated list of notable transactions announced in the six months to the snapshot date, from SEC filings, company announcements and press coverage (each row links its source). Private valuations are as reported for each funding round.",
     "Not investment advice.",
   ].forEach((t) => $("#method").append(el("li", "", t)));

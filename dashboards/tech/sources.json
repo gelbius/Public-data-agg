@@ -1,5 +1,5 @@
 {
-  "_doc": "Dashboard 03: tech valuations & deals. Financials from SEC EDGAR (needs SEC_USER_AGENT); prices from data/tech/prices_snapshot.json, built by pipeline/tech_snapshot.py. manual_refresh: the daily GitHub job skips this dashboard; a scheduled Claude session refreshes it every Monday and Friday (prices via the brokerage connector, then python3 pipeline/fetch.py tech --force).",
+  "_doc": "Dashboard 03: tech valuations & deals. Financials from SEC EDGAR (needs SEC_USER_AGENT); prices from data/tech/prices_snapshot.json, built by pipeline/tech_snapshot.py. manual_refresh: the daily GitHub job skips this dashboard; a scheduled Claude session refreshes it every Monday and Friday (prices via the brokerage connector, then python3 pipeline/fetch.py tech --force). sec.cik maps delisted tickers (precedent deal targets) to their SEC company IDs.",
   "fred": {},
   "categories": {
     "AI platforms": [
@@ -46,7 +46,17 @@
       "GRND",
       "LIF",
       "COUR",
-      "CHGG"
+      "CHGG",
+      "PTON",
+      "HIMS"
+    ],
+    "Consumer marketplaces & services": [
+      "ETSY",
+      "TRIP",
+      "YELP",
+      "ANGI",
+      "CMPR",
+      "NXDR"
     ]
   },
   "sec": {
@@ -87,13 +97,27 @@
       "LIF",
       "COUR",
       "CHGG",
+      "PTON",
+      "HIMS",
+      "ETSY",
+      "TRIP",
+      "YELP",
+      "ANGI",
+      "CMPR",
+      "NXDR",
       "LITE",
       "PTC",
       "BRZE",
       "CART",
       "SYNA",
-      "ARX"
-    ]
+      "ARX",
+      "SFLY",
+      "ME"
+    ],
+    "cik": {
+      "SFLY": 1125920,
+      "ME": 1804591
+    }
   },
   "deal_targets": [
     "LITE",
@@ -101,7 +125,9 @@
     "BRZE",
     "CART",
     "SYNA",
-    "ARX"
+    "ARX",
+    "SFLY",
+    "ME"
   ],
   "manual_refresh": true
 }

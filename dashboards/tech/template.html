@@ -23,7 +23,7 @@
       Public Data <small>/ Tech valuations</small>
     </a>
     <nav class="nav" aria-label="Sections">
-      <a href="#sec-summary">Summary</a><a href="#sec-companies">Companies</a><a href="#sec-deals">Deals</a>
+      <a href="#sec-summary">Summary</a><a href="#sec-companies">Companies</a><a href="#sec-deals">Deals</a><a href="#sec-precedents">Precedents</a>
       <a href="#sec-private">Private</a><a href="#sec-method">Method</a>
     </nav>
     <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle dark mode">☾</button>
@@ -86,7 +86,21 @@
       </div>
       <div class="filters" id="deal-filters" role="group" aria-label="Filter deals by type"></div>
       <div class="table-scroll"><table class="comp" id="deal-table"></table></div>
+      <div class="deal-cards" id="deal-cards"></div>
       <p class="footnote">Value is enterprise value where announced; where only the equity value was announced and the target is public, EV adds its debt and subtracts its cash (marked †). Target financials and multiples come from the target's own SEC filings for the 12 months before the announcement. Blank = not disclosed.</p>
+    </article>
+  </section>
+
+  <section class="section wrap" id="sec-precedents">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Consumer precedents</span>
+        <h2 data-k="precedents.headline"></h2>
+        <p class="sub" data-k="precedents.sub"></p>
+      </div>
+      <div class="table-scroll"><table class="comp" id="prec-table"></table></div>
+      <div class="deal-cards" id="prec-cards"></div>
+      <p class="footnote">Older deals for consumer subscription and personalized-goods businesses, plus this window's consumer deals. Values are as announced (~ = reported by press, not confirmed). Multiples use the target's trailing 12 months before the announcement.</p>
     </article>
   </section>
 

@@ -1,0 +1,17 @@
+{
+ "_doc": "Older consumer-subscription and personalized-goods deals used as valuation precedents. Values as announced (USD). For targets that filed with the SEC, revenue, EBITDA and multiples are computed in compute.py from the target's own filings for the 12 months before the announcement. Recent consumer deals from deals.json are added automatically. Each row needs a source link.",
+ "deals": [
+  {"date": "2025-06-13", "date_precision": "month", "acquirer": "TTAM Research Institute", "target": "23andMe", "target_ticker": "ME",
+   "type": "Bankruptcy sale", "segment": "Consumer subscription", "value_kind": "ev", "value": 305e6, "consideration": "Cash",
+   "note": "Founder-led nonprofit bought substantially all assets out of bankruptcy, outbidding Regeneron ($256M). Court-approved July 2025.",
+   "source": "https://www.medtechdive.com/news/anne-wojcicki-buy-23andme-bankruptcy/750931/"},
+  {"date": "2021-02-24", "acquirer": "Francisco Partners", "target": "MyHeritage", "target_ticker": null,
+   "type": "Buyout", "segment": "Consumer subscription", "value_kind": "ev", "value": 600e6, "approx": true, "consideration": "Undisclosed",
+   "note": "Price reported by press (about $600M); not confirmed by the company.",
+   "source": "https://techcrunch.com/2021/02/24/francisco-partners-is-acquiring-myheritage-sources-say-for-600m/"},
+  {"date": "2019-06-10", "acquirer": "Apollo", "target": "Shutterfly", "target_ticker": "SFLY",
+   "type": "Take-private", "segment": "Personalized goods", "value_kind": "ev", "value": 2.7e9, "consideration": "Cash",
+   "note": "$51.00 per share, 31% premium to the unaffected price; enterprise value about $2.7B. Closed September 2019.",
+   "source": "https://shutterflyinc.com/shutterfly-inc-agrees-acquired-certain-funds-managed-affiliates-apollo-global-management-cash-transaction-enterprise-value-2-7-billion/"}
+ ]
+}
