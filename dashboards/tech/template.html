@@ -50,7 +50,10 @@
         <p class="sub" data-k="summary.sub"></p>
       </div>
       <div class="head-row">
-        <div class="tkey" id="time-key" aria-label="Time: faint is a year ago, solid is now"></div>
+        <div class="keys">
+          <div class="tkey" id="time-key" aria-label="Time: faint is a year ago, solid is now"></div>
+          <div class="mkey" id="dir-key" aria-label="Blue means the multiple expanded, orange means it compressed"></div>
+        </div>
         <span id="key-summary"></span>
       </div>
       <div class="trio duo">
@@ -70,7 +73,7 @@
       </div>
       <div class="filters" id="cat-filters" role="group" aria-label="Filter by category"></div>
       <div class="table-scroll"><table class="comp" id="comp-table"></table></div>
-      <p class="footnote">Tap a column to sort. n/m = not meaningful (negative earnings or EBITDA). * EBITDA uses depreciation only (the company's amortization wasn't reported every quarter), so it's slightly understated. Multiple changes are shown neutral: a higher multiple isn't simply good or bad.</p>
+      <p class="footnote">Tap a column to sort. n/m = not meaningful (negative earnings or EBITDA). * EBITDA uses depreciation only (the company's amortization wasn't reported every quarter), so it's slightly understated. Multiple changes use blue (expanded) and orange (compressed) rather than green and red: a higher multiple isn't simply good or bad.</p>
     </article>
   </section>
 

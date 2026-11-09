@@ -449,3 +449,22 @@ table.comp th.left .th-sort { text-align: left; }
 sup.fn { color: var(--accent-ink); font-weight: 600; margin-left: 1px; }
 #sec-summary .head-row { align-items: center; margin-bottom: 8px; }
 #sec-summary .head-row .legend { margin: 0; }
+
+/* multiple direction: blue = expanded, orange = compressed (neutral pair, distinct from good/bad green/red) */
+:root { --mx-up: var(--s-ff); --mx-down: var(--s-cpi); }
+.db-seg.mx-up { --a: color-mix(in srgb, var(--mx-up) 20%, transparent); --b: color-mix(in srgb, var(--mx-up) 55%, transparent); --c: var(--mx-up); }
+.db-seg.mx-down { --a: color-mix(in srgb, var(--mx-down) 20%, transparent); --b: color-mix(in srgb, var(--mx-down) 55%, transparent); --c: var(--mx-down); }
+.db-seg.arrow.mx-up.r::after { border-left-color: var(--mx-up); } .db-seg.arrow.mx-up.l::after { border-right-color: var(--mx-up); }
+.db-seg.arrow.mx-down.r::after { border-left-color: var(--mx-down); } .db-seg.arrow.mx-down.l::after { border-right-color: var(--mx-down); }
+.db-seg.first:not(.arrow) { --c: var(--b); }
+.dumbbells .dd-12 { background: var(--ink-dim); }
+.dd.mx-up { background: var(--mx-up); } .dd.mx-down { background: var(--mx-down); }
+.tkey .dd, .tkey .tk-seg { --s-accent: var(--ink-dim); }
+.tkey .dd-now { background: var(--ink); }
+.tkey .tk-seg.last { background: linear-gradient(to right, var(--b), var(--ink)); }
+.keys { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 28px; }
+.mkey { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; color: var(--ink-soft); padding-top: 1px; }
+.mk-item { display: inline-flex; align-items: center; gap: 6px; }
+.mk-item b { font-size: .7rem; }
+.mk-item.mx-up b, .pill.mx-up { color: var(--mx-up); } .mk-item.mx-down b, .pill.mx-down { color: var(--mx-down); }
+.pill.mx-up, .pill.mx-down { border-color: transparent; }

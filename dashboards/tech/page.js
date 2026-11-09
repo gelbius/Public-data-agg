@@ -29,6 +29,11 @@
       host.append(stop);
     });
   })($("#time-key"));
+  (function dirKey(host) {
+    [["mx-up", "▲", "Multiple expanded"], ["mx-down", "▼", "Multiple compressed"]].forEach(([cls, arrow, label]) => {
+      const item = el("span", `mk-item ${cls}`); item.append(el("b", "", arrow), el("span", "", label)); host.append(item);
+    });
+  })($("#dir-key"));
 
   const valueBadge = (v, label) => v == null ? el("span", "", "—")
     : viz.deltaBadge(v, { goodUp: true, full: VALUE_FULL, text: `${Math.abs(v).toFixed(0)}%`, title: `${label}: ${v >= 0 ? "+" : ""}${v.toFixed(1)}%` });
@@ -46,7 +51,7 @@
       const pts = ["12m", "6m", "now"].map((k) => [k, c[key][k]]).filter(([, v]) => v != null);
       pts.slice(1).forEach(([k, v], i) => {
         const a = (pts[i][1] / max) * 100, b = (v / max) * 100;
-        const seg = el("span", `db-seg ${b >= a ? "r" : "l"} ${k === "now" ? "last" : "first"}`);
+        const seg = el("span", `db-seg ${b >= a ? "r" : "l"} ${k === "now" ? "last" : "first"} ${b >= a ? "mx-up" : "mx-down"}`);
         seg.style.left = `${Math.min(a, b)}%`; seg.style.width = `${Math.abs(b - a)}%`;
         if (k === "now" && Math.abs(b - a) > 4) seg.classList.add("arrow");
         track.append(seg);
@@ -54,7 +59,9 @@
       ["12m", "6m", "now"].forEach((k) => {
         const v = c[key][k];
         if (v == null) return;
-        const dot = el("span", `dd dd-${k === "now" ? "now" : k === "6m" ? "6" : "12"}`);
+        const prev = k === "now" ? (c[key]["6m"] ?? c[key]["12m"]) : k === "6m" ? c[key]["12m"] : null;
+        const dirCls = prev == null ? "" : v >= prev ? " mx-up" : " mx-down";
+        const dot = el("span", `dd dd-${k === "now" ? "now" : k === "6m" ? "6" : "12"}${dirCls}`);
         dot.style.left = `${(v / max) * 100}%`;
         dot.title = `${k === "now" ? "Now" : k === "6m" ? "6 months ago" : "12 months ago"}: ${fmt(v)}`;
         track.append(dot);
@@ -121,7 +128,16 @@
   // ---- companies
   const C = S.companies.rows;
   const withMark = (text, on) => { const s = el("span", "", text); if (on) s.append(el("sup", "fn", "*")); return s; };
-  const multDelta = (v) => v == null ? "—" : `${v >= 0 ? "+" : "−"}${Math.abs(v).toFixed(1)}×`;
+  const MULT_FULL = 50; // a ±50% change in the multiple earns the deepest tint
+  const multDelta = (r, k) => {
+    const v = r.mult_chg[k].ev_rev, then = r.hist[k] && r.hist[k].ev_rev;
+    if (v == null) return "—";
+    const pctChg = then ? (v / then) * 100 : 0, depth = Math.min(1, Math.abs(pctChg) / MULT_FULL);
+    const p = el("span", `pill ${v >= 0 ? "mx-up" : "mx-down"}`, `${v >= 0 ? "▲" : "▼"} ${Math.abs(v).toFixed(1)}×`);
+    p.style.background = `color-mix(in srgb, var(${v >= 0 ? "--mx-up" : "--mx-down"}) ${Math.round(8 + 34 * depth)}%, transparent)`;
+    p.title = `EV/revenue ${v >= 0 ? "expanded" : "compressed"} ${Math.abs(pctChg).toFixed(0)}% (from ${mult(then)} to ${mult(r.ev_rev)})`;
+    return p;
+  };
   const nameCell = (r) => { const s = el("span", "co"); s.append(el("b", "", r.name), el("small", "", ` ${r.ticker}`)); return s; };
   table($("#comp-table"), [
     { key: "name", label: "Company", cls: "sticky", sort: (r) => r.name.toLowerCase(), cell: nameCell },
@@ -135,8 +151,8 @@
     { key: "margin", label: "EBITDA margin", sort: (r) => r.margin, cell: (r) => pct(r.margin) },
     { key: "c6", label: "Value 6m", sort: (r) => r.chg["6m"], cell: (r) => valueBadge(r.chg["6m"], "6-month change") },
     { key: "c12", label: "Value 12m", sort: (r) => r.chg["12m"], cell: (r) => valueBadge(r.chg["12m"], "12-month change") },
-    { key: "m6", label: "EV/Rev Δ 6m", sort: (r) => r.mult_chg["6m"].ev_rev, cell: (r) => multDelta(r.mult_chg["6m"].ev_rev) },
-    { key: "m12", label: "EV/Rev Δ 12m", sort: (r) => r.mult_chg["12m"].ev_rev, cell: (r) => multDelta(r.mult_chg["12m"].ev_rev) },
+    { key: "m6", label: "EV/Rev Δ 6m", sort: (r) => r.mult_chg["6m"].ev_rev, cell: (r) => multDelta(r, "6m") },
+    { key: "m12", label: "EV/Rev Δ 12m", sort: (r) => r.mult_chg["12m"].ev_rev, cell: (r) => multDelta(r, "12m") },
   ], C, { key: "mcap", dir: -1 });
   filters($("#cat-filters"), S.summary.categories.map((c) => c.name), $("#comp-table"), (r, o) => r.category === o);
 
