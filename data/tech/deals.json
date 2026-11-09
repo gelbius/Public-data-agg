@@ -1,5 +1,5 @@
 {
- "_doc": "Curated list of tech deals announced in the 6 months before the snapshot date. Values are as announced (USD). For public targets, multiples are computed in compute.py from the target's own SEC filings (trailing 12 months before the announcement). Updated by hand on request.",
+ "_doc": "Curated list of tech deals announced in the 6 months before the snapshot date. Values are as announced (USD). For public targets, multiples are computed in compute.py from the target's own SEC filings (trailing 12 months before the announcement). Reviewed at each scheduled refresh; every row needs a source link.",
  "window": {"start": "2026-05-09", "end": "2026-11-09"},
  "deals": [
   {"date": "2026-11-02", "acquirer": "Marvell", "target": "Lumentum", "target_ticker": "LITE", "type": "Strategic",

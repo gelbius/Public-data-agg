@@ -169,7 +169,7 @@
 
   // ---- method
   [
-    `Prices and market caps are a snapshot from the close on ${dayLabel(D.as_of)}, refreshed on request. "6 months" and "12 months" compare with the closes on ${dayLabel(D.dates["6m"])} and ${dayLabel(D.dates["12m"])} (split-adjusted).`,
+    `Prices and market caps are a snapshot from the close on ${dayLabel(D.as_of)}, refreshed every Monday and Friday after the market close. "6 months" and "12 months" compare with the closes on ${dayLabel(D.dates["6m"])} and ${dayLabel(D.dates["12m"])} (split-adjusted).`,
     "All multiples use the trailing 12 months (TTM): the latest four reported quarters, from each company's SEC filings. Forward estimates aren't used (they come from paid analyst data).",
     "EBITDA = reported operating income + depreciation and amortization (GAAP; not the adjusted figures companies promote, so stock-based compensation and one-off charges are included).",
     "EV = market cap + total debt − cash and short-term investments, from the latest balance sheet. Past multiples use the financials that had been reported by then (results assumed public about 35 days after a quarter ends) and today's share count.",

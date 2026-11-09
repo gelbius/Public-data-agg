@@ -1,6 +1,6 @@
 # Public Data Dashboards
 
-Dashboards built from **public data**. Every headline is computed from the source numbers, so nothing on the pages is typed by hand. Dashboards 01–02 use government data and refresh themselves every day; dashboard 03 is a snapshot refreshed on request.
+Dashboards built from **public data**. Every headline is computed from the source numbers, so nothing on the pages is typed by hand. Dashboards 01–02 use government data and refresh themselves every day; dashboard 03 is refreshed every Monday and Friday after the market close.
 
 | # | Dashboard | What it shows |
 |---|---|---|
@@ -42,6 +42,7 @@ A GitHub Action (`.github/workflows/refresh-data.yml`) runs steps 1–3 every da
 pipeline/            shared tools
   fetch.py           download a dashboard's data (FRED, BLS, Census BTOS, Zillow, SEC)
   sec.py             SEC EDGAR company financials (needs SEC_USER_AGENT, see below)
+  tech_snapshot.py   validate and write dashboard 03's price snapshot
   btos.py            extract Census BTOS questions by wording
   xlsx.py            tiny Excel reader (standard library only)
   series.py          time-series helpers (year-over-year, streaks, "lowest since"…)
@@ -73,16 +74,22 @@ python3 -m http.server 8000 -d dist # open http://localhost:8000
 
 ## Refreshing dashboard 03 (tech)
 
-Dashboard 03 is a snapshot, not a daily feed, so the daily job skips it.
+The daily GitHub job skips dashboard 03. A scheduled Claude session refreshes it every Monday and Friday at 5:47 PM Eastern, after the market close:
 
-- **Prices and market caps** live in `data/tech/prices_snapshot.json`, pulled from a brokerage data connector when someone asks for a refresh.
-- **Financials** come from SEC EDGAR. The SEC requires a contact email in the request header. Set it in your shell only; never commit it:
+1. Pulls market caps, share counts and split-adjusted closes (now, 6 and 12 months ago) through the owner's brokerage data connector, then runs `python3 pipeline/tech_snapshot.py build raw.json`. The script refuses to write if a ticker is missing or a market cap disagrees with shares × price.
+2. Re-pulls SEC filings: `python3 pipeline/fetch.py tech --force`. The SEC requires a contact email in the request header. It comes from the `SEC_USER_AGENT` environment variable, set privately on the cloud environment. Never commit it.
+3. Reviews the curated lists (`data/tech/deals.json`, `data/tech/private.json`). It drops deals older than six months and adds new ones only with a primary source link.
+4. Rebuilds, checks the page and pushes to `main`.
 
-  ```bash
-  export SEC_USER_AGENT="public-data-agg dashboard you@example.com"
-  python3 pipeline/fetch.py tech --force
-  ```
-- **Deals and private valuations** are curated by hand, with a source link per row, in `data/tech/deals.json` and `data/tech/private.json`.
+To run it yourself:
+
+```bash
+export SEC_USER_AGENT="public-data-agg dashboard you@example.com"
+python3 pipeline/tech_snapshot.py dates          # the three dates to pull closes for
+python3 pipeline/tech_snapshot.py build raw.json # after writing raw.json (format in the script)
+python3 pipeline/fetch.py tech --force
+python3 pipeline/build.py
+```
 
 ## Publish with Cloudflare Pages
 

@@ -1,5 +1,5 @@
 {
-  "_doc": "Dashboard 03: tech valuations & deals. Financials from SEC EDGAR (needs SEC_USER_AGENT); prices from data/tech/prices_snapshot.json (manual snapshot). manual_refresh: prices come from a manual snapshot, so the daily job skips this dashboard and SEC data is re-pulled together with prices on request (python3 pipeline/fetch.py tech --force, with SEC_USER_AGENT set).",
+  "_doc": "Dashboard 03: tech valuations & deals. Financials from SEC EDGAR (needs SEC_USER_AGENT); prices from data/tech/prices_snapshot.json, built by pipeline/tech_snapshot.py. manual_refresh: the daily GitHub job skips this dashboard; a scheduled Claude session refreshes it every Monday and Friday (prices via the brokerage connector, then python3 pipeline/fetch.py tech --force).",
   "fred": {},
   "categories": {
     "AI platforms": [

@@ -1,5 +1,5 @@
 {
- "_doc": "Latest publicly reported valuations of large private AI companies. Funding-round valuations are set by investors in that round and are not comparable to public market caps. Updated by hand on request.",
+ "_doc": "Latest publicly reported valuations of large private AI companies. Funding-round valuations are set by investors in that round and are not comparable to public market caps. Reviewed at each scheduled refresh; every row needs a source link.",
  "companies": [
   {"name": "Anthropic", "category": "AI platforms", "date": "2026-05-28", "valuation": 965e9, "raised": 65e9, "round": "Series H",
    "note": "Reported talks in September at a higher valuation were not confirmed as closed.",
