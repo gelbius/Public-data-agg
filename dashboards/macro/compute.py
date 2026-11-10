@@ -7,7 +7,7 @@ contains a hand-typed statistic, so a data refresh can never leave stale prose.
 import json
 from pathlib import Path
 
-from series import Series, spans, month_label, quarter_label, day_label
+from series import _shift_month, Series, spans, month_label, quarter_label, day_label
 
 TITLE = "The Consumer: An Economic State of the Union"
 SLUG = "macro"
@@ -65,7 +65,7 @@ def compute(data_dir):
     direction = "rising again" if jan is not None and last_cpi[1] > jan + 0.25 else (
         "cooling" if jan is not None and last_cpi[1] < jan - 0.25 else "holding steady")
     hero_head = f"Inflation is {direction}."
-    hero_sub = (f"CPI {pct(last_cpi[1])} ({month_label(last_cpi[0])})"
+    hero_sub = (f"CPI {pct(last_cpi[1])} ({month_label(last_cpi[0])}{', est.' if last_cpi[0] in cpi.est else ''})"
                 + (f", from {pct(jan)} in January" if jan is not None and direction != "holding steady" else "")
                 + f". Unemployment {pct(ur.last[1])}. Fed funds {pct(ff_now[1], 2)}")
     if ff_prev_change and ff_prev_change.get("previous_same_dir"):
@@ -258,12 +258,20 @@ def _when(d, weekly):
 def _tile(label, s, kind, good_up, unit, weekly=False, full=1.0):
     d, v = s.last
     ago = s.year_ago()
+    est = False
+    if ago is None and not weekly:  # a year-ago month never published: bridge it with the months either side
+        base = f"{int(d[:4]) - 1}{d[4:]}"
+        nb = [s.get(_shift_month(base, k)) for k in (-1, 1)]
+        if None not in nb:
+            ago, est = (base, sum(nb) / 2), True
     delta = None
     if ago:
         if unit == "pp":
             delta = {"value": round(v - ago[1], 2), "text": f"{v - ago[1]:+.2f} pt"}
         else:
             delta = {"value": round((v / ago[1] - 1) * 100, 1), "text": f"{(v / ago[1] - 1) * 100:+.1f}%"}
+        if est:
+            delta["text"] += " (est.)"
     spark_src = s.monthly_mean() if weekly else s
     spark = [[dd, round(vv, 2)] for dd, vv in spark_src.obs[-25:]]
     if delta:
@@ -274,8 +282,13 @@ def _tile(label, s, kind, good_up, unit, weekly=False, full=1.0):
 
 def _tile_from_derived(label, yoy, sid, good_up, full=1.0):
     d, v = yoy.last
-    ago = yoy.get(f"{int(d[:4]) - 1}{d[4:]}")
-    delta = ({"value": round(v - ago, 2), "text": f"{v - ago:+.2f} pt", "full": full}
+    base = f"{int(d[:4]) - 1}{d[4:]}"
+    ago, est = yoy.get(base), d in yoy.est
+    if ago is None:  # a year-ago month never published: bridge it with the months either side
+        nb = [yoy.get(_shift_month(base, k)) for k in (-1, 1)]
+        if None not in nb:
+            ago, est = sum(nb) / 2, True
+    delta = ({"value": round(v - ago, 2), "text": f"{v - ago:+.2f} pt" + (" (est.)" if est else ""), "full": full}
              if ago is not None else None)
     return {"label": label, "value": f"{v:.1f}%", "when": month_label(d), "delta": delta,
             "good_up": good_up, "spark": [[dd, round(vv, 2)] for dd, vv in yoy.obs[-25:]], "id": sid}

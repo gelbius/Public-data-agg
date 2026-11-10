@@ -6,13 +6,20 @@ import csv
 from pathlib import Path
 
 
+def _shift_month(d, n):
+    """'YYYY-MM-01' moved n months."""
+    y, m = divmod(int(d[:4]) * 12 + int(d[5:7]) - 1 + n, 12)
+    return f"{y:04d}-{m + 1:02d}-01"
+
+
 class Series:
     """A sorted run of (date, value) observations with a few convenience methods."""
 
-    def __init__(self, sid, obs):
+    def __init__(self, sid, obs, est=()):
         self.id = sid
         self.obs = sorted(obs)
         self.map = dict(self.obs)
+        self.est = set(est)  # dates whose value rests on an estimate (see yoy_pct)
 
     @classmethod
     def load(cls, data_dir, sid):
@@ -27,7 +34,7 @@ class Series:
         return self.obs[-1]
 
     def since(self, start):
-        return Series(self.id, [(d, v) for d, v in self.obs if d >= start])
+        return Series(self.id, [(d, v) for d, v in self.obs if d >= start], self.est)
 
     def get(self, d):
         return self.map.get(d)
@@ -43,13 +50,24 @@ class Series:
 
     # --- transforms ---------------------------------------------------------
     def yoy_pct(self):
-        """Percent change vs the same month one year earlier (monthly data)."""
-        out = []
+        """Percent change vs the same month one year earlier (monthly data).
+
+        If that base month was never published (e.g. BLS skipped October 2025 during the
+        government shutdown) but the months either side exist, the base is estimated as their
+        geometric mean and the result's date is recorded in .est so pages can label it.
+        """
+        out, est = [], set()
         for d, v in self.obs:
-            prev = self.map.get(f"{int(d[:4]) - 1}{d[4:]}")
+            base = f"{int(d[:4]) - 1}{d[4:]}"
+            prev = self.map.get(base)
+            if prev is None:
+                before, after = self.map.get(_shift_month(base, -1)), self.map.get(_shift_month(base, 1))
+                if before and after:
+                    prev = (before * after) ** 0.5
+                    est.add(d)
             if prev:
                 out.append((d, (v / prev - 1) * 100))
-        return Series(self.id + "_yoy", out)
+        return Series(self.id + "_yoy", out, est)
 
     def monthly_mean(self):
         """Average weekly/daily observations into calendar months (dated the 1st)."""
