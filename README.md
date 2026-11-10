@@ -78,7 +78,7 @@ The daily GitHub job skips dashboard 03. A scheduled Claude session refreshes it
 
 1. Pulls market caps, share counts and split-adjusted closes (now, 6 and 12 months ago) through the owner's brokerage data connector, then runs `python3 pipeline/tech_snapshot.py build raw.json`. The script refuses to write if a ticker is missing or a market cap disagrees with shares × price.
 2. Re-pulls SEC filings: `python3 pipeline/fetch.py tech --force`. The SEC requires a contact email in the request header. It comes from the `SEC_USER_AGENT` environment variable, set privately on the cloud environment. Never commit it.
-3. Reviews the curated lists (`data/tech/deals.json`, `data/tech/private.json`). It drops deals older than six months and adds new ones only with a primary source link.
+3. Reviews the curated lists (`data/tech/deals.json`, `data/tech/private.json`, `data/tech/precedents.json`). It drops deals older than six months, moving consumer deals into the precedents list, and adds new ones only with a primary source link. Delisted precedent targets keep their SEC filings via `sec.cik` in `sources.json`.
 4. Rebuilds, checks the page and pushes to `main`.
 
 To run it yourself:

@@ -42,6 +42,13 @@
    "close_6m": 141.77,
    "close_12m": 134.65
   },
+  "ANGI": {
+   "market_cap": 274033104,
+   "shares": 40961600,
+   "close_now": 6.69,
+   "close_6m": 5.83,
+   "close_12m": 11.29
+  },
   "AVGO": {
    "market_cap": 1525174785000,
    "shares": 4773630000,
@@ -62,6 +69,13 @@
    "close_now": 0.6059,
    "close_6m": 1.16,
    "close_12m": 0.8909
+  },
+  "CMPR": {
+   "market_cap": 1359325410,
+   "shares": 24621000,
+   "close_now": 55.21,
+   "close_6m": 91.67,
+   "close_12m": 61.21
   },
   "COUR": {
    "market_cap": 951141514.06,
@@ -112,6 +126,13 @@
    "close_6m": 107.99,
    "close_12m": 201.21
   },
+  "ETSY": {
+   "market_cap": 7624049796,
+   "shares": 86205900,
+   "close_now": 88.44,
+   "close_6m": 64.38,
+   "close_12m": 59.09
+  },
   "GOOGL": {
    "market_cap": 3521935220000,
    "shares": 12223000000,
@@ -125,6 +146,13 @@
    "close_now": 13.39,
    "close_6m": 15.09,
    "close_12m": 15.09
+  },
+  "HIMS": {
+   "market_cap": 5352214512,
+   "shares": 233313623,
+   "close_now": 22.94,
+   "close_6m": 28.27,
+   "close_12m": 41.03
   },
   "HPE": {
    "market_cap": 63101036189.96,
@@ -210,6 +238,13 @@
    "close_6m": 215.2,
    "close_12m": 188.15
   },
+  "NXDR": {
+   "market_cap": 781307720,
+   "shares": 386786000,
+   "close_now": 2.02,
+   "close_6m": 2.02,
+   "close_12m": 1.78
+  },
   "ORCL": {
    "market_cap": 362183577200,
    "shares": 3023740000,
@@ -223,6 +258,13 @@
    "close_now": 170.285,
    "close_6m": 137.8,
    "close_12m": 177.93
+  },
+  "PTON": {
+   "market_cap": 2651346620,
+   "shares": 445604474,
+   "close_now": 5.95,
+   "close_6m": 5.69,
+   "close_12m": 7.66
   },
   "SMCI": {
    "market_cap": 18792495218.26,
@@ -245,6 +287,13 @@
    "close_6m": 782.64,
    "close_12m": 279.35
   },
+  "TRIP": {
+   "market_cap": 838924353,
+   "shares": 117826454.142857,
+   "close_now": 7.12,
+   "close_6m": 10.45,
+   "close_12m": 15.42
+  },
   "VRT": {
    "market_cap": 77181505688.13,
    "shares": 385060395.57,
@@ -258,6 +307,13 @@
    "close_now": 289.57,
    "close_6m": 480.0,
    "close_12m": 162.955
+  },
+  "YELP": {
+   "market_cap": 1066970982,
+   "shares": 54492900,
+   "close_now": 19.58,
+   "close_6m": 27.08,
+   "close_12m": 28.91
   }
  }
 }

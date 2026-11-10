@@ -182,7 +182,7 @@ def fetch_sec(dash_dir, spec, meta):
     """SEC EDGAR financials for the dashboard's tickers -> data/<dash>/sec/<TICKER>.json."""
     import sec
     print(f"  SEC EDGAR company facts ({len(spec['tickers'])} companies)")
-    failed = sec.fetch(spec["tickers"], dash_dir / "sec")
+    failed = sec.fetch(spec["tickers"], dash_dir / "sec", spec.get("cik"))
     if failed != ["sec"]:
         meta["sec"] = {"fetched": today(), "failed": failed}
     return [] if failed == ["sec"] else []  # missing SEC data keeps old files; compute flags gaps

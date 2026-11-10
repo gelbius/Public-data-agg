@@ -115,7 +115,8 @@ def balance(facts, asof_end=None):
     cash_end, cash = None, None
     for n in CASH:
         e, v = instant(facts, n, asof_end)
-        if e and (cash_end is None or e > cash_end):
+        # latest date wins; on the same date take the larger figure (some filers tag a zero placeholder)
+        if e and (cash_end is None or e > cash_end or (e == cash_end and v > cash)):
             cash_end, cash, cash_name = e, v, n
     if cash_end and cash_name == "CashAndCashEquivalentsAtCarryingValue":
         for n in SHORT_INV:
