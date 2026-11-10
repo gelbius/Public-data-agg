@@ -123,7 +123,7 @@ class Series:
         vals = [v for d, v in self.obs if start <= d <= end]
         return sum(vals) / len(vals) if vals else None
 
-    def rows(self, digits=2):
+    def rows(self, digits=6):  # keep precision: the page rounds once, exactly like the headlines
         return [[d, round(v, digits)] for d, v in self.obs]
 
 

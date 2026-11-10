@@ -273,7 +273,7 @@ def _tile(label, s, kind, good_up, unit, weekly=False, full=1.0):
         if est:
             delta["text"] += " (est.)"
     spark_src = s.monthly_mean() if weekly else s
-    spark = [[dd, round(vv, 2)] for dd, vv in spark_src.obs[-25:]]
+    spark = [[dd, round(vv, 6)] for dd, vv in spark_src.obs[-25:]]
     if delta:
         delta["full"] = full
     return {"label": label, "value": _fmt(v, kind), "when": _when(d, weekly), "delta": delta,
@@ -291,7 +291,7 @@ def _tile_from_derived(label, yoy, sid, good_up, full=1.0):
     delta = ({"value": round(v - ago, 2), "text": f"{v - ago:+.2f} pt" + (" (est.)" if est else ""), "full": full}
              if ago is not None else None)
     return {"label": label, "value": f"{v:.1f}%", "when": month_label(d), "delta": delta,
-            "good_up": good_up, "spark": [[dd, round(vv, 2)] for dd, vv in yoy.obs[-25:]], "id": sid}
+            "good_up": good_up, "spark": [[dd, round(vv, 6)] for dd, vv in yoy.obs[-25:]], "id": sid}
 
 
 def _last_change(s):
