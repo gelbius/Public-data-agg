@@ -482,7 +482,7 @@
     }
 
     build();
-    let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(build, 200); });
+    onWidthChange(build, 200);
     return { setStep(i) { if (i === stepIdx) return; stepIdx = i; apply(false); }, rebuild: build };
   }
 
@@ -513,23 +513,33 @@
     const entry = { el, buildOption, chart: null };
     charts.push(entry);
     const io = new IntersectionObserver((items) => {
-      if (items.some((i) => i.isIntersecting)) { io.disconnect(); draw(entry); }
+      if (items.some((i) => i.isIntersecting)) { io.disconnect(); draw(entry, true); }
     }, { rootMargin: "200px" });
     io.observe(el);
     return entry;
   }
-  function draw(entry) {
+  // Charts animate once, when first scrolled into view. Later redraws (rotation, theme switch) are instant.
+  function draw(entry, animate) {
     if (entry.chart) entry.chart.dispose();
     entry.chart = echarts.init(entry.el, null, { renderer: "svg" });
-    entry.chart.setOption(entry.buildOption());
+    const option = entry.buildOption();
+    if (!animate) option.animation = false;
+    entry.chart.setOption(option);
   }
-  function redrawAll() { charts.forEach((c) => c.chart && draw(c)); }
+  function redrawAll() { charts.forEach((c) => c.chart && draw(c, false)); }
 
-  let resizeTimer;
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(redrawAll, 180);
-  });
+  // Phones fire "resize" whenever the address bar slides in or out (on taps and scrolls).
+  // Only a width change (e.g. rotating the phone) changes the layout, so ignore height-only resizes.
+  function onWidthChange(fn, delay) {
+    let w = window.innerWidth, timer;
+    window.addEventListener("resize", () => {
+      if (window.innerWidth === w) return;
+      w = window.innerWidth;
+      clearTimeout(timer);
+      timer = setTimeout(fn, delay);
+    });
+  }
+  onWidthChange(redrawAll, 180);
 
   function initThemeToggle(btn) {
     const root = document.documentElement;
