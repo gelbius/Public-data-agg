@@ -1,6 +1,6 @@
 {
  "_doc": "Curated list of tech deals announced in the 6 months before the snapshot date. Values are as announced (USD). For public targets, multiples are computed in compute.py from the target's own SEC filings (trailing 12 months before the announcement). Reviewed at each scheduled refresh; every row needs a source link.",
- "window": {"start": "2026-05-13", "end": "2026-11-13"},
+ "window": {"start": "2026-05-16", "end": "2026-11-16"},
  "deals": [
   {"date": "2026-11-05", "acquirer": "Shield AI", "target": "Echodyne", "target_ticker": null, "type": "Strategic",
    "segment": "Hardware", "value_kind": "equity", "value": 5.3e9, "consideration": "Not disclosed",
