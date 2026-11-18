@@ -1,6 +1,6 @@
 # Public Data Dashboards
 
-Dashboards built from **public data**. Every headline is computed from the source numbers, so nothing on the pages is typed by hand. Dashboards 01–02 use government data and refresh themselves every day; dashboard 03 is refreshed every Monday and Friday after the market close.
+Dashboards built from **public data**. Every headline is computed from the source numbers, so nothing on the pages is typed by hand. Dashboards 01–02 use government data and refresh themselves every day; dashboard 03 is refreshed every weekday after the market close.
 
 | # | Dashboard | What it shows |
 |---|---|---|
@@ -74,18 +74,18 @@ python3 -m http.server 8000 -d dist # open http://localhost:8000
 
 ## Refreshing dashboard 03 (tech)
 
-The daily GitHub job skips dashboard 03. A scheduled Claude session refreshes it every Monday and Friday at 5:47 PM Eastern, after the market close:
+The daily GitHub job skips dashboard 03. A scheduled Claude session refreshes it every weekday at 5:47 PM Eastern, after the market close:
 
-1. Pulls market caps, share counts and split-adjusted closes (now, 6 and 12 months ago) through the owner's brokerage data connector, then runs `python3 pipeline/tech_snapshot.py build raw.json`. The script refuses to write if a ticker is missing or a market cap disagrees with shares × price.
+1. Pulls market caps, share counts and split-adjusted closes through the owner's brokerage data connector: today, the previous trading day, 6 and 12 months ago, and month-end closes for the last 12 months (for the sector-multiples chart). Then runs `python3 pipeline/tech_snapshot.py build raw.json`. The script refuses to write if a ticker is missing or a market cap disagrees with shares × price.
 2. Re-pulls SEC filings: `python3 pipeline/fetch.py tech --force`. The SEC requires a contact email in the request header. It comes from the `SEC_USER_AGENT` environment variable, set privately on the cloud environment. Never commit it.
-3. Reviews the curated lists (`data/tech/deals.json`, `data/tech/private.json`, `data/tech/precedents.json`). It drops deals older than six months, moving consumer deals into the precedents list, and adds new ones only with a primary source link. Delisted precedent targets keep their SEC filings via `sec.cik` in `sources.json`.
+3. Reviews the curated lists. `data/tech/deals.json` keeps every deal (the page filters by date, sector and type); new deals need a primary source link, and acquired private companies get their funding history and key investors. `data/tech/quotes.json` holds investor quotes, copied word for word with a link. `data/tech/private.json` holds private valuations. Delisted deal targets keep their SEC filings via `sec.cik` in `sources.json`.
 4. Rebuilds, checks the page and pushes to `main`.
 
 To run it yourself:
 
 ```bash
 export SEC_USER_AGENT="public-data-agg dashboard you@example.com"
-python3 pipeline/tech_snapshot.py dates          # the three dates to pull closes for
+python3 pipeline/tech_snapshot.py dates          # the dates to pull closes for
 python3 pipeline/tech_snapshot.py build raw.json # after writing raw.json (format in the script)
 python3 pipeline/fetch.py tech --force
 python3 pipeline/build.py

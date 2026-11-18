@@ -1,5 +1,5 @@
 {
-  "_doc": "Dashboard 03: tech valuations & deals. Financials from SEC EDGAR (needs SEC_USER_AGENT); prices from data/tech/prices_snapshot.json, built by pipeline/tech_snapshot.py. manual_refresh: the daily GitHub job skips this dashboard; a scheduled Claude session refreshes it every Monday and Friday (prices via the brokerage connector, then python3 pipeline/fetch.py tech --force). sec.cik maps delisted tickers (precedent deal targets) to their SEC company IDs.",
+  "_doc": "Dashboard 03: tech valuations & deals. categories = the public comp set (sector -> tickers). Financials from SEC EDGAR (needs SEC_USER_AGENT); prices from data/tech/prices_snapshot.json, built by pipeline/tech_snapshot.py. manual_refresh: the daily GitHub job skips this dashboard; a scheduled Claude session refreshes it every weekday after the close. deal_targets = public deal targets (SEC filings only, not in the comp set); sec.cik maps delisted tickers to their SEC company IDs.",
   "fred": {},
   "categories": {
     "AI platforms": [
@@ -21,6 +21,15 @@
       "CRWV",
       "SMCI"
     ],
+    "Semiconductors & equipment": [
+      "INTC",
+      "QCOM",
+      "TXN",
+      "ADI",
+      "AMAT",
+      "LRCX",
+      "KLAC"
+    ],
     "Hardware": [
       "DELL",
       "HPQ",
@@ -29,14 +38,22 @@
       "WDC",
       "STX"
     ],
-    "Software": [
+    "Software & security": [
       "CRM",
       "NOW",
       "ADBE",
       "PLTR",
       "SNOW",
       "DDOG",
-      "INTU"
+      "INTU",
+      "WDAY",
+      "ADSK",
+      "APP",
+      "IBM",
+      "PANW",
+      "CRWD",
+      "FTNT",
+      "NET"
     ],
     "Consumer subscription": [
       "NFLX",
@@ -56,7 +73,11 @@
       "YELP",
       "ANGI",
       "CMPR",
-      "NXDR"
+      "NXDR",
+      "UBER",
+      "ABNB",
+      "BKNG",
+      "DASH"
     ]
   },
   "sec": {
@@ -76,6 +97,13 @@
       "VRT",
       "CRWV",
       "SMCI",
+      "INTC",
+      "QCOM",
+      "TXN",
+      "ADI",
+      "AMAT",
+      "LRCX",
+      "KLAC",
       "DELL",
       "HPQ",
       "HPE",
@@ -89,6 +117,14 @@
       "SNOW",
       "DDOG",
       "INTU",
+      "WDAY",
+      "ADSK",
+      "APP",
+      "IBM",
+      "PANW",
+      "CRWD",
+      "FTNT",
+      "NET",
       "NFLX",
       "MTCH",
       "BMBL",
@@ -105,6 +141,10 @@
       "ANGI",
       "CMPR",
       "NXDR",
+      "UBER",
+      "ABNB",
+      "BKNG",
+      "DASH",
       "LITE",
       "PTC",
       "BRZE",

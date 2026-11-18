@@ -6,9 +6,13 @@ Usage:
 
 RAW.json (written by whoever pulled the prices, e.g. a scheduled Claude session):
   {"as_of": "YYYY-MM-DD",                  # last trading day with a close
+   "prev": "YYYY-MM-DD",                   # the trading day before as_of (for the daily move)
    "companies": {"AAPL": {"market_cap": 4.97e12, "shares": 1.45e10,
-                          "close_now": 342.37, "close_6m": 287.51, "close_12m": 269.77}, ...}}
+                          "close_now": 342.37, "close_prev": 340.10, "close_6m": 287.51, "close_12m": 269.77,
+                          "monthly": {"2025-11-30": 278.85, ..., "2026-10-31": 344.63}}, ...}}
 Closes must be split-adjusted, taken on the target date or the nearest trading day before it.
+"monthly" = month-end closes for the last 12 complete months (feeds the multiples-over-time chart).
+If a company has no "monthly", the previous snapshot's monthly closes are kept.
 
 The build refuses to write (exit 1) when tickers are missing or a market cap disagrees with
 shares x price by more than 5%, so a bad pull never reaches the site.
@@ -22,7 +26,7 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "data" / "tech" / "prices_snapshot.json"
 SOURCES = ROOT / "dashboards" / "tech" / "sources.json"
 DOC = ("Price snapshot (market cap, shares outstanding, split-adjusted daily closes) pulled through the "
-       "owner's brokerage data connector. Refreshed twice a week by a scheduled job.")
+       "owner's brokerage data connector. Refreshed every weekday after the close by a scheduled job.")
 
 
 def _months_back(d, n):
@@ -45,13 +49,14 @@ def build(raw_path):
     src = json.loads(SOURCES.read_text())
     want = sorted(set(src["sec"]["tickers"]) - set(src.get("deal_targets", [])))
     comps = raw["companies"]
+    old = json.loads(OUT.read_text())["companies"] if OUT.exists() else {}
     problems = [f"{t}: missing" for t in want if t not in comps]
     out = {}
     for t in want:
         c = comps.get(t)
         if not c:
             continue
-        keys = ("market_cap", "shares", "close_now", "close_6m", "close_12m")
+        keys = ("market_cap", "shares", "close_now", "close_prev", "close_6m", "close_12m")
         if any(not isinstance(c.get(k), (int, float)) or c[k] <= 0 for k in keys):
             problems.append(f"{t}: missing or non-positive field")
             continue
@@ -60,10 +65,21 @@ def build(raw_path):
             problems.append(f"{t}: market cap {c['market_cap']:.3g} vs shares x price {implied:.3g}")
             continue
         out[t] = {k: c[k] for k in keys}
+        monthly = c.get("monthly") or (old.get(t, {}).get("monthly") if old else None)
+        if monthly:
+            bad = [d for d, v in monthly.items() if not isinstance(v, (int, float)) or v <= 0]
+            if bad:
+                problems.append(f"{t}: bad monthly closes {bad[:3]}")
+                continue
+            out[t]["monthly"] = dict(sorted(monthly.items()))
     if problems:
         print("Snapshot NOT written:\n  " + "\n  ".join(problems))
         sys.exit(1)
-    snap = {"_doc": DOC, "as_of": raw["as_of"], "dates": target_dates(raw["as_of"]), "companies": out}
+    if not raw.get("prev") or raw["prev"] >= raw["as_of"]:
+        print("Snapshot NOT written: 'prev' (the trading day before as_of) is missing or not before as_of")
+        sys.exit(1)
+    dates = {**target_dates(raw["as_of"]), "prev": raw["prev"]}
+    snap = {"_doc": DOC, "as_of": raw["as_of"], "dates": dates, "companies": out}
     OUT.write_text(json.dumps(snap, indent=1) + "\n")
     print(f"Wrote {OUT.relative_to(ROOT)}: {len(out)} companies as of {raw['as_of']}")
 
