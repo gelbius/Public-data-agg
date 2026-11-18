@@ -7,7 +7,7 @@ contains a hand-typed statistic, so a data refresh can never leave stale prose.
 import json
 from pathlib import Path
 
-from series import _shift_month, Series, spans, month_label, quarter_label, day_label
+from series import _shift_month, Series, spans, month_label, quarter_label, day_label, btos_next_update
 
 TITLE = "The Consumer: An Economic State of the Union"
 SLUG = "macro"
@@ -611,6 +611,7 @@ def _prices(B, meta):
         sub += f" Retail raising prices: {a['avg']:.0f}% ({a['year']}) → {b['avg']:.0f}% ({b['year']})."
     return {
         "headline": head, "sub": sub,
+        "next_update": btos_next_update(W, max(N["pay_now"]["answers"]["Increased"])),
         "series": {"pay": pay, "charge": charge, "pay6": pay6, "charge6": charge6},
         "gaps": btos_gaps(pay),
         "stats": [

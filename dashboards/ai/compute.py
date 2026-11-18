@@ -3,7 +3,7 @@ Business Trends and Outlook Survey (BTOS). Every number and headline is computed
 import json
 from pathlib import Path
 
-from series import month_label, day_label
+from series import month_label, day_label, btos_next_update
 
 TITLE = "AI at Work: How US Businesses Are Adopting It"
 SLUG = "ai"
@@ -60,6 +60,7 @@ def compute(data_dir):
         gaps = [{"start": o1[0], "end": first[0], "label": "Question reworded"}]
 
     hero = {
+        "next_update": btos_next_update(W, last_code),
         "headline": f"{last[1]:.0f}% of US businesses now use AI.",
         "sub": (f"Up from {_pct(base[1])} in {month_label(base[0])}; {_pct(expect)} expect to within six months."
                 + history_txt),

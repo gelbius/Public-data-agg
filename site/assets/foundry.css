@@ -485,3 +485,7 @@ sup.fn { color: var(--accent-ink); font-weight: 600; margin-left: 1px; }
 .dc-stats dd { margin: 2px 0 0; font-weight: 600; font-variant-numeric: tabular-nums; }
 .dc-nofin { margin: 8px 0 0; font-size: .78rem; color: var(--ink-dim); }
 .dc-note { margin: 8px 0 6px; font-size: .8rem; color: var(--ink-soft); line-height: 1.4; }
+
+/* "Next update: …" line under charts fed by scheduled releases */
+.next-update { margin: 6px 0 0; font: 400 .72rem/1.4 var(--mono); color: var(--ink-dim); }
+.next-update:empty { display: none; }

@@ -169,3 +169,21 @@ def _shift_year(d, n):
     if md == "02-29":
         md = "02-28"
     return f"{y}-{md}"
+
+
+def btos_next_update(waves, last_code, today=None):
+    """One line about the next Census BTOS release, from the schedule in Census's own workbook.
+
+    waves: {code: {"start", "end", "published"}}; last_code: the latest wave we have data for.
+    """
+    from datetime import date
+    today = today or date.today().isoformat()
+    later = sorted(c for c in waves if c > last_code and waves[c].get("published") and waves[c].get("end"))
+    if not later:
+        return ""
+    w = waves[later[0]]
+    short = lambda d: f"{MONTHS[int(d[5:7]) - 1]} {int(d[8:10])}"
+    covers = f"{short(w['start'])} – {short(w['end'])}"
+    if w["published"] < today:
+        return f"Census's next release ({covers}) was due {short(w['published'])} and isn't out yet."
+    return f"Next update: {short(w['published'])}, covering {covers} (Census release schedule)."
