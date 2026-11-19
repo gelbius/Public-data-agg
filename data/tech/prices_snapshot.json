@@ -1,319 +1,319 @@
 {
  "_doc": "Price snapshot (market cap, shares outstanding, split-adjusted daily closes) pulled through the owner's brokerage data connector. Refreshed twice a week by a scheduled job.",
- "as_of": "2026-11-18",
+ "as_of": "2026-11-19",
  "dates": {
-  "12m": "2025-11-18",
-  "6m": "2026-05-18",
-  "now": "2026-11-18"
+  "12m": "2025-11-19",
+  "6m": "2026-05-19",
+  "now": "2026-11-19"
  },
  "companies": {
   "AAPL": {
-   "market_cap": 5119258094000,
-   "shares": 14532200000.0,
-   "close_now": 352.27,
-   "close_6m": 297.84,
-   "close_12m": 267.44
+   "market_cap": 5074208274000,
+   "shares": 14532200000,
+   "close_now": 349.17,
+   "close_6m": 298.97,
+   "close_12m": 268.56
   },
   "ADBE": {
-   "market_cap": 88021474400,
-   "shares": 389200010.613458,
-   "close_now": 226.16,
-   "close_6m": 255.64,
-   "close_12m": 324.47
+   "market_cap": 86258397541,
+   "shares": 389200006.954023,
+   "close_now": 221.63,
+   "close_6m": 254.99,
+   "close_12m": 318.11
   },
   "AMD": {
-   "market_cap": 870576172900,
-   "shares": 1640090000.0,
-   "close_now": 530.81,
-   "close_6m": 420.99,
-   "close_12m": 230.29
+   "market_cap": 802274624850,
+   "shares": 1640090000,
+   "close_now": 489.165,
+   "close_6m": 414.05,
+   "close_12m": 223.55
   },
   "AMZN": {
-   "market_cap": 2894407068275,
-   "shares": 10813139322.967157,
-   "close_now": 267.675,
-   "close_6m": 264.86,
-   "close_12m": 222.55
+   "market_cap": 2780965903598,
+   "shares": 10813137300.911331,
+   "close_now": 257.184,
+   "close_6m": 259.34,
+   "close_12m": 222.69
   },
   "ANET": {
-   "market_cap": 245055839589,
-   "shares": 1263402364.284948,
-   "close_now": 193.965,
-   "close_6m": 141.71,
-   "close_12m": 123.45
+   "market_cap": 239578989461,
+   "shares": 1263402359.65247,
+   "close_now": 189.63,
+   "close_6m": 141.58,
+   "close_12m": 124.81
   },
   "ANGI": {
-   "market_cap": 213000320,
-   "shares": 40961600.0,
-   "close_now": 5.2,
-   "close_6m": 5.18,
-   "close_12m": 10.67
+   "market_cap": 195796448,
+   "shares": 40961600,
+   "close_now": 4.78,
+   "close_6m": 5.2,
+   "close_12m": 10.42
   },
   "AVGO": {
-   "market_cap": 1690294646700,
-   "shares": 4773630000.0,
-   "close_now": 354.09,
-   "close_6m": 420.71,
-   "close_12m": 340.5
+   "market_cap": 1654444685400,
+   "shares": 4773630000,
+   "close_now": 346.58,
+   "close_6m": 411.07,
+   "close_12m": 354.42
   },
   "BMBL": {
-   "market_cap": 800426371,
-   "shares": 133627107.011686,
+   "market_cap": 800426343,
+   "shares": 133627102.337229,
    "close_now": 5.99,
-   "close_6m": 3.18,
-   "close_12m": 3.51
+   "close_6m": 3.16,
+   "close_12m": 3.4
   },
   "CHGG": {
-   "market_cap": 56952391,
-   "shares": 111170000.0,
-   "close_now": 0.5123,
-   "close_6m": 1.03,
-   "close_12m": 1.05
+   "market_cap": 56718934,
+   "shares": 111170000,
+   "close_now": 0.5102,
+   "close_6m": 1.05,
+   "close_12m": 0.99
   },
   "CMPR": {
-   "market_cap": 1372866960,
-   "shares": 24621000.0,
-   "close_now": 55.76,
-   "close_6m": 102.88,
-   "close_12m": 65.66
+   "market_cap": 1335196830,
+   "shares": 24621000,
+   "close_now": 54.23,
+   "close_6m": 99.48,
+   "close_12m": 67.455
   },
   "COUR": {
-   "market_cap": 905547527,
-   "shares": 253300007.605634,
-   "close_now": 3.575,
-   "close_6m": 5.73,
-   "close_12m": 8.19
+   "market_cap": 873885000,
+   "shares": 253300000,
+   "close_now": 3.45,
+   "close_6m": 5.4,
+   "close_12m": 8.1
   },
   "CRM": {
-   "market_cap": 156707438565,
-   "shares": 823000044.982521,
-   "close_now": 190.41,
-   "close_6m": 179.48,
-   "close_12m": 233.5
+   "market_cap": 150954660000,
+   "shares": 823000000,
+   "close_now": 183.42,
+   "close_6m": 179.42,
+   "close_12m": 227.88
   },
   "CRWV": {
-   "market_cap": 26268999907,
-   "shares": 548871707.215875,
-   "close_now": 47.86,
-   "close_6m": 103.77,
-   "close_12m": 74.9
+   "market_cap": 24666294198,
+   "shares": 548871700,
+   "close_now": 44.94,
+   "close_6m": 99.81,
+   "close_12m": 74.92
   },
   "CSCO": {
-   "market_cap": 382477607000,
-   "shares": 3936980000.0,
-   "close_now": 97.15,
-   "close_6m": 118.88,
-   "close_12m": 77.37
+   "market_cap": 373231741500,
+   "shares": 3942450000,
+   "close_now": 94.67,
+   "close_6m": 115.38,
+   "close_12m": 78.39
   },
   "DDOG": {
-   "market_cap": 60318028303,
-   "shares": 361120926.201719,
-   "close_now": 167.03,
-   "close_6m": 208.82,
-   "close_12m": 176.46
+   "market_cap": 60079690234,
+   "shares": 361120936.670457,
+   "close_now": 166.37,
+   "close_6m": 215.15,
+   "close_12m": 176.31
   },
   "DELL": {
-   "market_cap": 199251009537,
-   "shares": 635812781.72496,
-   "close_now": 313.38,
-   "close_6m": 238.03,
-   "close_12m": 122.69
+   "market_cap": 198824998572,
+   "shares": 635812729.277251,
+   "close_now": 312.71,
+   "close_6m": 235.26,
+   "close_12m": 119.38
   },
   "DUOL": {
-   "market_cap": 7560275022,
-   "shares": 47178003.254623,
-   "close_now": 160.25,
-   "close_6m": 113.24,
-   "close_12m": 175.45
+   "market_cap": 7041316674,
+   "shares": 47178001.166635,
+   "close_now": 149.25,
+   "close_6m": 114.1,
+   "close_12m": 174.48
   },
   "ETSY": {
-   "market_cap": 7328363559,
-   "shares": 86205900.0,
-   "close_now": 85.01,
-   "close_6m": 58.83,
-   "close_12m": 54.5
+   "market_cap": 6791300802,
+   "shares": 86205900,
+   "close_now": 78.78,
+   "close_6m": 57.61,
+   "close_12m": 53.11
   },
   "GOOGL": {
-   "market_cap": 3451041820000,
-   "shares": 12223000000.0,
-   "close_now": 282.34,
-   "close_6m": 396.94,
-   "close_12m": 284.28
+   "market_cap": 3330767500000,
+   "shares": 12223000000,
+   "close_now": 272.5,
+   "close_6m": 387.66,
+   "close_12m": 292.81
   },
   "GRND": {
-   "market_cap": 2582025300,
-   "shares": 176730000.0,
-   "close_now": 14.61,
-   "close_6m": 13.7,
-   "close_12m": 13.94
+   "market_cap": 2475987300,
+   "shares": 176730000,
+   "close_now": 14.01,
+   "close_6m": 13.09,
+   "close_12m": 13.81
   },
   "HIMS": {
-   "market_cap": 3996735222,
-   "shares": 234412623.0,
-   "close_now": 17.05,
-   "close_6m": 22.29,
-   "close_12m": 36.26
+   "market_cap": 3755290220,
+   "shares": 234412623,
+   "close_now": 16.02,
+   "close_6m": 22.44,
+   "close_12m": 35.83
   },
   "HPE": {
-   "market_cap": 60758058955,
-   "shares": 1327464692.037318,
-   "close_now": 45.77,
-   "close_6m": 33.0,
-   "close_12m": 20.9
+   "market_cap": 60373093932,
+   "shares": 1327464686.282219,
+   "close_now": 45.48,
+   "close_6m": 32.62,
+   "close_12m": 20.6
   },
   "HPQ": {
-   "market_cap": 25840821105,
-   "shares": 901791000.0,
-   "close_now": 28.655,
-   "close_6m": 20.92,
-   "close_12m": 22.71
+   "market_cap": 25096843831,
+   "shares": 901791010.816469,
+   "close_now": 27.83,
+   "close_6m": 20.97,
+   "close_12m": 22.47
   },
   "INTU": {
-   "market_cap": 83703659920,
-   "shares": 267236000.0,
-   "close_now": 313.22,
-   "close_6m": 403.16,
-   "close_12m": 649.73
+   "market_cap": 82848504720,
+   "shares": 267236000,
+   "close_now": 310.02,
+   "close_6m": 399.71,
+   "close_12m": 650.62
   },
   "LIF": {
-   "market_cap": 3606636057,
-   "shares": 81755322.620406,
-   "close_now": 44.115,
-   "close_6m": 39.47,
-   "close_12m": 68.04
+   "market_cap": 3432497110,
+   "shares": 81755320,
+   "close_now": 41.985,
+   "close_6m": 39.08,
+   "close_12m": 68.5
   },
   "META": {
-   "market_cap": 1574976914630,
-   "shares": 2556241239.072826,
-   "close_now": 616.13,
-   "close_6m": 611.21,
-   "close_12m": 597.69
+   "market_cap": 1524133178092,
+   "shares": 2556241074.218826,
+   "close_now": 596.24,
+   "close_6m": 602.61,
+   "close_12m": 590.32
   },
   "MRVL": {
-   "market_cap": 127632805948,
-   "shares": 876900075.218502,
-   "close_now": 145.55,
-   "close_6m": 168.93,
-   "close_12m": 78.68
+   "market_cap": 121362960000,
+   "shares": 876900000,
+   "close_now": 138.4,
+   "close_6m": 176.27,
+   "close_12m": 81.32
   },
   "MSFT": {
-   "market_cap": 3774957245664,
-   "shares": 7426194097.661188,
-   "close_now": 508.33,
-   "close_6m": 423.54,
-   "close_12m": 493.79
+   "market_cap": 3699433032582,
+   "shares": 7426194460.780263,
+   "close_now": 498.16,
+   "close_6m": 417.42,
+   "close_12m": 487.12
   },
   "MTCH": {
-   "market_cap": 9005616223,
-   "shares": 227529464.953854,
-   "close_now": 39.58,
-   "close_6m": 35.88,
-   "close_12m": 31.49
+   "market_cap": 8903227612,
+   "shares": 227529455.959596,
+   "close_now": 39.13,
+   "close_6m": 35.35,
+   "close_12m": 31.51
   },
   "MU": {
-   "market_cap": 797653340024,
-   "shares": 1131423177.33921,
-   "close_now": 705.0,
-   "close_6m": 681.54,
-   "close_12m": 228.5
+   "market_cap": 780735218776,
+   "shares": 1131423249.106016,
+   "close_now": 690.047,
+   "close_6m": 698.74,
+   "close_12m": 225.92
   },
   "NFLX": {
-   "market_cap": 245558534000,
-   "shares": 4106330000.0,
-   "close_now": 59.8,
-   "close_6m": 89.65,
-   "close_12m": 114.09
+   "market_cap": 240014988500,
+   "shares": 4106330000,
+   "close_now": 58.45,
+   "close_6m": 89.33,
+   "close_12m": 110.0
   },
   "NOW": {
-   "market_cap": 93990903046,
-   "shares": 1038000033.638321,
-   "close_now": 90.55,
-   "close_6m": 103.42,
-   "close_12m": 163.594
+   "market_cap": 92212806000,
+   "shares": 1038000000,
+   "close_now": 88.837,
+   "close_6m": 101.83,
+   "close_12m": 163.29
   },
   "NVDA": {
-   "market_cap": 3710899538000,
-   "shares": 24598300000.0,
-   "close_now": 150.86,
-   "close_6m": 222.32,
-   "close_12m": 181.36
+   "market_cap": 3591597783000,
+   "shares": 24598300000,
+   "close_now": 146.01,
+   "close_6m": 220.61,
+   "close_12m": 186.52
   },
   "NXDR": {
-   "market_cap": 775505615,
-   "shares": 386785843.0,
-   "close_now": 2.005,
-   "close_6m": 2.08,
-   "close_12m": 1.65
+   "market_cap": 763902040,
+   "shares": 386785843,
+   "close_now": 1.975,
+   "close_6m": 2.04,
+   "close_12m": 1.61
   },
   "ORCL": {
-   "market_cap": 344343511200,
-   "shares": 3023740000.0,
-   "close_now": 113.88,
-   "close_6m": 186.61,
-   "close_12m": 220.49
+   "market_cap": 334334931800,
+   "shares": 3023740000,
+   "close_now": 110.57,
+   "close_6m": 181.46,
+   "close_12m": 225.53
   },
   "PLTR": {
-   "market_cap": 377520794198,
-   "shares": 2409502133.0,
-   "close_now": 156.68,
-   "close_6m": 135.14,
-   "close_12m": 167.33
+   "market_cap": 370075432607,
+   "shares": 2409502133,
+   "close_now": 153.59,
+   "close_6m": 135.26,
+   "close_12m": 165.42
   },
   "PTON": {
-   "market_cap": 2387529288,
-   "shares": 445850474.0,
-   "close_now": 5.355,
-   "close_6m": 5.3,
-   "close_12m": 7.11
+   "market_cap": 2262691156,
+   "shares": 445850474,
+   "close_now": 5.075,
+   "close_6m": 5.23,
+   "close_12m": 6.88
   },
   "SMCI": {
-   "market_cap": 16058778062,
-   "shares": 659227342.460646,
-   "close_now": 24.36,
-   "close_6m": 30.85,
-   "close_12m": 34.9
+   "market_cap": 15715980707,
+   "shares": 659227378.66229,
+   "close_now": 23.84,
+   "close_6m": 30.56,
+   "close_12m": 33.73
   },
   "SNOW": {
-   "market_cap": 98639352000,
-   "shares": 352800000.0,
-   "close_now": 279.59,
-   "close_6m": 164.24,
-   "close_12m": 254.51
+   "market_cap": 94746204000,
+   "shares": 352800000,
+   "close_now": 268.555,
+   "close_6m": 169.55,
+   "close_12m": 252.98
   },
   "STX": {
-   "market_cap": 118499446124,
-   "shares": 229561112.21253,
-   "close_now": 516.2,
-   "close_6m": 740.84,
-   "close_12m": 253.86
+   "market_cap": 119640370117,
+   "shares": 229561122.314402,
+   "close_now": 521.17,
+   "close_6m": 733.35,
+   "close_12m": 259.135
   },
   "TRIP": {
-   "market_cap": 851885299,
-   "shares": 117826459.032717,
-   "close_now": 7.23,
-   "close_6m": 9.53,
-   "close_12m": 14.47
+   "market_cap": 842459122,
+   "shares": 117826450.692521,
+   "close_now": 7.15,
+   "close_6m": 9.3,
+   "close_12m": 14.545
   },
   "VRT": {
-   "market_cap": 74867298451,
-   "shares": 385060425.093239,
-   "close_now": 194.43,
-   "close_6m": 339.73,
-   "close_12m": 164.86
+   "market_cap": 71255424398,
+   "shares": 385060385.828877,
+   "close_now": 185.05,
+   "close_6m": 322.63,
+   "close_12m": 170.65
   },
   "WDC": {
-   "market_cap": 107872475599,
-   "shares": 374323254.907705,
-   "close_now": 288.18,
-   "close_6m": 458.68,
-   "close_12m": 152.86
+   "market_cap": 111087918582,
+   "shares": 374323275.877026,
+   "close_now": 296.77,
+   "close_6m": 455.8,
+   "close_12m": 153.97
   },
   "YELP": {
-   "market_cap": 1089313071,
-   "shares": 54492900.0,
-   "close_now": 19.99,
-   "close_6m": 21.79,
-   "close_12m": 28.11
+   "market_cap": 1011388224,
+   "shares": 54492900,
+   "close_now": 18.56,
+   "close_6m": 22.59,
+   "close_12m": 28.78
   }
  }
 }
