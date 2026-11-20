@@ -26,7 +26,7 @@
     a.innerHTML = "<b>SOURCE</b> ";
     a.append(`${ids}${via}`);
     const b = document.createElement("span");
-    b.textContent = `Latest observation ${latest.includes("annual") ? latest : latest.endsWith("-01") ? monthLabel(latest) : dayLabel(latest)} · fetched ${dayLabel(src.fetched)}`;
+    b.textContent = `Latest observation ${latest.includes("annual") ? latest : latest.endsWith("-01") && !src.ids.includes("BTOS") ? monthLabel(latest) : dayLabel(latest)} · fetched ${dayLabel(src.fetched)}`;
     el.append(a, b);
   });
 
