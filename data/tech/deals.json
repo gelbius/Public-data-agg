@@ -2,6 +2,21 @@
  "_doc": "Curated tech deals (M&A, take-privates, large venture rounds), newest first, kept indefinitely: the page filters by date range, sector and type. Values as announced (USD); approx = reported by press, not confirmed. For targets that filed with the SEC, revenue, EBITDA and multiples are computed from the target's own filings for the 12 months before the announcement. funding = what an acquired private company raised before the deal, and key investors. Every row needs a source link.",
  "deals": [
   {
+   "date": "2026-11-12",
+   "acquirer": "Existing and new investors",
+   "target": "OpenAI",
+   "target_ticker": null,
+   "type": "Venture round",
+   "segment": "AI platforms",
+   "value_kind": "pre_money",
+   "value": 1250000000000.0,
+   "raised": 15000000000.0,
+   "consideration": "Primary investment",
+   "approx": true,
+   "note": "Reported (CNBC, citing sources): $15B at a $1.25T valuation, about half the original $30B target; round not yet formally closed.",
+   "source": "https://www.cnbc.com/video/2026/11/12/openai-raises-15b-at-a-1-point-25t-valuation-what-it-means-for-the-ipo.html"
+  },
+  {
    "date": "2026-11-05",
    "acquirer": "Shield AI",
    "target": "Echodyne",
