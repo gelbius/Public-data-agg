@@ -17,7 +17,8 @@
     const src = S[el.dataset.src].source;
     const a = document.createElement("span"); a.className = "src"; a.innerHTML = "<b>SOURCE</b> "; a.append(src.label);
     const b = document.createElement("span");
-    b.textContent = `Latest wave ends ${dayLabel(Object.values(src.latest)[0])} · fetched ${dayLabel(src.fetched)}`;
+    const n = src.next;
+    b.textContent = `Latest wave ends ${dayLabel(Object.values(src.latest)[0])}${n && n.date ? ` · Next update ${dayLabel(n.date)}` : ""} · fetched ${dayLabel(src.fetched)}`;
     el.append(a, b);
   });
 

@@ -14,7 +14,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 import fin  # noqa: E402
 
-from series import day_label, month_label  # noqa: E402
+from series import day_label, month_label, next_trading_day  # noqa: E402
 
 TITLE = "Tech Valuations & Deals"
 SLUG = "tech"
@@ -225,14 +225,20 @@ def compute(data_dir):
     priv.sort(key=lambda r: -(r["valuation"] or 0))
 
     sec_meta = json.loads((data_dir / "fetch_meta.json").read_text()).get("sec", {}) if (data_dir / "fetch_meta.json").exists() else {}
+    nxt = next_trading_day(as_of)
+    price_src = {"label": "Market prices (brokerage data) · SEC EDGAR filings", "latest": as_of, "latest_text": f"{day_label(as_of)} close",
+                 "next": nxt, "next_text": f"{day_label(nxt)}, after the close", "fetched": sec_meta.get("fetched") or as_of}
+    deal_src = {"label": "SEC filings · company announcements · press coverage", "latest": deals[0]["date"],
+                "latest_text": f"newest deal {day_label(deals[0]['date'])}", "next": nxt,
+                "next_text": f"{day_label(nxt)} (deals and quotes are reviewed every weekday)", "fetched": sec_meta.get("fetched") or as_of}
     return {
         "title": TITLE, "slug": SLUG, "description": DESCRIPTION, "fetched": sec_meta.get("fetched") or as_of,
         "hub_headline": headline,
         "as_of": as_of, "dates": D,
         "sections": {
-            "summary": {"headline": headline, "sub": sub, "trend": trend, "categories": cats},
-            "companies": {"headline": comp_head, "sub": comp_sub, "rows": companies, "n_categories": len(cat_names)},
-            "deals": {"headline": deal_head, "sub": deal_sub, "rows": deals, "window_start": window_start},
+            "summary": {"headline": headline, "sub": sub, "trend": trend, "categories": cats, "source": price_src},
+            "companies": {"headline": comp_head, "sub": comp_sub, "rows": companies, "n_categories": len(cat_names), "source": price_src},
+            "deals": {"headline": deal_head, "sub": deal_sub, "rows": deals, "window_start": window_start, "source": deal_src},
             "quotes": {"headline": "What investors are saying about tech valuations.",
                        "sub": "Recent remarks from investors, fund managers and CEOs, quoted word for word with a link to each source.",
                        "rows": quotes},

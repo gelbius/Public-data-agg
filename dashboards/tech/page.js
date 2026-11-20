@@ -21,6 +21,14 @@
   $("#m-asof").textContent = dayLabel(D.as_of);
   document.querySelectorAll("[data-k]").forEach((n) => { const [s, k] = n.dataset.k.split("."); n.textContent = S[s][k] || ""; });
 
+  // ---- source footers: latest observation + next update
+  document.querySelectorAll("[data-src]").forEach((node) => {
+    const src = S[node.dataset.src].source;
+    const a = el("span", "src"); a.innerHTML = "<b>SOURCE</b> "; a.append(src.label);
+    const b = el("span", "", `Latest observation ${src.latest_text} · Next update ${src.next_text}`);
+    node.append(a, b);
+  });
+
   const badge = (v, full, label, digits = 0) => v == null ? el("span", "", "—")
     : viz.deltaBadge(v, { goodUp: true, full, text: `${Math.abs(v).toFixed(digits)}%`, title: `${label}: ${v >= 0 ? "+" : ""}${v.toFixed(1)}%` });
 

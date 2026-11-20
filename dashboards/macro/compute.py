@@ -7,7 +7,7 @@ contains a hand-typed statistic, so a data refresh can never leave stale prose.
 import json
 from pathlib import Path
 
-from series import _shift_month, Series, spans, month_label, quarter_label, day_label, btos_next_update
+from series import _shift_month, Series, spans, month_label, quarter_label, day_label, btos_next_update, next_update
 
 TITLE = "The Consumer: An Economic State of the Union"
 SLUG = "macro"
@@ -239,6 +239,16 @@ def compute(data_dir):
         {"id": "CXU…LB0101M", "name": "BLS Consumer Expenditure Survey"},
     ]
     out["hub_headline"] = hero_head + " " + wage_head
+    # ---- "next update" for every chart, from FRED's release calendar and the Census survey schedule
+    rel_path = data_dir / "releases.json"
+    releases = json.loads(rel_path.read_text())["series"] if rel_path.exists() else {}
+    btos_path = data_dir / "btos.json"
+    B = json.loads(btos_path.read_text()) if btos_path.exists() else {}
+    btos_last = max(B["national"]["pay_now"]["answers"]["Increased"]) if B else None
+    for sec_ in out["sections"].values():
+        src = sec_.get("source") if isinstance(sec_, dict) else None
+        if src:
+            src["next"] = next_update(src["ids"], releases, src.get("latest"), B.get("waves"), btos_last)
     return out
 
 

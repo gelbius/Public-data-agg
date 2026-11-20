@@ -217,6 +217,12 @@ def main():
         failed += fetch_sec(dash_dir, sources["sec"], meta)
     if "zillow" in sources:
         failed += fetch_zillow(dash_dir, sources["zillow"], meta)
+    if sources.get("fred"):
+        import releases
+        print(f"  FRED release calendar ({len(sources['fred'])} series)")
+        cal_failed = releases.fetch(list(sources["fred"]), dash_dir / "releases.json")
+        if cal_failed:
+            print(f"    calendar lookups kept from last time: {', '.join(cal_failed)}")
     meta["fetched"] = today()
     meta_path.write_text(json.dumps(meta, indent=1, sort_keys=True) + "\n")
 

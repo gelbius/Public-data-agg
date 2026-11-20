@@ -15,6 +15,9 @@
     el.textContent = S[sec][key] || "";
   });
 
+  // "· Next update Dec 4, 2026 (Employment Situation)" or "· Next update: annual, usually in September"
+  const nextText = (n) => !n ? "" : n.date ? ` · Next update ${dayLabel(n.date)} (${n.release})` : ` · Next update: ${n.text}`;
+
   // ---- SOURCE footers
   document.querySelectorAll("[data-src]").forEach((el) => {
     const src = S[el.dataset.src].source;
@@ -26,7 +29,7 @@
     a.innerHTML = "<b>SOURCE</b> ";
     a.append(`${ids}${via}`);
     const b = document.createElement("span");
-    b.textContent = `Latest observation ${latest.includes("annual") ? latest : latest.endsWith("-01") && !src.ids.includes("BTOS") ? monthLabel(latest) : dayLabel(latest)} · fetched ${dayLabel(src.fetched)}`;
+    b.textContent = `Latest observation ${latest.includes("annual") ? latest : latest.endsWith("-01") && !src.ids.includes("BTOS") ? monthLabel(latest) : dayLabel(latest)}${nextText(src.next)} · fetched ${dayLabel(src.fetched)}`;
     el.append(a, b);
   });
 

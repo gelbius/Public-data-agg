@@ -1,0 +1,196 @@
+{
+ "fetched": "2026-11-20",
+ "series": {
+  "UNRATE": {
+   "rid": "50",
+   "release": "Employment Situation",
+   "dates": [
+    "2026-12-04"
+   ]
+  },
+  "CPIAUCSL": {
+   "rid": "10",
+   "release": "Consumer Price Index",
+   "dates": [
+    "2026-12-10"
+   ]
+  },
+  "CPILFESL": {
+   "rid": "10",
+   "release": "Consumer Price Index",
+   "dates": [
+    "2026-12-10"
+   ]
+  },
+  "FEDFUNDS": {
+   "rid": "18",
+   "release": "H.15 Selected Interest Rates",
+   "dates": [
+    "2026-11-20",
+    "2026-11-23",
+    "2026-11-24",
+    "2026-11-25",
+    "2026-11-27",
+    "2026-11-30",
+    "2026-12-01",
+    "2026-12-02",
+    "2026-12-03",
+    "2026-12-04",
+    "2026-12-07",
+    "2026-12-08",
+    "2026-12-09",
+    "2026-12-10",
+    "2026-12-11",
+    "2026-12-14",
+    "2026-12-15",
+    "2026-12-16",
+    "2026-12-17",
+    "2026-12-18",
+    "2026-12-21",
+    "2026-12-22",
+    "2026-12-23",
+    "2026-12-24",
+    "2026-12-28",
+    "2026-12-29",
+    "2026-12-30",
+    "2026-12-31"
+   ]
+  },
+  "MORTGAGE30US": {
+   "rid": "190",
+   "release": "Primary Mortgage Market Survey",
+   "dates": [
+    "2026-11-25",
+    "2026-12-03",
+    "2026-12-10",
+    "2026-12-17",
+    "2026-12-24",
+    "2026-12-31"
+   ]
+  },
+  "TERMCBCCALLNS": {
+   "rid": "14",
+   "release": "G.19 Consumer Credit",
+   "dates": [
+    "2026-12-07"
+   ]
+  },
+  "REVOLSL": {
+   "rid": "14",
+   "release": "G.19 Consumer Credit",
+   "dates": [
+    "2026-12-07"
+   ]
+  },
+  "PSAVERT": {
+   "rid": "54",
+   "release": "Personal Income and Outlays",
+   "dates": [
+    "2026-11-25",
+    "2026-12-23"
+   ]
+  },
+  "TDSP": {
+   "rid": "89",
+   "release": "Household Debt Service Ratios",
+   "dates": []
+  },
+  "DRCCLACBS": {
+   "rid": "231",
+   "release": "Charge-Off and Delinquency Rates on Loans and Leases at Commercial Banks",
+   "dates": []
+  },
+  "UMCSENT": {
+   "rid": "91",
+   "release": "Surveys of Consumers",
+   "dates": [
+    "2026-11-20",
+    "2026-12-18"
+   ]
+  },
+  "USREC": {
+   "rid": "242",
+   "release": "Recession Indicators Series",
+   "dates": [
+    "2026-11-20",
+    "2026-11-23",
+    "2026-11-24",
+    "2026-11-25",
+    "2026-11-26",
+    "2026-11-27",
+    "2026-11-30",
+    "2026-12-01",
+    "2026-12-02",
+    "2026-12-03",
+    "2026-12-04",
+    "2026-12-07",
+    "2026-12-08",
+    "2026-12-09",
+    "2026-12-10",
+    "2026-12-11",
+    "2026-12-14",
+    "2026-12-15",
+    "2026-12-16",
+    "2026-12-17",
+    "2026-12-18",
+    "2026-12-21",
+    "2026-12-22",
+    "2026-12-23",
+    "2026-12-24",
+    "2026-12-25",
+    "2026-12-28",
+    "2026-12-29",
+    "2026-12-30",
+    "2026-12-31"
+   ]
+  },
+  "GASREGW": {
+   "rid": "183",
+   "release": "Gasoline and Diesel Fuel Update",
+   "dates": [
+    "2026-11-24",
+    "2026-12-01",
+    "2026-12-08",
+    "2026-12-15",
+    "2026-12-22",
+    "2026-12-29"
+   ]
+  },
+  "CES0500000003": {
+   "rid": "50",
+   "release": "Employment Situation",
+   "dates": [
+    "2026-12-04"
+   ]
+  },
+  "DSPIC96": {
+   "rid": "54",
+   "release": "Personal Income and Outlays",
+   "dates": [
+    "2026-11-25",
+    "2026-12-23"
+   ]
+  },
+  "CSUSHPISA": {
+   "rid": "199",
+   "release": "S&P Cotality Case-Shiller Home Price Indices",
+   "dates": [
+    "2026-11-24",
+    "2026-12-29"
+   ]
+  },
+  "MEHOINUSA646N": {
+   "rid": "249",
+   "release": "Income and Poverty in the United States",
+   "dates": []
+  },
+  "MSPUS": {
+   "rid": "97",
+   "release": "New Residential Sales",
+   "dates": [
+    "2026-11-25",
+    "2026-12-23"
+   ]
+  }
+ }
+}

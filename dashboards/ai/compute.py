@@ -3,7 +3,7 @@ Business Trends and Outlook Survey (BTOS). Every number and headline is computed
 import json
 from pathlib import Path
 
-from series import month_label, day_label, btos_next_update
+from series import month_label, day_label, btos_next_update, next_update
 
 TITLE = "AI at Work: How US Businesses Are Adopting It"
 SLUG = "ai"
@@ -118,7 +118,8 @@ def compute(data_dir):
 
     src = {"ids": ["BTOS"], "latest": {"BTOS": last[0]}, "fetched": meta.get("btos", {}).get("fetched"),
            "label": "Census Bureau, Business Trends and Outlook Survey (National.xlsx, Sector.xlsx)"
-                    + (f" · published {day_label(published)}" if published else "")}
+                    + (f" · published {day_label(published)}" if published else ""),
+           "next": next_update(["BTOS"], {}, None, W, last_code)}
     for sct in (hero, industries, jobs):
         sct["source"] = src
     if old_use:  # credit the frozen pre-Nov-2025 history on the chart that uses it
