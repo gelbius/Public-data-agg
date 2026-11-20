@@ -23,10 +23,11 @@
     usd0: (v) => `$${Math.round(v).toLocaleString("en-US")}`,
     tn: (v) => `$${v.toFixed(2)}T`,
     mult: (v) => `${v.toFixed(2)}×`,
+    mult1: (v) => `${v.toFixed(1)}×`,
     pct0: (v) => `${v.toFixed(1)}%`,
   };
   const AXIS_FMT = {
-    pct1: (v) => `${v}%`, pct2: (v) => `${v}%`, pct0: (v) => `${v}%`, num1: (v) => `${v}`, usd: (v) => `$${v}`, tn: (v) => `$${v.toFixed(1)}T`, mult: (v) => `${v}×`,
+    pct1: (v) => `${v}%`, pct2: (v) => `${v}%`, pct0: (v) => `${v}%`, num1: (v) => `${v}`, usd: (v) => `$${v}`, tn: (v) => `$${v.toFixed(1)}T`, mult: (v) => `${v}×`, mult1: (v) => `${v}×`,
   };
 
   function theme() {
