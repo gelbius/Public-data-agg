@@ -2,6 +2,46 @@
  "_doc": "Curated tech deals (M&A, take-privates, large venture rounds), newest first, kept indefinitely: the page filters by date range, sector and type. Values as announced (USD); approx = reported by press, not confirmed. For targets that filed with the SEC, revenue, EBITDA and multiples are computed from the target's own filings for the 12 months before the announcement. funding = what an acquired private company raised before the deal, and key investors. Every row needs a source link.",
  "deals": [
   {
+   "date": "2026-11-19",
+   "acquirer": "TPG (with Corpay)",
+   "target": "BILL",
+   "target_ticker": "BILL",
+   "type": "Take-private",
+   "segment": "Software",
+   "value_kind": "equity",
+   "value": 6000000000.0,
+   "consideration": "Cash",
+   "note": "$63.25 per share, 31% premium to the 60-day average price; TPG takes a majority stake and Corpay a minority stake. Expected to close in the first half of 2027.",
+   "source": "https://www.sec.gov/Archives/edgar/data/0001786352/000119312526469396/d176726dex991.htm"
+  },
+  {
+   "date": "2026-11-18",
+   "acquirer": "Palo Alto Networks",
+   "target": "Applied Compute",
+   "target_ticker": null,
+   "type": "Strategic",
+   "segment": "Software",
+   "value_kind": "equity",
+   "value": 4500000000.0,
+   "consideration": "Stock",
+   "note": "Platform for post-training and inference of open-weight AI models. All-stock, $4.5B subject to adjustments; about 1.4x its $3.25B round two weeks earlier. Expected to close in Palo Alto's fiscal Q3 2027.",
+   "source": "https://www.sec.gov/Archives/edgar/data/0001327567/000132756726000030/ex992pressrelease_november.htm",
+   "funding": {
+    "total": 510000000.0,
+    "approx": true,
+    "investors": [
+     "Elad Gil",
+     "Nvidia",
+     "Kleiner Perkins",
+     "Lux Capital",
+     "Blackstone",
+     "Shopify Ventures",
+     "HubSpot Ventures"
+    ],
+    "source": "https://siliconangle.com/2026/11/03/ai-cloud-startup-applied-compute-raises-350m-after-reaching-key-revenue-milestone/"
+   }
+  },
+  {
    "date": "2026-11-12",
    "acquirer": "Existing and new investors",
    "target": "OpenAI",

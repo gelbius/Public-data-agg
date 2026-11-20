@@ -1,9 +1,9 @@
 {
  "_doc": "Latest publicly reported valuations of large private AI companies. Funding-round valuations are set by investors in that round and are not comparable to public market caps. Reviewed at each scheduled refresh; every row needs a source link.",
  "companies": [
-  {"name": "Anthropic", "category": "AI platforms", "date": "2026-05-28", "valuation": 965e9, "raised": 65e9, "round": "Series H",
-   "note": "Reported talks in September at a higher valuation were not confirmed as closed.",
-   "source": "https://valueaddvc.com/blog/biggest-ai-funding-rounds-of-2026-so-far-ranked"},
+  {"name": "Anthropic", "category": "AI platforms", "date": "2026-11-18", "valuation": 1.49e12, "raised": 94e9, "round": "IPO (Nasdaq: ANT)",
+   "note": "No longer private: priced its IPO at $83 a share and began trading November 19. About $1.49T fully diluted (Financial Times; other outlets report lower figures); at least $68B raised in the IPO plus a $26B private placement. Last private round: $965B (Series H, May 2026).",
+   "source": "https://thenextweb.com/news/anthropic-ipo-prices-83-share-1-5-trillion-record-raise"},
   {"name": "OpenAI", "category": "AI platforms", "date": "2026-03-31", "valuation": 852e9, "raised": 122e9, "round": "Growth round",
    "note": "Largest private round on record. Later reported talks at higher valuations were not confirmed.",
    "source": "https://valueaddvc.com/blog/biggest-us-startup-funding-rounds-of-2026-tracked-and-ranked"},

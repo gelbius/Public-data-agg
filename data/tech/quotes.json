@@ -1,6 +1,9 @@
 {
  "_doc": "What notable investors, fund managers and CEOs are saying about tech valuations. Quotes are copied word for word from the linked article (which may itself quote a post on Substack, LinkedIn or X). Newest first; keep about the last two months. Every row needs a source link.",
  "quotes": [
+  {"date": "2026-11-20", "who": "Yuri Khodjamirian", "role": "Chief investment officer, Tema ETFs", "quote": "Right now it looks cheap, but will companies like Micron and Nvidia actually deliver?",
+   "context": "On CNBC's ETF Edge, discussing AI stock valuations after the November selloff and Anthropic's IPO.", "outlet": "CNBC",
+   "source": "https://www.cnbc.com/2026/11/20/anthropic-ipo-ai-stock-market-selloff.html"},
   {"date": "2026-11-18", "who": "Jeremy Grantham", "role": "Co-founder, GMO", "quote": "The rule from history is that great technological innovations lead to great bubbles.",
    "context": "From a GMO research paper.", "outlet": "The Motley Fool",
    "source": "https://www.fool.com/investing/2026/11/18/stock-market-ai-bubble-wall-street-ignoring-crucial-fact/"},

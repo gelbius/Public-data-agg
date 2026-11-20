@@ -152,7 +152,8 @@
       "SYNA",
       "ARX",
       "SFLY",
-      "ME"
+      "ME",
+      "BILL"
     ],
     "cik": {
       "SFLY": 1125920,
@@ -167,7 +168,8 @@
     "SYNA",
     "ARX",
     "SFLY",
-    "ME"
+    "ME",
+    "BILL"
   ],
   "manual_refresh": true
 }
