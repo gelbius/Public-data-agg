@@ -1,0 +1,22 @@
+{
+ "_doc": "The AI 2027 scenario's own research-speed figures (its 'AI R&D progress multiplier': how much faster the leading lab makes algorithmic progress than it would without AI). Quotes are from ai-2027.com. Dates use the same one-day convention as predictions.json. Between figures the multiplier is interpolated on a log scale; the scenario names no figure for April 2025, so publication is anchored at 1x (no AI speed-up). After the last figure the rate is held flat, because the scenario's next stated figures come later than this chart reaches.",
+ "title": "AI 2027",
+ "authors": "Daniel Kokotajlo, Scott Alexander, Thomas Larsen, Eli Lifland, Romeo Dean",
+ "published": "2025-04-03",
+ "url": "https://ai-2027.com/",
+ "chart_end": "2027-03-31",
+ "rd_multiplier": [
+  {"date": "2025-04-03", "value": 1.0, "label": "AI 2027 published", "quote": null, "section": null},
+  {"date": "2026-02-01", "value": 1.5, "label": "Agent-1: coding automation", "quote": "Overall, they are making algorithmic progress 50% faster than they would without AI assistants", "section": "Early 2026: Coding Automation"},
+  {"date": "2026-12-01", "value": 2.0, "label": "Latest Agent-1 doubles the pace", "quote": "the latest Agent-1 could double the pace of OpenBrain's algorithmic progress", "section": "January 2027: Agent-2 Never Finishes Learning"},
+  {"date": "2027-01-01", "value": 3.0, "label": "Agent-2", "quote": "Agent-2 can now triple it", "section": "January 2027: Agent-2 Never Finishes Learning"},
+  {"date": "2027-03-01", "value": 4.0, "label": "Agent-3: superhuman coder", "quote": "speeds up OpenBrain's overall rate of algorithmic progress by “only” 4x", "section": "March 2027: Algorithmic Breakthroughs"}
+ ],
+ "milestones": [
+  {"date": "2025-11-01", "label": "Agent-0"},
+  {"date": "2026-02-01", "label": "Agent-1"},
+  {"date": "2026-11-01", "label": "Agent-1-mini"},
+  {"date": "2027-01-01", "label": "Agent-2"},
+  {"date": "2027-03-01", "label": "Superhuman coder"}
+ ]
+}

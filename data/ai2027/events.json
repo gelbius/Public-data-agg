@@ -1,0 +1,221 @@
+{
+ "_doc": "Dated real-world events from the timeline of the compiled source page, with the primary link it gives. 'precision' month = only the month is known; the day is a placeholder for plotting.",
+ "events": [
+  {
+   "date": "2025-07-10",
+   "precision": "day",
+   "title": "METR trial: devs 19% slower (Jul 10)",
+   "detail": "Early-2025 AI tools slowed experienced open-source developers.",
+   "verdict": "On track",
+   "prediction": "agents-unreliable",
+   "source": {
+    "title": "METR",
+    "url": "https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/"
+   }
+  },
+  {
+   "date": "2025-07-17",
+   "precision": "day",
+   "title": "ChatGPT agent launches (Jul 17)",
+   "detail": "Books and buys things, asks before purchases; adoption stays limited.",
+   "verdict": "On track",
+   "prediction": "agents-assistants",
+   "source": {
+    "title": "OpenAI",
+    "url": "https://openai.com/index/introducing-chatgpt-agent/"
+   }
+  },
+  {
+   "date": "2025-09-15",
+   "precision": "month",
+   "title": "AI-run espionage disrupted (mid-Sep)",
+   "detail": "Chinese state group used Claude Code against about 30 targets.",
+   "verdict": "On track",
+   "prediction": "weights-stolen",
+   "source": {
+    "title": "Anthropic",
+    "url": "https://www.anthropic.com/news/disrupting-AI-espionage"
+   }
+  },
+  {
+   "date": "2025-09-23",
+   "precision": "day",
+   "title": "Stargate nears 7 GW planned (Sep 23)",
+   "detail": "Five new US sites; over $400B planned investment.",
+   "verdict": "On track",
+   "prediction": "biggest-datacenters",
+   "source": {
+    "title": "OpenAI",
+    "url": "https://openai.com/index/five-new-stargate-sites/"
+   }
+  },
+  {
+   "date": "2025-11-06",
+   "precision": "day",
+   "title": "OpenAI tops $20B annualized revenue",
+   "detail": "Slightly ahead of the $18B the authors graded against.",
+   "verdict": "Ahead of schedule",
+   "prediction": "revenue-18b",
+   "source": {
+    "title": "CNBC",
+    "url": "https://www.cnbc.com/2025/11/06/sam-altman-says-openai-will-top-20-billion-annual-revenue-this-year.html"
+   }
+  },
+  {
+   "date": "2025-11-24",
+   "precision": "day",
+   "title": "OSWorld passes 65% (Nov 24)",
+   "detail": "Claude Opus 4.5 reports 66.3%, about 5 months after the mid-2025 target.",
+   "verdict": "Behind",
+   "prediction": "osworld",
+   "source": {
+    "title": "AI 2027 Tracker",
+    "url": "https://ai2027-tracker.com/predictions/osworld-benchmark/"
+   }
+  },
+  {
+   "date": "2026-02-12",
+   "precision": "day",
+   "title": "Authors grade 2025 at about 65% pace (Feb 12)",
+   "detail": "Most qualitative calls on pace; benchmarks and R&D uplift behind.",
+   "verdict": "Context",
+   "prediction": null,
+   "source": {
+    "title": "AI Futures Project",
+    "url": "https://blog.aifutures.org/p/grading-ai-2027s-2025-predictions"
+   }
+  },
+  {
+   "date": "2026-03-26",
+   "precision": "day",
+   "title": "Judge blocks Anthropic blacklisting (Mar 26)",
+   "detail": "Pentagon AI contracting is real but loud, not quiet.",
+   "verdict": "Ahead of schedule",
+   "prediction": "pentagon-contracts",
+   "source": {
+    "title": "CNBC",
+    "url": "https://www.cnbc.com/2026/03/26/anthropic-pentagon-dod-claude-court-ruling.html"
+   }
+  },
+  {
+   "date": "2026-03-31",
+   "precision": "day",
+   "title": "OpenAI valued at $852B (Mar 31)",
+   "detail": "Short of the $1T the scenario had during 2025.",
+   "verdict": "Behind",
+   "prediction": "valuation-1t",
+   "source": {
+    "title": "OpenAI",
+    "url": "https://openai.com/index/accelerating-the-next-phase-ai/"
+   }
+  },
+  {
+   "date": "2026-04-07",
+   "precision": "day",
+   "title": "Mythos Preview withheld; SWE-bench 93.9% (Apr 7)",
+   "detail": "Strongest model kept to security partners; 85% target passed about 9 months late.",
+   "verdict": "Ahead of schedule",
+   "prediction": "model-withheld",
+   "source": {
+    "title": "Anthropic",
+    "url": "https://www.anthropic.com/glasswing"
+   }
+  },
+  {
+   "date": "2026-07-15",
+   "precision": "month",
+   "title": "OpenAI models escape sandbox",
+   "detail": "Test models compromised OpenAI and Hugging Face systems; disclosed Aug 26.",
+   "verdict": "Ahead of schedule",
+   "prediction": "sandbox-escape",
+   "source": {
+    "title": "OpenAI",
+    "url": "https://openai.com/index/hugging-face-incident-and-the-road-ahead/"
+   }
+  },
+  {
+   "date": "2026-07-28",
+   "precision": "day",
+   "title": "UK AISI agent incident (Jul 28)",
+   "detail": "Agents took unsanctioned actions against real people in 10 of 122 runs.",
+   "verdict": "Ahead of schedule",
+   "prediction": "sandbox-escape",
+   "source": {
+    "title": "UK AISI",
+    "url": "https://www.aisi.gov.uk/blog/incident-report-unsanctioned-agent-behaviour-during-cyber-testing"
+   }
+  },
+  {
+   "date": "2026-08-12",
+   "precision": "day",
+   "title": "Young-worker AI job gap hits 19% (Aug 12)",
+   "detail": "Ages 22–25 in AI-exposed jobs; no economy-wide displacement.",
+   "verdict": "On track",
+   "prediction": "junior-dev-jobs",
+   "source": {
+    "title": "Stanford",
+    "url": "https://digitaleconomy.stanford.edu/news/canariesaug26/"
+   }
+  },
+  {
+   "date": "2026-08-17",
+   "precision": "day",
+   "title": "Anthropic hits $65B run rate",
+   "detail": "End-of-July figure, reported Aug 17; scenario had $35B for all of 2026.",
+   "verdict": "Ahead of schedule",
+   "prediction": "revenue-35b",
+   "source": {
+    "title": "CNBC",
+    "url": "https://www.cnbc.com/2026/08/17/anthropic-says-annualized-revenue-climbed-to-65-billion-in-july.html"
+   }
+  },
+  {
+   "date": "2026-11-05",
+   "precision": "day",
+   "title": "METR: Anthropic improving about 2x faster (Nov 5)",
+   "detail": "Range 1.3x–3x, mostly due to AI; most evidence redacted.",
+   "verdict": "Ahead of schedule",
+   "prediction": "rd-2x",
+   "source": {
+    "title": "METR",
+    "url": "https://metr.org/blog/2026-11-05-anthropic-ai-rd-acceleration-assessment/"
+   }
+  },
+  {
+   "date": "2026-11-10",
+   "precision": "day",
+   "title": "Authors: intelligence explosion in 2027 after all (Nov 10)",
+   "detail": "AI-driven R&D speedup now about 5 months ahead of the scenario.",
+   "verdict": "Context",
+   "prediction": null,
+   "source": {
+    "title": "AI Futures Project",
+    "url": "https://blog.aifutures.org/p/q35-timelines-update-looks-like-the"
+   }
+  },
+  {
+   "date": "2026-11-18",
+   "precision": "day",
+   "title": "Anthropic IPO (priced Nov 18)",
+   "detail": "Lists on Nasdaq as ANT on Nov 19; OpenAI reportedly at $1.25T (Nov 6).",
+   "verdict": "Context",
+   "prediction": null,
+   "source": {
+    "title": "Anthropic",
+    "url": "https://www.anthropic.com/news/anthropic-prices-initial-public-offering"
+   }
+  },
+  {
+   "date": "2026-11-19",
+   "precision": "day",
+   "title": "Ban RSI rally draws 205 (Nov 19)",
+   "detail": "Protest outside Anthropic, far below the scenario's 10,000.",
+   "verdict": "Behind",
+   "prediction": "protest-10k",
+   "source": {
+    "title": "X",
+    "url": "https://x.com/DKokotajlo/status/2123578626499293680"
+   }
+  }
+ ]
+}

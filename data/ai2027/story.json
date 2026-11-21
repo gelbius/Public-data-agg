@@ -1,0 +1,85 @@
+{
+ "_doc": "The scroll story: one beat per scroll step. 'date' is where the pen stands when the beat is centred. Text in {braces} is filled in by compute.py from the data (gap = the smoothed schedule gap at that date; cross = the month the record crosses the script; low = the lowest reading and its month). 'refs' are event or prediction ids whose sources back the beat.",
+ "beats": [
+  {
+   "date": "2025-04-03",
+   "kicker": "Apr 2025",
+   "title": "The script is printed",
+   "body": "AI 2027 tells a month-by-month story that ends in superhuman AI. The red line is the scenario's pace: AI research progress, sped up by AI itself, exactly as the scenario expects it. The pen records where reality actually is on that path.",
+   "refs": []
+  },
+  {
+   "date": "2025-07-17",
+   "kicker": "Mid 2025",
+   "title": "Stumbling agents, right on cue",
+   "body": "Agents arrive as 'personal assistants' that impress in demos and stumble in practice. ChatGPT agent launches; METR finds experienced developers 19% slower with early-2025 AI tools. Lab safety tests surface risky behavior even earlier than the script. Reading: {gap}.",
+   "refs": [
+    "agents-assistants",
+    "agents-unreliable",
+    "bio-hacking-risk",
+    "models-lie-in-tests"
+   ]
+  },
+  {
+   "date": "2025-11-24",
+   "kicker": "Late 2025",
+   "title": "The pen sags below the line",
+   "body": "Named benchmarks miss their dates. OSWorld's 65% mark lands about five months late, SWE-bench's 85% is still out of reach, and no one is seen running the scenario's giant training run. Reading: {gap}.",
+   "refs": [
+    "osworld",
+    "swe-bench-85",
+    "flop-1e28"
+   ]
+  },
+  {
+   "date": "2026-02-12",
+   "kicker": "Feb 2026",
+   "title": "The authors grade themselves",
+   "body": "The AI 2027 team scores 2025 at about 65% of the scenario's pace. Benchmarks and AI-assisted research are the furthest behind. Reading: {gap}. The record's lowest point: {low}.",
+   "refs": [
+    "rd-1-5x",
+    "leader-margin"
+   ]
+  },
+  {
+   "date": "2026-04-07",
+   "kicker": "Apr 2026",
+   "title": "The crossing",
+   "body": "Anthropic keeps its strongest model, Mythos Preview, away from the public, about nine months before the scenario's version of that moment. The same model clears SWE-bench's 85% bar. The record crosses the script in {cross}.",
+   "refs": [
+    "model-withheld",
+    "swe-bench-85"
+   ]
+  },
+  {
+   "date": "2026-08-17",
+   "kicker": "Summer 2026",
+   "title": "Running ahead",
+   "body": "Models under test break out of their sandbox at OpenAI, months before the scenario's January 2027 date, and the UK AI Security Institute logs agents acting against real people in testing. Anthropic reports a $65B annualized run rate. Reading: {gap}.",
+   "refs": [
+    "sandbox-escape",
+    "revenue-35b"
+   ]
+  },
+  {
+   "date": "2026-11-20",
+   "kicker": "Nov 2026",
+   "title": "Today's reading",
+   "body": "METR finds Anthropic improving about twice as fast as its historical rate, mostly because of AI. The authors read that as AI-driven research about five months ahead of the scenario. Reading today: {gap}.",
+   "refs": [
+    "rd-2x"
+   ]
+  },
+  {
+   "date": "2026-11-20",
+   "kicker": "Next",
+   "title": "Blank paper ahead",
+   "body": "The pen stops at today. The next three scenario beats fall within four months: Agent-2 in January, stolen weights in February and a superhuman coder in March 2027. The full board below lists every prediction.",
+   "refs": [
+    "agent-2-triples",
+    "weights-stolen",
+    "superhuman-coder"
+   ]
+  }
+ ]
+}

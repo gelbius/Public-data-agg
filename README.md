@@ -1,12 +1,13 @@
 # Public Data Dashboards
 
-Dashboards built from **public data**. Every headline is computed from the source numbers, so nothing on the pages is typed by hand. Dashboards 01–02 use government data and refresh themselves every day; dashboard 03 is refreshed every weekday after the market close.
+Dashboards built from **public data**. Every headline is computed from the source numbers, so nothing on the pages is typed by hand. Dashboards 01–02 use government data and refresh themselves every day; dashboard 03 is refreshed every weekday after the market close. Dashboard 04 is curated by hand from linked sources (see below).
 
 | # | Dashboard | What it shows |
 |---|---|---|
 | 01 | [The Consumer: an economic state of the union](dashboards/macro/) | Inflation, rates, jobs, wages, business price pressure, housing affordability, credit, sentiment and household spending in the US |
 | 02 | [AI at work](dashboards/ai/) | How many US businesses use AI, which industries lead, and its effect on jobs so far (Census BTOS) |
 | 03 | [Tech valuations & deals](dashboards/tech/) | Valuation multiples (TTM) by tech category, how they moved over 6 and 12 months, notable deals of the last six months, and the biggest private AI valuations |
+| 04 | [AI 2027 vs reality](dashboards/ai2027/) | The AI 2027 scenario's 36 dated predictions scored against what happened, a scroll-driven seismograph of whether AI progress runs behind or ahead of the script, and a split-flap board of every prediction |
 
 Design follows the [Foundry Solutions](https://foundrysolutions.ai) brand. Charts use [Apache ECharts](https://echarts.apache.org).
 
@@ -90,6 +91,18 @@ python3 pipeline/tech_snapshot.py build raw.json # after writing raw.json (forma
 python3 pipeline/fetch.py tech --force
 python3 pipeline/build.py
 ```
+
+## Updating dashboard 04 (AI 2027 vs reality)
+
+Dashboard 04 has no automatic download: its inputs are hand-curated JSON files in `data/ai2027/`, each with a `_doc` note explaining its fields.
+
+- `predictions.json`: the 36 predictions, their verdicts, dates and source links. When new evidence lands, update `reality`, `verdict`, `actual` / `verdict_on`, and the `checkpoints` that feed the schedule-gap trend, then bump `as_of`.
+- `events.json`: dated real-world events shown on the seismograph and in the telegraph slip. Every event needs a primary link.
+- `scenario.json`: the AI 2027 scenario's own research-speed figures (quoted from ai-2027.com) that shape the red "script" curve.
+- `story.json`: the scroll story. Readings in `{braces}` are filled in by `compute.py`, so the text never goes stale.
+- `watch.json`: what to watch next.
+
+Then run `python3 pipeline/build.py`. `compute.py` recomputes the counts, the trend, both curves and every reading quoted on the page.
 
 ## Publish with Cloudflare Pages
 

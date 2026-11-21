@@ -1,0 +1,14 @@
+{
+ "_doc": "What to watch next: scheduled events and the scenario beats they test, from the compiled source page (as of 2026-11-20). 'scenario': true marks a date taken from the scenario rather than a confirmed calendar date.",
+ "items": [
+  {"date": "2026-12-04", "scenario": false, "event": "ARC Prize 2026 results announced", "tests": "Capabilities: progress on novel-reasoning tasks outside coding", "url": "https://arcprize.org/"},
+  {"date": "2026-12-01", "scenario": true, "event": "AI 2027 year-end panel: about 2x R&D speedup, $55B leading-lab run rate, $2.5T valuation", "tests": "Whether the 2x R&D speedup and revenue stay ahead while valuation lags", "url": "https://ai-2027.com/"},
+  {"date": "2026-12-31", "scenario": false, "event": "S&P 500 full-year close", "tests": "Economic: the “+30% in 2026” call", "url": "https://fred.stlouisfed.org/series/SP500"},
+  {"date": "2027-01-10", "scenario": false, "event": "End of the extended pause on BIS's affiliates export rule (Federal Register 2026-22793)", "tests": "External: whether US export controls tighten or loosen", "url": null},
+  {"date": "2027-01-01", "scenario": true, "event": "Agent-2: always-learning model, 3x research speed, kept internal", "tests": "R&D speedup data from METR or the labs; more models withheld like Mythos Preview", "url": "https://ai-2027.com/"},
+  {"date": "2027-02-01", "scenario": true, "event": "China steals Agent-2's weights", "tests": "Security disclosures; any confirmed nation-state theft of model weights", "url": "https://ai-2027.com/"},
+  {"date": "2027-03-01", "scenario": true, "event": "Agent-3: superhuman coder, 200,000 copies in parallel", "tests": "Whether labs say AI does essentially all their coding", "url": "https://ai-2027.com/"},
+  {"date": "2027-05-01", "scenario": false, "event": "Kokotajlo's median for a Superhuman AI Researcher (Nov 10 update)", "tests": "Whether the authors' shortened timelines hold", "url": "https://blog.aifutures.org/p/q35-timelines-update-looks-like-the"},
+  {"date": null, "scenario": false, "event": "Anthropic's first earnings as a public company (listed Nov 19, 2026)", "tests": "Economic: audited revenue against the scenario's money track", "url": null}
+ ]
+}
