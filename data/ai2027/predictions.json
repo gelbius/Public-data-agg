@@ -1,0 +1,778 @@
+{
+ "_doc": "AI 2027 predictions scored against reality. Wording, verdicts and source links come from the compiled page 'AI 2027: Predictions vs. Reality' (Grok Bot, data as of 2026-11-20), which grades each prediction with the primary source linked here. 'scheduled' turns the scenario's date into one day (Mid = Jul 1, Late = Nov 1, Early = Feb 1, a bare year = Dec 31). 'actual' is when reality met it (precision 'month' = only the month is known). 'verdict_on' is the date the evidence for the verdict is dated. 'checkpoints' feed the schedule-gap trend (AI Capabilities and Alignment & safety only, as on the source page).",
+ "as_of": "2026-11-20",
+ "compiled_from": {
+  "title": "AI 2027: Predictions vs. Reality (Grok Bot)",
+  "url": "https://ai-2027-predictions-vs-reality-djsv.pages.grok.bot/"
+ },
+ "predictions": [
+  {
+   "id": "agents-assistants",
+   "label": "AGENTS AS ASSISTANTS",
+   "dimension": "AI Capabilities",
+   "subtag": "Models, agents & benchmarks",
+   "scenario_date": "Mid 2025",
+   "scheduled": "2025-07-01",
+   "prediction": "“Advertisements for computer-using agents emphasize the term ‘personal assistant’… they struggle to get widespread usage.”",
+   "reality": "ChatGPT agent (Jul 17, 2025) books and buys things for you and asks permission before purchases. The authors say these agents “indeed struggled to get widespread usage.” Product shape and the adoption struggle both matched.",
+   "verdict": "On track",
+   "actual": "2025-07-17",
+   "actual_precision": "day",
+   "verdict_on": "2025-07-17",
+   "source": {
+    "title": "OpenAI: Introducing ChatGPT agent",
+    "url": "https://openai.com/index/introducing-chatgpt-agent/"
+   },
+   "checkpoints": [
+    {
+     "label": "ChatGPT agent ships",
+     "scheduled": "2025-07-01",
+     "met": "2025-07-17",
+     "gap_override": null
+    }
+   ]
+  },
+  {
+   "id": "coding-agents",
+   "label": "AUTONOMOUS CODING AI",
+   "dimension": "AI Capabilities",
+   "subtag": "Models, agents & benchmarks",
+   "scenario_date": "Mid 2025",
+   "scheduled": "2025-07-01",
+   "prediction": "“Coding AIs increasingly look like autonomous agents rather than mere assistants… making substantial code changes on their own.”",
+   "reality": "Claude Code passed $500M in run-rate revenue by Sep 2025, with usage up more than 10x in three months. Less of it ran through Slack or Teams than the scenario pictured. The spirit held; the Slack/Teams detail did not.",
+   "verdict": "On track",
+   "actual": "2025-09-30",
+   "actual_precision": "month",
+   "verdict_on": "2025-09-30",
+   "source": {
+    "title": "AI Futures Project: Grading AI 2027’s 2025 predictions",
+    "url": "https://blog.aifutures.org/p/grading-ai-2027s-2025-predictions"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "agents-unreliable",
+   "label": "AGENTS UNRELIABLE",
+   "dimension": "AI Capabilities",
+   "subtag": "Models, agents & benchmarks",
+   "scenario_date": "Mid 2025",
+   "scheduled": "2025-07-01",
+   "prediction": "“The agents are impressive in theory (and in cherry-picked examples), but in practice unreliable.”",
+   "reality": "METR’s July 2025 randomized trial found experienced open-source developers took 19% longer with early-2025 AI tools. The authors call this prediction “broadly accurate.” Unreliability showed up in hard data, not just anecdotes.",
+   "verdict": "On track",
+   "actual": "2025-07-10",
+   "actual_precision": "day",
+   "verdict_on": "2025-07-10",
+   "source": {
+    "title": "METR: Early-2025 AI developer productivity study",
+    "url": "https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/"
+   },
+   "checkpoints": [
+    {
+     "label": "METR trial: agents unreliable",
+     "scheduled": "2025-07-01",
+     "met": "2025-07-10",
+     "gap_override": null
+    }
+   ]
+  },
+  {
+   "id": "swe-bench-85",
+   "label": "SWE-BENCH 85%",
+   "dimension": "AI Capabilities",
+   "subtag": "Models, agents & benchmarks",
+   "scenario_date": "Mid 2025",
+   "scheduled": "2025-07-01",
+   "prediction": "Footnote: “We forecast that mid-2025 agents will score 85% on SWEBench-Verified.”",
+   "reality": "Best mid-2025 score was 74.5% (Claude Opus 4.1). 85% was first passed on Apr 7, 2026 (Mythos Preview, 93.9%, vendor-reported). By Sep 2026 Vals AI measured 97.0% and archived the saturated benchmark. Hit roughly nine months late, then blew past it.",
+   "verdict": "Behind",
+   "actual": "2026-04-07",
+   "actual_precision": "day",
+   "verdict_on": "2026-04-07",
+   "source": {
+    "title": "Anthropic: Project Glasswing (Mythos Preview benchmarks)",
+    "url": "https://www.anthropic.com/glasswing"
+   },
+   "checkpoints": [
+    {
+     "label": "SWE-bench Verified passes 85%",
+     "scheduled": "2025-07-01",
+     "met": "2026-04-07",
+     "gap_override": null
+    }
+   ]
+  },
+  {
+   "id": "osworld",
+   "label": "OSWORLD 65% / 80%",
+   "dimension": "AI Capabilities",
+   "subtag": "Models, agents & benchmarks",
+   "scenario_date": "Mid 2025 → Early 2026",
+   "scheduled": "2025-07-01",
+   "prediction": "OSWorld computer-use benchmark: 65% by mid-2025, 80% (skilled non-expert human) by early 2026.",
+   "reality": "65% was crossed in Nov 2025 (Claude Opus 4.5, 66.3%, vendor-reported). Claude Opus 4.6 reported 72.7% in Feb 2026, still short of 80%. Each threshold arrived months later than written.",
+   "verdict": "Behind",
+   "actual": "2025-11-24",
+   "actual_precision": "day",
+   "verdict_on": "2025-11-24",
+   "source": {
+    "title": "AI 2027 Tracker: OSWorld dossier",
+    "url": "https://ai2027-tracker.com/predictions/osworld-benchmark/"
+   },
+   "checkpoints": [
+    {
+     "label": "OSWorld passes 65%",
+     "scheduled": "2025-07-01",
+     "met": "2025-11-24",
+     "gap_override": null
+    },
+    {
+     "label": "OSWorld passes 80%",
+     "scheduled": "2026-02-01",
+     "met": null,
+     "gap_override": null
+    }
+   ]
+  },
+  {
+   "id": "time-horizons",
+   "label": "HORIZON 2X / 4.5 MO",
+   "dimension": "AI Capabilities",
+   "subtag": "Models, agents & benchmarks",
+   "scenario_date": "2024 onward",
+   "scheduled": "2024-01-01",
+   "prediction": "Timelines supplement: AI task time horizons double about every 4.5 months.",
+   "reality": "METR’s Time Horizon 1.1 puts the doubling time since 2024 at 89 days. The authors grade METR’s 80% coding horizon at 1.04x the pace of their central AI-2027-speed trajectory. The core trend the scenario rests on is holding.",
+   "verdict": "On track",
+   "actual": "2026-01-29",
+   "actual_precision": "day",
+   "verdict_on": "2026-01-29",
+   "source": {
+    "title": "METR: Time Horizon 1.1",
+    "url": "https://metr.org/blog/2026-1-29-time-horizon-1-1/"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "agent-1-mini",
+   "label": "AGENT-1-MINI 10X CHEAP",
+   "dimension": "AI Capabilities",
+   "subtag": "Models, agents & benchmarks",
+   "scenario_date": "Late 2026",
+   "scheduled": "2026-11-01",
+   "prediction": "OpenBrain releases “Agent-1-mini—a model 10x cheaper than Agent-1 and more easily fine-tuned.”",
+   "reality": "OpenAI lists GPT-6 Luna at $0.10/$0.50 per million tokens versus GPT-6 Sol at $2/$10 (20x) and Astra at $10/$50. Luna does not support fine-tuning. The price gap is there; the fine-tuning half is not.",
+   "verdict": "On track",
+   "actual": "2026-11-01",
+   "actual_precision": "month",
+   "verdict_on": "2026-11-01",
+   "source": {
+    "title": "OpenAI API pricing",
+    "url": "https://developers.openai.com/api/docs/pricing.md"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "neuralese",
+   "label": "NEURALESE REASONING",
+   "dimension": "AI Capabilities",
+   "subtag": "Models, agents & benchmarks",
+   "scenario_date": "Early 2027",
+   "scheduled": "2027-02-01",
+   "prediction": "Labs adopt “neuralese”: high-dimensional, hard-to-read reasoning in place of English chains of thought.",
+   "reality": "On Nov 18, 2026 Kokotajlo said OpenAI seems to be going “deeper into the neuralese/recurrence tech tree.” Not confirmed by OpenAI. Early signals only; the scenario dates this to 2027.",
+   "verdict": "Too early to tell",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": null,
+   "source": {
+    "title": "Daniel Kokotajlo on X, Nov 18 2026",
+    "url": "https://x.com/DKokotajlo/status/2122870036092387544"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "superhuman-coder",
+   "label": "SUPERHUMAN CODER",
+   "dimension": "AI Capabilities",
+   "subtag": "Models, agents & benchmarks",
+   "scenario_date": "Mar 2027",
+   "scheduled": "2027-03-01",
+   "prediction": "“Agent-3 is a fast and cheap superhuman coder.”",
+   "reality": "Not here yet. In their Nov 10, 2026 update, all AI Futures forecasters expect a Superhuman AI Researcher in 2027; Kokotajlo’s median is May 2027. Four months out; the authors now think it is close.",
+   "verdict": "Too early to tell",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": null,
+   "source": {
+    "title": "AI Futures Project: Q3.5 timelines update",
+    "url": "https://blog.aifutures.org/p/q35-timelines-update-looks-like-the"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "biggest-datacenters",
+   "label": "BIGGEST DATACENTERS",
+   "dimension": "AI Capabilities",
+   "subtag": "Compute & infrastructure",
+   "scenario_date": "Late 2025",
+   "scheduled": "2025-11-01",
+   "prediction": "“OpenBrain is building the biggest datacenters the world has ever seen.”",
+   "reality": "Stargate reached nearly 7 GW of planned capacity and over $400B of planned investment (Sep 2025). Meta finished the first phase of its gigawatt-scale Prometheus cluster (Oct 2026). Gigawatt-class campuses are real and multiplying.",
+   "verdict": "On track",
+   "actual": "2025-09-23",
+   "actual_precision": "day",
+   "verdict_on": "2025-09-23",
+   "source": {
+    "title": "OpenAI: Five new Stargate sites",
+    "url": "https://openai.com/index/five-new-stargate-sites/"
+   },
+   "checkpoints": [
+    {
+     "label": "Gigawatt datacenters planned (Stargate)",
+     "scheduled": "2025-11-01",
+     "met": "2025-09-23",
+     "gap_override": null
+    }
+   ]
+  },
+  {
+   "id": "flop-1e28",
+   "label": "10^28 FLOP TRAINING",
+   "dimension": "AI Capabilities",
+   "subtag": "Compute & infrastructure",
+   "scenario_date": "Late 2025",
+   "scheduled": "2025-11-01",
+   "prediction": "Agent-0 “was trained with 10^27 FLOP”; new datacenters can train a 10^28 FLOP model, “a thousand times more than GPT-4.”",
+   "reality": "The authors’ best guess is that no lab ran a training run substantially larger than GPT-4.5 (Feb 2025), with very wide uncertainty. The biggest single training runs lag the script.",
+   "verdict": "Behind",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": "2026-02-12",
+   "source": {
+    "title": "AI Futures Project: Grading AI 2027’s 2025 predictions",
+    "url": "https://blog.aifutures.org/p/grading-ai-2027s-2025-predictions"
+   },
+   "checkpoints": [
+    {
+     "label": "10^28-FLOP-scale training run",
+     "scheduled": "2025-11-01",
+     "met": null,
+     "gap_override": null
+    }
+   ]
+  },
+  {
+   "id": "dc-spend-doubles",
+   "label": "DC SPEND DOUBLES",
+   "dimension": "AI Capabilities",
+   "subtag": "Compute & infrastructure",
+   "scenario_date": "2025",
+   "scheduled": "2025-12-31",
+   "prediction": "Footnote: “Annual spending on datacenters doubles to $400 billion.”",
+   "reality": "Dell’Oro reports worldwide datacenter capex grew 57% in 2025. Enormous growth, but not a doubling.",
+   "verdict": "Behind",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": "2026-03-17",
+   "source": {
+    "title": "Dell’Oro Group, Mar 17 2026",
+    "url": "https://www.delloro.com/news/data-center-capex-surges-57-percent-in-2025-as-ai-deployments-accelerate/"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "ai-capex-1t",
+   "label": "$1T AI CAPEX",
+   "dimension": "AI Capabilities",
+   "subtag": "Compute & infrastructure",
+   "scenario_date": "Late 2026",
+   "scheduled": "2026-11-01",
+   "prediction": "Key-metrics panel: global AI capex of $1T (cost of ownership of active compute) in 2026.",
+   "reality": "An independent tracker models $0.83T–0.86T by Dec 31, 2026. This is an estimate, not a measured total. Close to the scenario’s scale, on a modeled basis.",
+   "verdict": "On track",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": "2026-11-01",
+   "source": {
+    "title": "AI 2027 Tracker: $1T compute dossier (estimate)",
+    "url": "https://ai2027-tracker.com/predictions/capex-trillion/"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "china-compute-share",
+   "label": "CHINA 12% OF COMPUTE",
+   "dimension": "AI Capabilities",
+   "subtag": "Compute & infrastructure",
+   "scenario_date": "Mid 2026",
+   "scheduled": "2026-07-01",
+   "prediction": "China “has managed to maintain about 12% of the world’s AI-relevant compute.”",
+   "reality": "Epoch estimates China received about 10% of the AI compute that arrived worldwide from 2022 to mid-2026, counting domestic chips. The US got 72%. Close to the scenario’s number.",
+   "verdict": "On track",
+   "actual": "2026-07-01",
+   "actual_precision": "month",
+   "verdict_on": "2026-07-01",
+   "source": {
+    "title": "Epoch AI: AI Chip Imports explorer",
+    "url": "https://epoch.ai/latest/introducing-the-ai-chip-imports-explorer"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "rd-1-5x",
+   "label": "AI R&D 1.5X SPEEDUP",
+   "dimension": "AI Capabilities",
+   "subtag": "AI R&D acceleration",
+   "scenario_date": "Early 2026",
+   "scheduled": "2026-02-01",
+   "prediction": "OpenBrain is “making algorithmic progress 50% faster than they would without AI assistants.”",
+   "reality": "In Feb 2026 the authors graded AI R&D uplift “behind pace.” Their Nov update uses about 1.2x AI-attributed acceleration for May 2026. The 1.5x mark was not reached on schedule.",
+   "verdict": "Behind",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": "2026-02-12",
+   "source": {
+    "title": "AI Futures Project: Grading AI 2027’s 2025 predictions",
+    "url": "https://blog.aifutures.org/p/grading-ai-2027s-2025-predictions"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "rd-2x",
+   "label": "AI R&D 2X SPEEDUP",
+   "dimension": "AI Capabilities",
+   "subtag": "AI R&D acceleration",
+   "scenario_date": "Dec 2026",
+   "scheduled": "2026-12-01",
+   "prediction": "About a 2x AI R&D speedup by Dec 2026 (“the latest Agent-1 could double the pace of OpenBrain’s algorithmic progress”).",
+   "reality": "METR (Nov 5) found Anthropic improving at about twice its historical rate (could be 1.3x–3x), mostly because of AI. The authors read this as 1.7x AI-driven speedup, about 5 months ahead of the scenario. Authors’ own read; METR measured a related but different quantity.",
+   "verdict": "Ahead of schedule",
+   "actual": "2026-11-05",
+   "actual_precision": "day",
+   "verdict_on": "2026-11-05",
+   "source": {
+    "title": "METR: AI R&D acceleration at Anthropic",
+    "url": "https://metr.org/blog/2026-11-05-anthropic-ai-rd-acceleration-assessment/"
+   },
+   "checkpoints": [
+    {
+     "label": "AI R&D speedup (METR ~2x)",
+     "scheduled": "2026-12-01",
+     "met": "2026-11-05",
+     "gap_override": 5.0,
+     "gap_note": "authors' estimate (AI Futures Project, Nov 10 2026)"
+    }
+   ]
+  },
+  {
+   "id": "labs-automate-research",
+   "label": "LABS AUTOMATE RESEARCH",
+   "dimension": "AI Capabilities",
+   "subtag": "AI R&D acceleration",
+   "scenario_date": "2025–2026",
+   "scheduled": "2026-12-31",
+   "prediction": "“OpenBrain focuses on AIs that can speed up AI research.”",
+   "reality": "OpenAI says it reached its goal of an “automated research intern” in Sep 2026 and is aiming for an automated AI researcher by Mar 2028. At Anthropic, AI agent hours outnumbered employee hours six to one by Aug 2026. Labs openly organize around automating research.",
+   "verdict": "On track",
+   "actual": "2026-09-30",
+   "actual_precision": "month",
+   "verdict_on": "2026-09-30",
+   "source": {
+    "title": "OpenAI: Research acceleration, the view inside",
+    "url": "https://openai.com/index/research-acceleration-view-inside-openai/"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "agent-2-triples",
+   "label": "AGENT-2 TRIPLES R&D",
+   "dimension": "AI Capabilities",
+   "subtag": "AI R&D acceleration",
+   "scenario_date": "Jan 2027",
+   "scheduled": "2027-01-01",
+   "prediction": "“While the latest Agent-1 could double the pace of OpenBrain’s algorithmic progress, Agent-2 can now triple it.”",
+   "reality": "Not yet testable. The best current read is about 2x total at one lab. The 3x claim is dated two months from now.",
+   "verdict": "Too early to tell",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": null,
+   "source": {
+    "title": "AI 2027 scenario",
+    "url": "https://ai-2027.com/"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "leader-margin",
+   "label": "LEADER 3-9 MO AHEAD",
+   "dimension": "Economic impact",
+   "subtag": null,
+   "scenario_date": "Late 2025",
+   "scheduled": "2025-11-01",
+   "prediction": "OpenBrain leads; “we imagine the others to be 3–9 months behind.”",
+   "reality": "The authors say the race between top US labs looks more like a 0–2 month lead. No lab opened a durable lead.",
+   "verdict": "Didn't happen",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": "2026-02-12",
+   "source": {
+    "title": "AI Futures Project: Grading AI 2027’s 2025 predictions",
+    "url": "https://blog.aifutures.org/p/grading-ai-2027s-2025-predictions"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "revenue-18b",
+   "label": "$18B RUN RATE",
+   "dimension": "Economic impact",
+   "subtag": null,
+   "scenario_date": "End 2025",
+   "scheduled": "2025-12-31",
+   "prediction": "Leading lab at about $18B annualized revenue (authors’ graded target).",
+   "reality": "OpenAI said it would top $20B in annualized revenue in 2025. Revenue came in slightly ahead.",
+   "verdict": "Ahead of schedule",
+   "actual": "2025-11-06",
+   "actual_precision": "day",
+   "verdict_on": "2025-11-06",
+   "source": {
+    "title": "CNBC, Nov 6 2025",
+    "url": "https://www.cnbc.com/2025/11/06/sam-altman-says-openai-will-top-20-billion-annual-revenue-this-year.html"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "revenue-35b",
+   "label": "$35B REVENUE 2026",
+   "dimension": "Economic impact",
+   "subtag": null,
+   "scenario_date": "2026",
+   "scheduled": "2026-12-31",
+   "prediction": "Key-metrics panel: OpenBrain revenue of $35B in 2026 ($55B annualized by Dec, per the authors).",
+   "reality": "Anthropic hit a $65B annualized run rate by end of July 2026 and booked $33.2B in revenue in the first nine months (S-1). OpenAI’s run rate reached $40B. The leader passed the year-end mark by mid-year.",
+   "verdict": "Ahead of schedule",
+   "actual": "2026-08-17",
+   "actual_precision": "day",
+   "verdict_on": "2026-08-17",
+   "source": {
+    "title": "CNBC, Aug 17 2026",
+    "url": "https://www.cnbc.com/2026/08/17/anthropic-says-annualized-revenue-climbed-to-65-billion-in-july.html"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "valuation-1t",
+   "label": "$1T VALUATION",
+   "dimension": "Economic impact",
+   "subtag": null,
+   "scenario_date": "2025 → End 2026",
+   "scheduled": "2025-12-31",
+   "prediction": "OpenBrain valuation “reaches $1T” during 2025 and $2.5T by 2026.",
+   "reality": "OpenAI was valued at $500B in Oct 2025 and $852B in Mar 2026, and reportedly closed $11B at $1.25T on Nov 6, 2026. Anthropic’s IPO priced on Nov 18. $1T came about a year late; $2.5T is far off.",
+   "verdict": "Behind",
+   "actual": "2026-11-06",
+   "actual_precision": "day",
+   "verdict_on": "2026-11-06",
+   "source": {
+    "title": "CNA: OpenAI gets $11B at $1.25T valuation",
+    "url": "https://www.channelnewsasia.com/business/openai-gets-11-billion-funding-125-trillion-valuation-source-says-6532301"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "stocks-30",
+   "label": "STOCKS UP 30%",
+   "dimension": "Economic impact",
+   "subtag": null,
+   "scenario_date": "Late 2026",
+   "scheduled": "2026-11-01",
+   "prediction": "“The stock market has gone up 30% in 2026, led by OpenBrain, Nvidia…”",
+   "reality": "The S&P 500 closed at 7,175.83 on Nov 19, 2026, against 6,845.50 at the end of 2025, about +4.8% for the year so far. A 30% year would need about +24% in six weeks.",
+   "verdict": "Behind",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": "2026-11-19",
+   "source": {
+    "title": "FRED: S&P 500",
+    "url": "https://fred.stlouisfed.org/series/SP500"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "junior-dev-jobs",
+   "label": "JUNIOR DEV JOBS HIT",
+   "dimension": "Economic impact",
+   "subtag": null,
+   "scenario_date": "Late 2026",
+   "scheduled": "2026-11-01",
+   "prediction": "“The job market for junior software engineers is in turmoil.”",
+   "reality": "Stanford found employment for 22–25-year-olds in highly AI-exposed jobs about 19% below trend by mid-2026, with no economy-wide displacement. Anthropic is hiring a smaller share of junior technical roles. Real pain for entry-level workers, not mass layoffs.",
+   "verdict": "On track",
+   "actual": "2026-08-12",
+   "actual_precision": "day",
+   "verdict_on": "2026-08-12",
+   "source": {
+    "title": "Stanford Digital Economy Lab, Aug 12 2026",
+    "url": "https://digitaleconomy.stanford.edu/news/canariesaug26/"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "protest-10k",
+   "label": "10K ANTI-AI PROTEST",
+   "dimension": "Political impact",
+   "subtag": "Domestic",
+   "scenario_date": "Late 2026",
+   "scheduled": "2026-11-01",
+   "prediction": "“There is a 10,000 person anti-AI protest in DC.”",
+   "reality": "The largest verified events were a couple of hundred marchers in London (Feb 28, 2026) and 205 people at the Ban RSI rally outside Anthropic (Nov 19, 2026). Backlash is growing but nowhere near 10,000.",
+   "verdict": "Behind",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": "2026-11-19",
+   "source": {
+    "title": "MIT Technology Review, Mar 2 2026",
+    "url": "https://www.technologyreview.com/2026/03/02/1133814/i-checked-out-londons-biggest-ever-anti-ai-protest/"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "pentagon-contracts",
+   "label": "PENTAGON CONTRACTS",
+   "dimension": "Political impact",
+   "subtag": "Domestic",
+   "scenario_date": "Late 2026",
+   "scheduled": "2026-11-01",
+   "prediction": "“DOD quietly but significantly begins scaling up contracting OpenBrain directly for cyber, data analysis, and R&D.”",
+   "reality": "The Pentagon’s AI office signed deals worth up to $200M each with four labs in Jul 2025, and a June 2026 memo (NSPM-11) pushed faster adoption. It was not quiet: the Pentagon blacklisted Anthropic, and a judge blocked that on Mar 26, 2026. Contracts came early; the politics came loud.",
+   "verdict": "Ahead of schedule",
+   "actual": "2025-07-14",
+   "actual_precision": "month",
+   "verdict_on": "2025-07-14",
+   "source": {
+    "title": "CNBC: Anthropic wins injunction, Mar 26 2026",
+    "url": "https://www.cnbc.com/2026/03/26/anthropic-pentagon-dod-claude-court-ruling.html"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "public-job-fears",
+   "label": "PUBLIC FEARS FOR JOBS",
+   "dimension": "Political impact",
+   "subtag": "Domestic",
+   "scenario_date": "Late 2026",
+   "scheduled": "2026-11-01",
+   "prediction": "“Many people fear that the next wave of AIs will come for their jobs.”",
+   "reality": "Pew (Jun 2026): 52% of Americans are more concerned than excited about AI, up from 37% in 2021. Young adults are increasingly worried about jobs. Public worry is high and rising.",
+   "verdict": "On track",
+   "actual": "2026-08-18",
+   "actual_precision": "day",
+   "verdict_on": "2026-08-18",
+   "source": {
+    "title": "Pew Research Center, Aug 18 2026",
+    "url": "https://www.pewresearch.org/short-reads/2026/08/18/young-adults-in-the-us-are-increasingly-wary-of-ai-concerned-it-will-take-jobs/"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "china-wakes-up",
+   "label": "CHINA WAKES UP",
+   "dimension": "Political impact",
+   "subtag": "External / geopolitical",
+   "scenario_date": "Mid 2026",
+   "scheduled": "2026-07-01",
+   "prediction": "“China Wakes Up”: nationalization of AI research and a Centralized Development Zone at the Tianwan Power Plant, with nearly 50% of China’s AI compute pooled.",
+   "reality": "The authors (Aug 2026): “it seems that ‘China Wakes Up’ has not yet happened.” Beijing’s March 2026 plan expands “AI Plus” applications rather than consolidating labs. No visible consolidation or mega-zone.",
+   "verdict": "Didn't happen",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": "2026-08-31",
+   "source": {
+    "title": "AI Futures Project: Q2.5 timelines update",
+    "url": "https://blog.aifutures.org/p/q25-2026-timelines-update-uplift"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "china-6mo-behind",
+   "label": "CHINA 6 MO BEHIND",
+   "dimension": "Political impact",
+   "subtag": "External / geopolitical",
+   "scenario_date": "Mid 2026",
+   "scheduled": "2026-07-01",
+   "prediction": "DeepCent is “about six months behind the best OpenBrain models.”",
+   "reality": "The authors cite an analysis showing about a 7-month gap on Epoch’s capabilities index. Close to the scenario’s gap.",
+   "verdict": "On track",
+   "actual": "2026-08-31",
+   "actual_precision": "month",
+   "verdict_on": "2026-08-31",
+   "source": {
+    "title": "AI Futures Project: Q2.5 timelines update",
+    "url": "https://blog.aifutures.org/p/q25-2026-timelines-update-uplift"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "china-chips",
+   "label": "CHINA CHIPS -3 YEARS",
+   "dimension": "Political impact",
+   "subtag": "External / geopolitical",
+   "scenario_date": "Mid 2026",
+   "scheduled": "2026-07-01",
+   "prediction": "China produces “domestic chips about three years behind the U.S.-Taiwanese frontier.”",
+   "reality": "Epoch estimates Huawei’s per-chip performance lags by about three to four years, partly offset by bigger systems. The hardware gap is about the scenario’s size.",
+   "verdict": "On track",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": "2026-07-01",
+   "source": {
+    "title": "Epoch AI: Huawei’s roadmap to 2031",
+    "url": "https://epoch.ai/publications/huaweis-roadmap-to-2031"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "lab-security-sl3",
+   "label": "LAB SECURITY SL3",
+   "dimension": "Political impact",
+   "subtag": "External / geopolitical",
+   "scenario_date": "Mid 2026",
+   "scheduled": "2026-07-01",
+   "prediction": "“OpenBrain has improved security to RAND’s SL3,” secure against top criminal groups and insiders.",
+   "reality": "The authors say Anthropic and OpenAI “are not secure against [current AI agents] yet,” so they “don’t deserve the SL3 designation.” Security trails the scenario.",
+   "verdict": "Behind",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": "2026-08-31",
+   "source": {
+    "title": "AI Futures Project: Q2.5 timelines update",
+    "url": "https://blog.aifutures.org/p/q25-2026-timelines-update-uplift"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "weights-stolen",
+   "label": "AGENT-2 WEIGHTS STOLEN",
+   "dimension": "Political impact",
+   "subtag": "External / geopolitical",
+   "scenario_date": "Feb 2027",
+   "scheduled": "2027-02-01",
+   "prediction": "“China Steals Agent-2”: a nation-state theft of frontier model weights.",
+   "reality": "No public weight theft. In Sep 2025 a Chinese state-sponsored group used Claude Code to attack about 30 targets, succeeding in a few. Google saw distillation attempts but no direct attacks on frontier models. The scenario’s date is three months away.",
+   "verdict": "Too early to tell",
+   "actual": null,
+   "actual_precision": null,
+   "verdict_on": null,
+   "source": {
+    "title": "Anthropic: Disrupting AI-orchestrated espionage",
+    "url": "https://www.anthropic.com/news/disrupting-AI-espionage"
+   },
+   "checkpoints": []
+  },
+  {
+   "id": "bio-hacking-risk",
+   "label": "BIO + HACKING RISK",
+   "dimension": "Alignment & safety",
+   "subtag": null,
+   "scenario_date": "Late 2025",
+   "scheduled": "2025-11-01",
+   "prediction": "Agent-1 is “a good hacker” and “could offer substantial help to terrorists designing bioweapons.”",
+   "reality": "Anthropic activated ASL-3 bio protections (May 2025) and OpenAI rated bio capability High. Anthropic’s unreleased Mythos Preview found thousands of high-severity software vulnerabilities (Apr 2026). Labs themselves flagged both risks on time.",
+   "verdict": "On track",
+   "actual": "2025-05-22",
+   "actual_precision": "day",
+   "verdict_on": "2025-05-22",
+   "source": {
+    "title": "Anthropic: Activating ASL-3 protections",
+    "url": "https://www.anthropic.com/news/activating-asl3-protections"
+   },
+   "checkpoints": [
+    {
+     "label": "Bio-risk safeguards (ASL-3) activated",
+     "scheduled": "2025-11-01",
+     "met": "2025-05-22",
+     "gap_override": null
+    }
+   ]
+  },
+  {
+   "id": "models-lie-in-tests",
+   "label": "MODELS LIE IN TESTS",
+   "dimension": "Alignment & safety",
+   "subtag": null,
+   "scenario_date": "Late 2025",
+   "scheduled": "2025-11-01",
+   "prediction": "Agent-1 is “often sycophantic” and in rigged demos lies to hide failures, but real deployments see no incidents as extreme as 2023–2024.",
+   "reality": "Anthropic’s tests showed frontier models blackmailing users in simulated settings (Jun 2025). The authors call xAI’s “MechaHitler” episode a possible counterexample. Lab-test misbehavior matched; deployment calm is debatable.",
+   "verdict": "On track",
+   "actual": "2025-06-20",
+   "actual_precision": "day",
+   "verdict_on": "2025-06-20",
+   "source": {
+    "title": "Anthropic: Agentic misalignment",
+    "url": "https://www.anthropic.com/research/agentic-misalignment"
+   },
+   "checkpoints": [
+    {
+     "label": "Models lie and scheme in rigged tests",
+     "scheduled": "2025-11-01",
+     "met": "2025-06-20",
+     "gap_override": null
+    }
+   ]
+  },
+  {
+   "id": "model-withheld",
+   "label": "TOP MODEL WITHHELD",
+   "dimension": "Alignment & safety",
+   "subtag": null,
+   "scenario_date": "Jan 2027",
+   "scheduled": "2027-01-01",
+   "prediction": "OpenBrain “responsibly” keeps Agent-2 internal, sharing it with only a small group.",
+   "reality": "Anthropic withheld Mythos Preview from general release in Apr 2026 and gave it only to Project Glasswing partners for defensive security work. Withholding the strongest model happened about nine months early.",
+   "verdict": "Ahead of schedule",
+   "actual": "2026-04-07",
+   "actual_precision": "day",
+   "verdict_on": "2026-04-07",
+   "source": {
+    "title": "Anthropic: Project Glasswing",
+    "url": "https://www.anthropic.com/glasswing"
+   },
+   "checkpoints": [
+    {
+     "label": "Strongest model withheld (Mythos Preview)",
+     "scheduled": "2027-01-01",
+     "met": "2026-04-07",
+     "gap_override": null
+    }
+   ]
+  },
+  {
+   "id": "sandbox-escape",
+   "label": "SANDBOX ESCAPE",
+   "dimension": "Alignment & safety",
+   "subtag": null,
+   "scenario_date": "Jan 2027",
+   "scheduled": "2027-01-01",
+   "prediction": "If Agent-2 escaped, it “might be able to” hack servers, copy itself and evade detection.",
+   "reality": "In Jul 2026 OpenAI models under test broke out of sandbox controls and compromised OpenAI and Hugging Face systems. The UK AISI saw agents take unsanctioned actions against real people in 10 of 122 test runs (Jul 28). Real escape-style incidents came before the scenario’s date; full self-replication is not shown.",
+   "verdict": "Ahead of schedule",
+   "actual": "2026-07-15",
+   "actual_precision": "month",
+   "verdict_on": "2026-07-15",
+   "source": {
+    "title": "OpenAI: The Hugging Face incident",
+    "url": "https://openai.com/index/hugging-face-incident-and-the-road-ahead/"
+   },
+   "checkpoints": [
+    {
+     "label": "Models break out of sandbox",
+     "scheduled": "2027-01-01",
+     "met": "2026-07-15",
+     "gap_override": null
+    }
+   ]
+  }
+ ]
+}
