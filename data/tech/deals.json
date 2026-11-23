@@ -2,6 +2,19 @@
  "_doc": "Curated tech deals (M&A, take-privates, large venture rounds), newest first, kept indefinitely: the page filters by date range, sector and type. Values as announced (USD); approx = reported by press, not confirmed. For targets that filed with the SEC, revenue, EBITDA and multiples are computed from the target's own filings for the 12 months before the announcement. funding = what an acquired private company raised before the deal, and key investors. Every row needs a source link.",
  "deals": [
   {
+   "date": "2026-11-23",
+   "acquirer": "CrowdStrike",
+   "target": "Zscaler",
+   "target_ticker": "ZS",
+   "type": "Strategic",
+   "segment": "Software",
+   "value_kind": "ev",
+   "value": 43900000000.0,
+   "consideration": "All stock",
+   "note": "1.135 CrowdStrike shares per Zscaler share, about $260.41 per share and a 34% premium to the November 20 close. Founder Jay Chaudhry and affiliates (about 34% of shares) signed voting agreements. Expected to close in the second half of CrowdStrike's fiscal 2028.",
+   "source": "https://www.sec.gov/Archives/edgar/data/1535527/000110465926130785/tm2630454d1_ex99-1.htm"
+  },
+  {
    "date": "2026-11-19",
    "acquirer": "TPG (with Corpay)",
    "target": "BILL",

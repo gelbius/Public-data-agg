@@ -153,7 +153,8 @@
       "ARX",
       "SFLY",
       "ME",
-      "BILL"
+      "BILL",
+      "ZS"
     ],
     "cik": {
       "SFLY": 1125920,
@@ -169,7 +170,8 @@
     "ARX",
     "SFLY",
     "ME",
-    "BILL"
+    "BILL",
+    "ZS"
   ],
   "manual_refresh": true
 }
