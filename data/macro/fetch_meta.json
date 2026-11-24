@@ -26,9 +26,9 @@
    "latest": "2026-10-01"
   },
   "CSUSHPISA": {
-   "count": 332,
+   "count": 333,
    "fetched": "2026-11-24",
-   "latest": "2026-08-01"
+   "latest": "2026-09-01"
   },
   "DRCCLACBS": {
    "count": 142,
@@ -46,9 +46,9 @@
    "latest": "2026-10-01"
   },
   "GASREGW": {
-   "count": 1886,
+   "count": 1887,
    "fetched": "2026-11-24",
-   "latest": "2026-11-16"
+   "latest": "2026-11-23"
   },
   "MEHOINUSA646N": {
    "count": 27,
