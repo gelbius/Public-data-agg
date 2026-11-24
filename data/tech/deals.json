@@ -3,6 +3,46 @@
  "deals": [
   {
    "date": "2026-11-23",
+   "acquirer": "Amazon",
+   "target": "Decart (technology and team)",
+   "target_ticker": null,
+   "type": "Strategic",
+   "segment": "AI infrastructure & chips",
+   "value_kind": "equity",
+   "value": 7500000000.0,
+   "consideration": "Undisclosed",
+   "approx": true,
+   "note": "Amazon buys Decart's chip-optimization software (Decart Optimization Stack) and hires its three founders and research team; Decart's own AI models are not included. Price not disclosed; Bloomberg reported about $7.5B. Subject to regulatory approval.",
+   "source": "https://www.cnbc.com/2026/11/23/amazon-decarts-ai-acquisition.html",
+   "funding": {
+    "total": 453000000.0,
+    "approx": true,
+    "investors": [
+     "Sequoia",
+     "Benchmark",
+     "Zeev Ventures",
+     "Radical Ventures",
+     "Nvidia"
+    ],
+    "source": "https://siliconangle.com/2026/05/18/decart-raises-300m-ai-optimization-software-world-models/"
+   }
+  },
+  {
+   "date": "2026-11-23",
+   "acquirer": "Investors led by Greenoaks and Lightspeed",
+   "target": "Sierra",
+   "target_ticker": null,
+   "type": "Venture round",
+   "segment": "Software",
+   "value_kind": "post_money",
+   "value": 30000000000.0,
+   "raised": 1750000000.0,
+   "consideration": "Primary investment",
+   "note": "Series F at a $30B valuation (not stated whether pre- or post-money), about double its May round; Benchmark, Sequoia, GV and Tiger Global also took part. AI customer-service agents; says it passed $400M in annual recurring revenue.",
+   "source": "https://techcrunch.com/2026/11/23/sierra-doubles-valuation-to-30b-within-six-months-as-demand-for-ai-in-cx-takes-off/"
+  },
+  {
+   "date": "2026-11-23",
    "acquirer": "CrowdStrike",
    "target": "Zscaler",
    "target_ticker": "ZS",
