@@ -2,6 +2,15 @@
  "_doc": "What notable investors, fund managers and CEOs are saying about tech valuations. Quotes are copied word for word from the linked article (which may itself quote a post on Substack, LinkedIn or X). Newest first; keep about the last two months. Every row needs a source link.",
  "quotes": [
   {
+   "date": "2026-11-25",
+   "who": "Thomas Martin",
+   "role": "Senior portfolio manager, Globalt Investments",
+   "quote": "It's fear more so than fundamentals.",
+   "context": "On the tech selloff that resumed the day after Nvidia's 30% rebound on Jensen Huang's return as CEO.",
+   "outlet": "CNN",
+   "source": "https://localnews8.com/money/cnn-business-consumer/2026/11/25/tech-stock-selloff-deepens-as-ai-fears-outweigh-huangs-nvidia-return/"
+  },
+  {
    "date": "2026-11-23",
    "who": "Mike Wilson",
    "role": "Chief US equity strategist, Morgan Stanley",
@@ -72,15 +81,6 @@
    "context": "On whether a softer Anthropic IPO dampens AI investment.",
    "outlet": "The Asia Business Daily",
    "source": "https://www.asiae.co.kr/en/article/2026111115465637781"
-  },
-  {
-   "date": "2026-03-17",
-   "who": "Orlando Bravo",
-   "role": "Co-founder, Thoma Bravo",
-   "quote": "There are many, many software companies in the public markets that will be disrupted from AI",
-   "context": "He called some valuation cuts warranted, but said others hit businesses that will be big winners.",
-   "outlet": "CNBC",
-   "source": "https://www.cnbc.com/2026/03/17/orlando-bravo-software-ai-valuation-cut.html"
   }
  ]
 }

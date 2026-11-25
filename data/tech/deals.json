@@ -188,6 +188,29 @@
    "source": "https://www.sec.gov/Archives/edgar/data/0001792789/000179278926000062/proddashex991-pressrelease.htm"
   },
   {
+   "date": "2026-10-27",
+   "acquirer": "Guidewire",
+   "target": "hyperexponential",
+   "target_ticker": null,
+   "type": "Strategic",
+   "segment": "Software",
+   "value_kind": "equity",
+   "value": 1700000000.0,
+   "consideration": "Cash",
+   "note": "Insurance pricing software (London). $1.7B base price in cash plus up to $400M earnout tied to recurring-revenue targets; expected to close in Guidewire's fiscal Q2 2027.",
+   "source": "https://www.sec.gov/Archives/edgar/data/0001528396/000119312526432656/d121813d8k.htm",
+   "funding": {
+    "total": 91000000.0,
+    "approx": true,
+    "investors": [
+     "Battery Ventures",
+     "Andreessen Horowitz",
+     "Highland Europe"
+    ],
+    "source": "https://www.businesswire.com/news/home/20240111953381/en/hyperexponential-Raises-$73m-Series-B-to-Expand-Its-Mission-Critical-Insurance-Pricing-Platform"
+   }
+  },
+  {
    "date": "2026-10-26",
    "acquirer": "Intel",
    "target": "Classiq",
