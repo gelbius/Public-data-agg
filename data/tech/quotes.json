@@ -1,27 +1,86 @@
 {
  "_doc": "What notable investors, fund managers and CEOs are saying about tech valuations. Quotes are copied word for word from the linked article (which may itself quote a post on Substack, LinkedIn or X). Newest first; keep about the last two months. Every row needs a source link.",
  "quotes": [
-  {"date": "2026-11-18", "who": "Jeremy Grantham", "role": "Co-founder, GMO", "quote": "The rule from history is that great technological innovations lead to great bubbles.",
-   "context": "From a GMO research paper.", "outlet": "The Motley Fool",
-   "source": "https://www.fool.com/investing/2026/11/18/stock-market-ai-bubble-wall-street-ignoring-crucial-fact/"},
-  {"date": "2026-11-17", "who": "Michael Burry", "role": "Investor (The Big Short)", "quote": "The press has now started to do its job on NVIDIA",
-   "context": "In a Substack post as Nvidia shares slid.", "outlet": "Fortune",
-   "source": "https://fortune.com/2026/11/17/ai-bubble-popping-bofa-fund-manager-survey-largest-cut-since-2006/"},
-  {"date": "2026-11-17", "who": "Goldman Sachs strategists", "role": "Led by Ben Snider, 2027 equity outlook",
+  {
+   "date": "2026-11-25",
+   "who": "Thomas Martin",
+   "role": "Senior portfolio manager, Globalt Investments",
+   "quote": "It's fear more so than fundamentals.",
+   "context": "On the tech selloff that resumed the day after Nvidia's 30% rebound on Jensen Huang's return as CEO.",
+   "outlet": "CNN",
+   "source": "https://localnews8.com/money/cnn-business-consumer/2026/11/25/tech-stock-selloff-deepens-as-ai-fears-outweigh-huangs-nvidia-return/"
+  },
+  {
+   "date": "2026-11-23",
+   "who": "Mike Wilson",
+   "role": "Chief US equity strategist, Morgan Stanley",
+   "quote": "This is the fat pitch we have patiently been waiting for, and we're not going to miss it",
+   "context": "In a Monday research note arguing the November selloff pushed the S&P 500 below fair value.",
+   "outlet": "CNBC",
+   "source": "https://www.cnbc.com/2026/11/23/morgan-stanley-says-this-is-a-big-buying-opportunity-were-not-going-to-miss-it.html"
+  },
+  {
+   "date": "2026-11-23",
+   "who": "James St. Aubin",
+   "role": "Chief investment officer, Ocean Park Asset Management",
+   "quote": "Jensen's return doesn't answer the big questions investors were grappling with regarding the ROI on the AI build-out",
+   "context": "To Reuters, after Nvidia reinstated Jensen Huang as CEO and AI stocks rebounded.",
+   "outlet": "Fortune",
+   "source": "https://fortune.com/2026/11/23/wall-street-ai-stock-market-selloff-8-trillion-loss-nvidia-jensen-huang-return-anthropic-ipo-memory-chips-rebound/"
+  },
+  {
+   "date": "2026-11-20",
+   "who": "Yuri Khodjamirian",
+   "role": "Chief investment officer, Tema ETFs",
+   "quote": "Right now it looks cheap, but will companies like Micron and Nvidia actually deliver?",
+   "context": "On CNBC's ETF Edge, discussing AI stock valuations after the November selloff and Anthropic's IPO.",
+   "outlet": "CNBC",
+   "source": "https://www.cnbc.com/2026/11/20/anthropic-ipo-ai-stock-market-selloff.html"
+  },
+  {
+   "date": "2026-11-18",
+   "who": "Jeremy Grantham",
+   "role": "Co-founder, GMO",
+   "quote": "The rule from history is that great technological innovations lead to great bubbles.",
+   "context": "From a GMO research paper.",
+   "outlet": "The Motley Fool",
+   "source": "https://www.fool.com/investing/2026/11/18/stock-market-ai-bubble-wall-street-ignoring-crucial-fact/"
+  },
+  {
+   "date": "2026-11-17",
+   "who": "Michael Burry",
+   "role": "Investor (The Big Short)",
+   "quote": "The press has now started to do its job on NVIDIA",
+   "context": "In a Substack post as Nvidia shares slid.",
+   "outlet": "Fortune",
+   "source": "https://fortune.com/2026/11/17/ai-bubble-popping-bofa-fund-manager-survey-largest-cut-since-2006/"
+  },
+  {
+   "date": "2026-11-17",
+   "who": "Goldman Sachs strategists",
+   "role": "Led by Ben Snider, 2027 equity outlook",
    "quote": "the outlook for AI investment and corporate profit margins in 2028 and beyond is highly uncertain",
-   "context": "They estimate the AI investment boom has lifted S&P 500 earnings 25% above trend.", "outlet": "Fortune",
-   "source": "https://fortune.com/2026/11/17/ai-bubble-popping-bofa-fund-manager-survey-largest-cut-since-2006/"},
-  {"date": "2026-11-17", "who": "Robin Li", "role": "Chairman and CEO, Baidu",
+   "context": "They estimate the AI investment boom has lifted S&P 500 earnings 25% above trend.",
+   "outlet": "Fortune",
+   "source": "https://fortune.com/2026/11/17/ai-bubble-popping-bofa-fund-manager-survey-largest-cut-since-2006/"
+  },
+  {
+   "date": "2026-11-17",
+   "who": "Robin Li",
+   "role": "Chairman and CEO, Baidu",
    "quote": "If we fail to address this, the concern that AI might be a bubble could well become a reality",
-   "context": "At the APEC CEO Summit, on AI spending that has yet to produce profits.", "outlet": "Reuters via Regional Media News",
-   "source": "https://www.regionalmedianews.com/news/national/business/baidu-ceo-says-ai-investment-must-deliver-profits-to-avoid-bubble/"},
-  {"date": "2026-11-13", "who": "Venture capital CEO", "role": "Korean VC firm (unnamed in the article)",
+   "context": "At the APEC CEO Summit, on AI spending that has yet to produce profits.",
+   "outlet": "Reuters via Regional Media News",
+   "source": "https://www.regionalmedianews.com/news/national/business/baidu-ceo-says-ai-investment-must-deliver-profits-to-avoid-bubble/"
+  },
+  {
+   "date": "2026-11-13",
+   "who": "Venture capital CEO",
+   "role": "Korean VC firm (unnamed in the article)",
    "quote": "Investment in AI is not a trend that emerged this year; it has built up over several years",
-   "context": "On whether a softer Anthropic IPO dampens AI investment.", "outlet": "The Asia Business Daily",
-   "source": "https://www.asiae.co.kr/en/article/2026111115465637781"},
-  {"date": "2026-03-17", "who": "Orlando Bravo", "role": "Co-founder, Thoma Bravo",
-   "quote": "There are many, many software companies in the public markets that will be disrupted from AI",
-   "context": "He called some valuation cuts warranted, but said others hit businesses that will be big winners.", "outlet": "CNBC",
-   "source": "https://www.cnbc.com/2026/03/17/orlando-bravo-software-ai-valuation-cut.html"}
+   "context": "On whether a softer Anthropic IPO dampens AI investment.",
+   "outlet": "The Asia Business Daily",
+   "source": "https://www.asiae.co.kr/en/article/2026111115465637781"
+  }
  ]
 }

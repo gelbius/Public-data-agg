@@ -2,6 +2,99 @@
  "_doc": "Curated tech deals (M&A, take-privates, large venture rounds), newest first, kept indefinitely: the page filters by date range, sector and type. Values as announced (USD); approx = reported by press, not confirmed. For targets that filed with the SEC, revenue, EBITDA and multiples are computed from the target's own filings for the 12 months before the announcement. funding = what an acquired private company raised before the deal, and key investors. Every row needs a source link.",
  "deals": [
   {
+   "date": "2026-11-23",
+   "acquirer": "Amazon",
+   "target": "Decart (technology and team)",
+   "target_ticker": null,
+   "type": "Strategic",
+   "segment": "AI infrastructure & chips",
+   "value_kind": "equity",
+   "value": 7500000000.0,
+   "consideration": "Undisclosed",
+   "approx": true,
+   "note": "Amazon buys Decart's chip-optimization software (Decart Optimization Stack) and hires its three founders and research team; Decart's own AI models are not included. Price not disclosed; Bloomberg reported about $7.5B. Subject to regulatory approval.",
+   "source": "https://www.cnbc.com/2026/11/23/amazon-decarts-ai-acquisition.html",
+   "funding": {
+    "total": 453000000.0,
+    "approx": true,
+    "investors": [
+     "Sequoia",
+     "Benchmark",
+     "Zeev Ventures",
+     "Radical Ventures",
+     "Nvidia"
+    ],
+    "source": "https://siliconangle.com/2026/05/18/decart-raises-300m-ai-optimization-software-world-models/"
+   }
+  },
+  {
+   "date": "2026-11-23",
+   "acquirer": "Investors led by Greenoaks and Lightspeed",
+   "target": "Sierra",
+   "target_ticker": null,
+   "type": "Venture round",
+   "segment": "Software",
+   "value_kind": "post_money",
+   "value": 30000000000.0,
+   "raised": 1750000000.0,
+   "consideration": "Primary investment",
+   "note": "Series F at a $30B valuation (not stated whether pre- or post-money), about double its May round; Benchmark, Sequoia, GV and Tiger Global also took part. AI customer-service agents; says it passed $400M in annual recurring revenue.",
+   "source": "https://techcrunch.com/2026/11/23/sierra-doubles-valuation-to-30b-within-six-months-as-demand-for-ai-in-cx-takes-off/"
+  },
+  {
+   "date": "2026-11-23",
+   "acquirer": "CrowdStrike",
+   "target": "Zscaler",
+   "target_ticker": "ZS",
+   "type": "Strategic",
+   "segment": "Software",
+   "value_kind": "ev",
+   "value": 43900000000.0,
+   "consideration": "All stock",
+   "note": "1.135 CrowdStrike shares per Zscaler share, about $260.41 per share and a 34% premium to the November 20 close. Founder Jay Chaudhry and affiliates (about 34% of shares) signed voting agreements. Expected to close in the second half of CrowdStrike's fiscal 2028.",
+   "source": "https://www.sec.gov/Archives/edgar/data/1535527/000110465926130785/tm2630454d1_ex99-1.htm"
+  },
+  {
+   "date": "2026-11-19",
+   "acquirer": "TPG (with Corpay)",
+   "target": "BILL",
+   "target_ticker": "BILL",
+   "type": "Take-private",
+   "segment": "Software",
+   "value_kind": "equity",
+   "value": 6000000000.0,
+   "consideration": "Cash",
+   "note": "$63.25 per share, 31% premium to the 60-day average price; TPG takes a majority stake and Corpay a minority stake. Expected to close in the first half of 2027.",
+   "source": "https://www.sec.gov/Archives/edgar/data/0001786352/000119312526469396/d176726dex991.htm"
+  },
+  {
+   "date": "2026-11-18",
+   "acquirer": "Palo Alto Networks",
+   "target": "Applied Compute",
+   "target_ticker": null,
+   "type": "Strategic",
+   "segment": "Software",
+   "value_kind": "equity",
+   "value": 4500000000.0,
+   "consideration": "Stock",
+   "note": "Platform for post-training and inference of open-weight AI models. All-stock, $4.5B subject to adjustments; about 1.4x its $3.25B round two weeks earlier. Expected to close in Palo Alto's fiscal Q3 2027.",
+   "source": "https://www.sec.gov/Archives/edgar/data/0001327567/000132756726000030/ex992pressrelease_november.htm",
+   "funding": {
+    "total": 510000000.0,
+    "approx": true,
+    "investors": [
+     "Elad Gil",
+     "Nvidia",
+     "Kleiner Perkins",
+     "Lux Capital",
+     "Blackstone",
+     "Shopify Ventures",
+     "HubSpot Ventures"
+    ],
+    "source": "https://siliconangle.com/2026/11/03/ai-cloud-startup-applied-compute-raises-350m-after-reaching-key-revenue-milestone/"
+   }
+  },
+  {
    "date": "2026-11-12",
    "acquirer": "Existing and new investors",
    "target": "OpenAI",
@@ -93,6 +186,29 @@
    "consideration": "At least 75% cash",
    "note": "$65.00 per share, 26% premium.",
    "source": "https://www.sec.gov/Archives/edgar/data/0001792789/000179278926000062/proddashex991-pressrelease.htm"
+  },
+  {
+   "date": "2026-10-27",
+   "acquirer": "Guidewire",
+   "target": "hyperexponential",
+   "target_ticker": null,
+   "type": "Strategic",
+   "segment": "Software",
+   "value_kind": "equity",
+   "value": 1700000000.0,
+   "consideration": "Cash",
+   "note": "Insurance pricing software (London). $1.7B base price in cash plus up to $400M earnout tied to recurring-revenue targets; expected to close in Guidewire's fiscal Q2 2027.",
+   "source": "https://www.sec.gov/Archives/edgar/data/0001528396/000119312526432656/d121813d8k.htm",
+   "funding": {
+    "total": 91000000.0,
+    "approx": true,
+    "investors": [
+     "Battery Ventures",
+     "Andreessen Horowitz",
+     "Highland Europe"
+    ],
+    "source": "https://www.businesswire.com/news/home/20240111953381/en/hyperexponential-Raises-$73m-Series-B-to-Expand-Its-Mission-Critical-Insurance-Pricing-Platform"
+   }
   },
   {
    "date": "2026-10-26",

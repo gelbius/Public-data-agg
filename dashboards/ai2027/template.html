@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 2027 vs Reality</title>
+<meta name="description" content="__DESCRIPTION__">
+<meta property="og:title" content="AI 2027 vs Reality: The Script and the Record">
+<meta property="og:description" content="__DESCRIPTION__">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/foundry.css">
+<script>try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}</script>
+<style>
+/* Dashboard 04 only. The record is drawn like a seismograph sheet (paper = panel, red ink = the
+   scenario, black ink = reality); the predictions are a split-flap departures board, which stays dark
+   in both themes because it is a physical object. */
+:root {
+  --script: #B3261E; --script-wash: rgba(179, 38, 30, .08);
+  --ahead-wash: rgba(232, 162, 74, .22);
+  --v-ahead: #0E7490; --v-ontrack: #1F7A3A; --v-behind: #A35A00; --v-no: #9E2B25; --v-tbd: #6B6255;
+  --board: #141210; --board-2: #1D1A17; --tile: #24211D; --tile-seam: #0B0A09; --flap-ink: #F1E9D2;
+  --f-early: #5FC3E4; --f-ontime: #7CD992; --f-delayed: #F5B041; --f-cancel: #F27466; --f-sched: #E9E4D8; --f-boarding: #C9B8F0;
+}
+@media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) {
+  --script: #F07A6E; --script-wash: rgba(240, 122, 110, .08); --ahead-wash: rgba(232, 162, 74, .16);
+  --v-ahead: #4FB6D6; --v-ontrack: #4CB86A; --v-behind: #E8A24A; --v-no: #F2746B; --v-tbd: #A59B8C;
+  --board: #0B0A09; --board-2: #151310; --tile: #1E1B18; } }
+:root[data-theme="dark"] {
+  --script: #F07A6E; --script-wash: rgba(240, 122, 110, .08); --ahead-wash: rgba(232, 162, 74, .16);
+  --v-ahead: #4FB6D6; --v-ontrack: #4CB86A; --v-behind: #E8A24A; --v-no: #F2746B; --v-tbd: #A59B8C;
+  --board: #0B0A09; --board-2: #151310; --tile: #1E1B18; }
+
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- the record: scroll story */
+.rec { position: relative; display: grid; grid-template-columns: minmax(250px, 330px) minmax(0, 1fr); gap: 28px; margin-top: 8px; }
+.rec-stage { position: sticky; top: 72px; height: calc(100vh - 96px); min-height: 520px; max-height: 820px;
+  display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 12px; grid-column: 2; grid-row: 1; }
+.rec-steps { grid-column: 1; grid-row: 1; position: relative; z-index: 3; }
+.step { min-height: 78vh; display: flex; align-items: center; }
+.step:first-child { min-height: 60vh; align-items: flex-start; padding-top: 8vh; }
+.step:last-child { min-height: 70vh; }
+.step-card { background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--r); padding: 16px 18px 14px;
+  box-shadow: var(--shadow); transition: border-color .3s, opacity .3s; opacity: .55; }
+.step.on .step-card { opacity: 1; border-color: var(--accent); }
+.step-card .kick { font: 500 .7rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--accent-ink); }
+.step-card h3 { margin: 8px 0 8px; font-size: 1.35rem; }
+.step-card p { margin: 0; font-size: .93rem; color: var(--ink-soft); }
+.step-card .refs { margin: 10px 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 4px 12px; font: 400 .7rem/1.4 var(--mono); }
+.step-card .refs a { color: var(--accent-ink); text-decoration: none; }
+.step-card .refs a:hover { text-decoration: underline; }
+
+.seis { position: relative; min-height: 0; background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--r); overflow: hidden; }
+.seis svg { display: block; width: 100%; height: 100%; }
+.seis .paper-rule { stroke: var(--chart-grid); stroke-width: 1; }
+.seis .axis-t { fill: var(--ink-dim); font: 400 11px var(--mono); }
+.seis .axis-y { fill: var(--ink-dim); font: 400 10px var(--mono); }
+.seis .script { fill: none; stroke: var(--script); stroke-width: 1.8; stroke-dasharray: 1.5 4; stroke-linecap: round; }
+.seis .script-lbl { fill: var(--script); font: italic 400 13px var(--serif); }
+.seis .ms-dot { fill: var(--panel); stroke: var(--script); stroke-width: 1.5; }
+.seis .ms-lbl { fill: var(--script); font: 400 10.5px var(--mono); }
+.seis .trace { fill: none; stroke: var(--ink); stroke-width: 2.4; stroke-linejoin: round; stroke-linecap: round; }
+.seis .wash-ahead { fill: var(--ahead-wash); }
+.seis .wash-behind { fill: var(--band-2); }
+.seis .today { stroke: var(--ink-dim); stroke-dasharray: 2 4; }
+.seis .today-lbl { fill: var(--ink-dim); font: 400 10px var(--mono); }
+.seis .arm { stroke: var(--ink-soft); stroke-width: 1.5; }
+.seis .nib { fill: var(--ink); }
+.seis .ev { stroke-width: 2; }
+.seis .ev.off { opacity: 0; }
+.seis .ev.hit { animation: tremor .6s var(--ease); }
+@keyframes tremor { 0% { transform: translateY(0); } 20% { transform: translateY(-5px); } 40% { transform: translateY(4px); } 60% { transform: translateY(-2px); } 100% { transform: none; } }
+.seis .cross-ring { fill: none; stroke: var(--script); stroke-width: 1.5; }
+.seis .cross-lbl { fill: var(--ink); font: italic 400 13px var(--serif); }
+.seis .note-lbl { fill: var(--ink-soft); font: 400 11px var(--sans); }
+.readout { position: absolute; left: 14px; top: 12px; display: grid; gap: 2px; pointer-events: none; }
+.readout .r-date { font: 500 1.5rem/1 var(--serif); letter-spacing: -.01em; }
+.readout .r-gap { font: 500 .78rem/1.2 var(--mono); }
+.readout .r-gap.ahead { color: var(--accent-ink); } .readout .r-gap.behind { color: var(--script); }
+.readout .r-note { font: 400 .7rem/1.3 var(--sans); color: var(--ink-soft); max-width: 46ch; }
+.readout .r-cap { font: 400 .66rem/1.2 var(--mono); color: var(--ink-dim); letter-spacing: .06em; text-transform: uppercase; }
+
+.rec-lower { display: grid; grid-template-columns: minmax(0, .72fr) minmax(0, 1.6fr); gap: 12px; min-height: 0; }
+.telegraph { background: var(--panel-2); border: 1px solid var(--line-2); border-radius: var(--r); padding: 10px 12px; font: 400 .74rem/1.45 var(--mono); color: var(--ink-soft); min-width: 0; }
+.telegraph .tg-cap { font-size: .64rem; letter-spacing: .14em; color: var(--ink-dim); }
+.telegraph .tg-date { color: var(--ink); font-weight: 500; }
+.telegraph .tg-title { color: var(--ink); text-transform: uppercase; display: block; margin-top: 4px; }
+.telegraph .tg-detail { display: block; }
+.telegraph a { color: var(--accent-ink); }
+
+/* ---------- split-flap board (shared by the mini board and the full board) */
+.board { background: var(--board); color: var(--flap-ink); border-radius: 6px; padding: 12px 14px; border: 1px solid #2A2622; font-family: var(--mono); }
+.board-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.board-top .b-title { font: 600 .82rem/1 var(--sans); letter-spacing: .16em; color: #F5F1E6; }
+.board-top .b-sub { font: 400 .62rem/1.2 var(--sans); letter-spacing: .14em; color: #8F877B; text-transform: uppercase; }
+.board-top .b-clock { margin-left: auto; }
+.fl-head, .fl-row { display: grid; grid-template-columns: 7.6em minmax(0, 1fr) 6.6em 9.6em; gap: 0 1em; align-items: center; }
+.fl-head { font: 500 .6rem/1 var(--sans); letter-spacing: .16em; color: #8F877B; padding: 10px 0 6px; }
+.fl-row { padding: 3px 0; }
+.flap { display: inline-flex; gap: 2px; white-space: nowrap; }
+.ch { display: inline-grid; place-items: center; width: 1.02em; height: 1.5em; background: var(--tile); border-radius: 2px; position: relative;
+  font: 600 .86rem/1 var(--mono); color: var(--flap-ink); text-transform: uppercase; }
+.ch::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--tile-seam); }
+.ch.flip { animation: flap .34s steps(3, end) both; }
+@keyframes flap { 0% { transform: scaleY(1); } 40% { transform: scaleY(.1); filter: brightness(1.6); } 100% { transform: scaleY(1); } }
+.st-EARLY .ch { color: var(--f-early); } .st-ON-TIME .ch { color: var(--f-ontime); } .st-DELAYED .ch { color: var(--f-delayed); }
+.st-CANCELLED .ch { color: var(--f-cancel); } .st-SCHEDULED .ch { color: var(--f-sched); } .st-BOARDING .ch { color: var(--f-boarding); }
+.miniboard { min-width: 0; overflow: hidden; }
+.miniboard .fl-row { grid-template-columns: 7.6em minmax(0, 1fr) 9.6em; }
+.miniboard .fl-head { grid-template-columns: 7.6em minmax(0, 1fr) 9.6em; }
+.miniboard .ch { font-size: .74rem; }
+.miniboard .flight { overflow: hidden; white-space: nowrap; }
+.miniboard .flight .ch { background: none; width: auto; height: auto; color: var(--flap-ink); font-weight: 500; }
+.miniboard .flight .ch::after { display: none; }
+.miniboard .flight .flap { gap: 0; letter-spacing: .02em; }
+.miniboard .flight .ch { font-size: .7rem; }
+
+/* full board */
+#sec-board .card { padding-bottom: 20px; }
+.board.full { padding: 16px 18px 12px; }
+.board-filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 4px; }
+.fchip { font: 500 .7rem/1 var(--sans); letter-spacing: .06em; padding: 7px 10px; border-radius: 2px; border: 1px solid #3A352F; background: var(--board-2); color: #CFC6B6; cursor: pointer; }
+.fchip[aria-pressed="true"] { background: #F5F1E6; color: #141210; border-color: #F5F1E6; }
+.fchip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.fchip .n { opacity: .65; margin-left: 4px; }
+.fchip.st { font-family: var(--mono); }
+.fchip.st[data-st="EARLY"] { color: var(--f-early); } .fchip.st[data-st="ON TIME"] { color: var(--f-ontime); } .fchip.st[data-st="DELAYED"] { color: var(--f-delayed); }
+.fchip.st[data-st="CANCELLED"] { color: var(--f-cancel); } .fchip.st[data-st="SCHEDULED"] { color: var(--f-sched); }
+.fchip.st[aria-pressed="true"] { color: #141210; }
+.board-key { font: 400 .68rem/1.5 var(--sans); color: #8F877B; margin: 6px 0 0; }
+details.flight-d { border-top: 1px solid #23201C; }
+details.flight-d > summary { list-style: none; cursor: pointer; }
+details.flight-d > summary::-webkit-details-marker { display: none; }
+details.flight-d > summary:hover .ch { background: #2E2A25; }
+details.flight-d > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+details.flight-d[open] > summary .ch { background: #332E28; }
+.manifest { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px 24px; padding: 12px 2px 16px; font-family: var(--sans); color: #E6DFD0; }
+.manifest h4 { margin: 0 0 4px; font: 500 .62rem/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: #8F877B; }
+.manifest p { margin: 0; font-size: .88rem; line-height: 1.5; }
+.manifest .m-quote { font-family: var(--serif); font-size: .98rem; }
+.manifest .m-meta { grid-column: 1 / -1; font: 400 .72rem/1.5 var(--mono); color: #A89F90; display: flex; flex-wrap: wrap; gap: 4px 18px; }
+.manifest a { color: #E8A24A; }
+.board-empty { padding: 18px 0; color: #A89F90; font: 400 .85rem var(--sans); }
+
+/* gap dots chart */
+.gapchart svg { display: block; width: 100%; height: auto; }
+.gapchart .g-grid { stroke: var(--chart-grid); }
+.gapchart .g-zero { stroke: var(--script); stroke-dasharray: 1.5 4; stroke-width: 1.6; stroke-linecap: round; }
+.gapchart .g-zero-lbl { fill: var(--script); font: italic 400 12px var(--serif); }
+.gapchart .g-ax { fill: var(--ink-dim); font: 400 11px var(--mono); }
+.gapchart .g-trend { fill: none; stroke: var(--ink); stroke-width: 2.2; }
+.gapchart .g-dot { stroke: var(--panel); stroke-width: 1.5; }
+.gapchart .g-dot.unmet { fill: var(--panel) !important; stroke-width: 2; }
+.gapchart .g-lbl { fill: var(--ink-soft); font: 400 10.5px var(--sans); }
+.dot-key { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+
+/* watch list */
+.watch { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.watch li { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 4px 18px; padding: 12px 0; border-top: 1px solid var(--line); }
+.watch li:first-child { border-top: 0; }
+.watch .w-date { font: 500 .8rem/1.4 var(--mono); }
+.watch .w-date small { display: block; font-weight: 400; color: var(--ink-dim); font-size: .68rem; }
+.watch .w-ev { font-weight: 500; }
+.watch .w-test { color: var(--ink-soft); font-size: .9rem; }
+.watch a { color: var(--accent-ink); }
+
+/* ---------- phones */
+@media (max-width: 899px) {
+  .rec { display: block; margin: 6px -16px 0; }
+  .rec-stage { top: 56px; height: 58vh; min-height: 400px; max-height: 560px; z-index: 4; background: var(--bg);
+    padding: 8px 12px 10px; border-bottom: 1px solid var(--line); gap: 8px; }
+  .rec-steps { padding: 0 12px; z-index: 1; }
+  .step, .step:first-child { min-height: 70vh; align-items: flex-start; padding-top: 14px; }
+  .step-card { padding: 12px 14px 10px; }
+  .step-card h3 { font-size: 1.12rem; margin: 6px 0; }
+  .step-card p { font-size: .86rem; }
+  .step:last-child { min-height: 52vh; }
+  .step-card { opacity: 1; background: var(--panel-2); }
+  .readout .r-date { font-size: 1.15rem; }
+  .readout .r-note { max-width: 30ch; }
+  .rec-lower { grid-template-columns: minmax(0, 1fr); }
+  .telegraph { padding: 6px 10px; font-size: .68rem; }
+  .telegraph .tg-detail { display: none; }
+  .miniboard .fl-head { display: none; }
+  .miniboard .fl-row { grid-template-columns: minmax(0, 1fr) 9.6em; }
+  .miniboard .sched { display: none; }
+  .miniboard .ch { font-size: .64rem; }
+  .fl-head { display: none; }
+  .board.full .fl-row { grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; }
+  .board.full .sched, .board.full .act { display: none; }
+  .board.full .flight .ch { background: none; width: auto; height: auto; color: var(--flap-ink); }
+  .board.full .flight .ch::after { display: none; }
+  .board.full .flight .flap { gap: 0; letter-spacing: .04em; white-space: normal; }
+  .miniboard { padding: 8px 10px; }
+  .miniboard .fl-row { padding: 1px 0; }
+  .board.full .ch { font-size: .7rem; }
+  .manifest { grid-template-columns: minmax(0, 1fr); }
+  .watch li { grid-template-columns: minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ch.flip, .seis .ev.hit { animation: none; }
+  .step-card { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="../">
+      <svg class="mark" width="20" height="20" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M5 11 V5 H11"/><path d="M21 5 H27 V11"/><path d="M27 21 V27 H21"/><path d="M11 27 H5 V21"/><path d="M18 7.5 L11.5 16.5 H15 L14 24 L21.5 14.5 H17.5 Z" fill="#E8A24A" stroke="none"/></svg>
+      Public Data <small>/ AI 2027 vs reality</small>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#sec-kpis">Scorecard</a><a href="#sec-record">The record</a><a href="#sec-board">The board</a>
+      <a href="#sec-gap">How it's measured</a><a href="#sec-watch">What's next</a><a href="#sec-method">Method</a>
+    </nav>
+    <button class="theme-btn" id="theme-btn" type="button" aria-label="Toggle dark mode">☾</button>
+  </div>
+</header>
+
+<main>
+  <section class="masthead wrap rise">
+    <span class="eyebrow"><span class="tick">+</span> Dashboard 04 · AI 2027 vs reality</span>
+    <h1>AI 2027: <em>the script and the record.</em></h1>
+    <p class="lead">In April 2025 the AI 2027 scenario laid out, month by month, how AI might reach superhuman research ability by 2027. This page checks every dated prediction against what actually happened, and draws how far reality is running behind or ahead of the script.</p>
+    <div class="meta-row">
+      <span class="chip"><span class="dot"></span> Curated from linked sources</span>
+      <span>Data as of <b id="m-asof"></b></span>
+      <span>Scenario <b><a href="https://ai-2027.com/">AI 2027</a></b></span>
+    </div>
+  </section>
+
+  <section class="section wrap" id="sec-kpis">
+    <div class="card-head">
+      <span class="eyebrow"><span class="tick">+</span> Scorecard</span>
+      <h2 id="kpi-head"></h2>
+    </div>
+    <div class="kpis" id="kpis"></div>
+    <div class="card-foot" data-src="kpis"></div>
+  </section>
+
+  <section class="section wrap" id="sec-record">
+    <div class="card-head">
+      <span class="eyebrow"><span class="tick">+</span> The record</span>
+      <h2 data-k="record.headline"></h2>
+      <p class="sub" data-k="record.sub"></p>
+    </div>
+    <ul class="legend">
+      <li><i class="key dashed" style="color:var(--script)"></i>The script: progress the scenario expects</li>
+      <li><i class="key" style="color:var(--ink);height:3px"></i>The record: where reality stands on that path</li>
+      <li><i class="key swatch" style="background:var(--ahead-wash)"></i>Ahead</li>
+      <li><i class="key swatch" style="background:var(--band-2)"></i>Behind</li>
+    </ul>
+    <p class="legend-hint">Scroll to move the pen through time. Ticks on the trace mark dated events.</p>
+    <div class="rec">
+      <div class="rec-stage" id="stage">
+        <div class="seis" id="seis" role="img" aria-label="Seismograph-style chart: the AI 2027 scenario's expected AI research progress as a red dotted line, and reality's position on that path as a black trace that falls behind in late 2025 and crosses above in 2026">
+          <div class="readout" aria-live="polite"><span class="r-cap">Reading</span><span class="r-date" id="r-date"></span><span class="r-gap" id="r-gap"></span><span class="r-note" id="r-note"></span></div>
+        </div>
+        <div class="rec-lower">
+          <div class="telegraph" id="telegraph" aria-live="polite"></div>
+          <div class="board miniboard" id="miniboard" aria-label="Departures board: the predictions whose status changed most recently"></div>
+        </div>
+      </div>
+      <div class="rec-steps" id="steps"></div>
+    </div>
+    <details class="data" id="t-record"><summary>Show the data</summary></details>
+    <div class="card-foot" data-src="record"></div>
+  </section>
+
+  <section class="section wrap" id="sec-board">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> The full board</span>
+        <h2>Every prediction, <em>scheduled vs actual.</em></h2>
+        <p class="sub">Each prediction is a flight. SCHED is the scenario's date, ACTUAL is when reality got there. Tap a row for the scenario's wording, what happened and the source.</p>
+      </div>
+      <div class="board full" id="board">
+        <div class="board-top">
+          <span class="b-title">AI 2027 · DEPARTURES</span>
+          <span class="b-sub">Scheduled by the scenario · actual by reality</span>
+          <span class="b-clock flap" id="board-clock"></span>
+        </div>
+        <div class="board-filters" id="f-dim" role="group" aria-label="Filter by area"></div>
+        <div class="board-filters" id="f-st" role="group" aria-label="Filter by status"></div>
+        <p class="board-key" id="board-key"></p>
+        <div class="fl-head" aria-hidden="true"><span>SCHED</span><span>PREDICTION</span><span>ACTUAL</span><span>STATUS</span></div>
+        <div id="board-rows"></div>
+      </div>
+      <div class="card-foot" data-src="board"></div>
+    </article>
+  </section>
+
+  <section class="section wrap" id="sec-gap">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> How the reading is made</span>
+        <h2>One dot per prediction, <em>early or late.</em></h2>
+        <p class="sub" id="gap-sub"></p>
+      </div>
+      <ul class="legend" id="gap-legend"></ul>
+      <div class="gapchart" id="gapchart" role="img" aria-label="Months early or late for each resolved prediction, with the smoothed trend line"></div>
+      <details class="data" id="t-gap"><summary>Show the data</summary></details>
+      <div class="card-foot" data-src="dots"></div>
+    </article>
+  </section>
+
+  <section class="section wrap" id="sec-watch">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> What to watch next</span>
+        <h2>The next tests <em>of the script.</em></h2>
+      </div>
+      <ul class="watch" id="watch"></ul>
+      <div class="card-foot" data-src="watch"></div>
+    </article>
+  </section>
+
+  <section class="section wrap" id="sec-method">
+    <article class="card">
+      <div class="card-head">
+        <span class="eyebrow"><span class="tick">+</span> Method</span>
+        <h2>A forecast, scored <em>with its receipts.</em></h2>
+      </div>
+      <ul class="caveats" id="method"></ul>
+    </article>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <span class="built"><svg width="14" height="14" viewBox="0 0 32 32" aria-hidden="true"><path d="M18 7.5 L11.5 16.5 H15 L14 24 L21.5 14.5 H17.5 Z" fill="#E8A24A"/></svg> Built with Claude from public sources · <a href="https://foundrysolutions.ai">Foundry Solutions</a></span>
+    <span>Code MIT-licensed · <a href="https://github.com/gelbius/Public-data-agg">Source on GitHub</a></span>
+  </div>
+</footer>
+
+<script id="data" type="application/json">__DATA__</script>
+<script src="../assets/viz.js"></script>
+<script src="page.js"></script>
+</body>
+</html>
