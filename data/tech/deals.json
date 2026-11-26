@@ -95,6 +95,21 @@
    }
   },
   {
+   "date": "2026-11-17",
+   "acquirer": "Investors incl. Tencent- and CATL-linked funds",
+   "target": "DeepSeek",
+   "target_ticker": null,
+   "type": "Venture round",
+   "segment": "AI platforms",
+   "value_kind": "post_money",
+   "value": 86000000000.0,
+   "raised": 15000000000.0,
+   "consideration": "Primary investment",
+   "approx": true,
+   "note": "Second outside round of about 100 billion yuan (about $15B); registration changes finalized November 17, with the new investors' partnership taking about 17.3%. Valuation not disclosed; Bloomberg Billionaires Index estimates about $86B. Ahead of a planned Shanghai STAR Market IPO.",
+   "source": "https://www.caixinglobal.com/2026-11-20/deepseek-closes-100-billion-yuan-funding-round-102506825.html"
+  },
+  {
    "date": "2026-11-12",
    "acquirer": "Existing and new investors",
    "target": "OpenAI",
