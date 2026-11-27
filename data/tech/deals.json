@@ -68,6 +68,19 @@
    "source": "https://www.sec.gov/Archives/edgar/data/0001786352/000119312526469396/d176726dex991.htm"
   },
   {
+   "date": "2026-11-19",
+   "acquirer": "Bending Spoons",
+   "target": "Mailchimp (from Intuit)",
+   "target_ticker": null,
+   "type": "Strategic",
+   "segment": "Software",
+   "value_kind": "equity",
+   "value": 3680000000.0,
+   "consideration": "Cash and stock",
+   "note": "Intuit sells the email-marketing unit it bought for about $12B in 2021; Mailchimp revenue fell 1% to $313M in Intuit's latest quarter. Expected to close in early 2027.",
+   "source": "https://www.cnbc.com/2026/11/19/intuit-mailchimp-sale-bending-spoons.html"
+  },
+  {
    "date": "2026-11-18",
    "acquirer": "Palo Alto Networks",
    "target": "Applied Compute",
