@@ -81,9 +81,23 @@
   {
     const cmap = Object.fromEntries(W.series.cpi);
     const rows = W.series.wages.filter((r) => r[0] in cmap);
-    const base = rows.map(([d, w]) => [d, Math.min(w, cmap[d])]);
-    const pos = rows.map(([d, w]) => [d, Math.max(0, w - cmap[d])]);
-    const neg = rows.map(([d, w]) => [d, Math.max(0, cmap[d] - w)]);
+    // Shading between the lines: one band per side. Where pay and prices cross between two months, add the exact
+    // crossing point (linear interpolation), so green and red meet at the crossing instead of spilling past it.
+    const pts = [];
+    rows.forEach(([d, w], i) => {
+      const t = Date.parse(d), c = cmap[d];
+      if (i) {
+        const [d0, w0] = rows[i - 1], c0 = cmap[d0], g0 = w0 - c0, g1 = w - c;
+        if (g0 * g1 < 0) {
+          const f = g0 / (g0 - g1), t0 = Date.parse(d0);
+          pts.push([t0 + f * (t - t0), w0 + f * (w - w0), 0]);
+        }
+      }
+      pts.push([t, Math.min(w, c), w - c]);
+    });
+    const base = pts.map(([t, lo]) => [t, lo]);
+    const pos = pts.map(([t, , g]) => [t, Math.max(0, g)]);
+    const neg = pts.map(([t, , g]) => [t, Math.max(0, -g)]);
     const helper = (name, data, color) => ({
       name, type: "line", stack: "gap", data, showSymbol: false, silent: true,
       lineStyle: { width: 0 }, areaStyle: color ? { color, opacity: 1 } : { opacity: 0 }, tooltip: { show: false },
