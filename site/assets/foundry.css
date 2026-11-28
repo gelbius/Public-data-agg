@@ -1,79 +1,96 @@
-/* Shared look for every dashboard in this repo.
-   Brand tokens follow Foundry Solutions (foundrysolutions.ai): warm paper, ink,
-   amber accent, Fraunces headlines, Inter body, IBM Plex Mono for data labels.
+/* Shared look for every dashboard in this repo: a redwood forest.
+   Fog-and-moss surfaces, redwood-bark accent, light through the canopy, and a tree line
+   behind each page header (CSS masks over site/assets/redwoods-*.svg, so they take the
+   theme's colors). Fraunces headlines, Inter body, IBM Plex Mono for data labels.
    Chart colors were validated for color-vision deficiency in both modes. */
 
 :root {
   color-scheme: light;
-  --bg: #F5F1E6;
-  --bg-2: #EFE9DB;
-  --panel: #FBF8F0;
-  --panel-2: #EDE7D8;
-  --ink: #1C1814;
-  --ink-soft: #3E382F;
-  --ink-dim: #5C544A;
-  --line: rgba(28, 24, 20, .14);
-  --line-2: rgba(28, 24, 20, .28);
-  --grid: rgba(28, 24, 20, .06);
-  --accent: #E8A24A;
-  --accent-ink: #8A5A00;
-  --accent-ink-lg: #B07A10;
-  --btn-bg: #F2B705;
+  --bg: #EDF0E6;
+  --bg-2: #E4E8DB;
+  --panel: #FAF9F2;
+  --panel-2: #ECEFE3;
+  --ink: #17211A;
+  --ink-soft: #34413A;
+  --ink-dim: #56625A;
+  --line: rgba(23, 33, 26, .14);
+  --line-2: rgba(23, 33, 26, .28);
+  --grid: rgba(23, 33, 26, .05);
+  --accent: #B0532A;
+  --accent-ink: #8A3A17;
+  --accent-ink-lg: #A4471F;
+  --btn-bg: #D9A43A;
   --good: #1F7A3A;
   --bad: #9E2B25;
   --good-wash: rgba(31, 122, 58, .14);
   --bad-wash: rgba(158, 43, 37, .13);
-  --band: rgba(28, 24, 20, .045);
-  --band-2: rgba(28, 24, 20, .085);
-  --chart-grid: #E4DED0;
-  --chart-axis: #C9C1B0;
-  --chart-muted: #7A7164;
-  /* series (validated: light surface #FBF8F0) */
-  --s-cpi: #B4531B;
-  --s-ff: #2F5FA8;
-  --s-ur: #8E3B78;
-  --s-wage: #008C85;
-  --s-accent: #9A6A00;
-  --s-in: #7A4FA8;
+  --band: rgba(23, 33, 26, .045);
+  --band-2: rgba(23, 33, 26, .085);
+  --chart-grid: #DEE3D5;
+  --chart-axis: #C0C8B7;
+  --chart-muted: #6E7A70;
+  /* series (validated with the dataviz checker on #FAF9F2) */
+  --s-cpi: #B0461A;
+  --s-ff: #1F64A8;
+  --s-ur: #00826B;
+  --s-wage: #7A45A8;
+  --s-accent: #8C6D00;
+  --s-in: #7A45A8;
   --s-ref: var(--chart-muted);
-  /* tech sectors (c1-c7) + all-companies line */
-  --s-c1: #2F5FA8; --s-c2: #B4531B; --s-c3: #7A4FA8; --s-c4: #6B6255; --s-c5: #008C85; --s-c6: #B03A6E; --s-c7: #8A7400; --s-all: #1C1814;
-  --shadow: 0 30px 70px -55px rgba(28, 24, 20, .5);
+  --s-c1: #1F64A8; --s-c2: #B0461A; --s-c3: #00826B; --s-c4: #7A45A8; --s-c5: #8C6D00; --s-c6: #B2346A; --s-c7: #5D7F12; --s-all: #17211A;
+  /* forest atmosphere */
+  --tree-far: rgba(62, 98, 74, .20);
+  --tree-near: rgba(70, 48, 34, .16);
+  --tree-floor: rgba(52, 78, 58, .24);
+  --sun: rgba(255, 214, 140, .42);
+  --shaft: rgba(255, 246, 214, .30);
+  --mist: rgba(237, 240, 230, .0);
+  --shadow: 0 30px 70px -55px rgba(17, 33, 20, .5);
   --serif: "Fraunces", Georgia, serif;
   --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --maxw: 1180px;
-  --r: 4px;
+  --r: 8px;
   --ease: cubic-bezier(.22, 1, .36, 1);
 }
 
-/* "Furnace" dark mode: the OS setting, unless the viewer picked light. */
+/* "Dusk under the canopy" dark mode: the OS setting, unless the viewer picked light. */
 @media (prefers-color-scheme: dark) {
   :root:where(:not([data-theme="light"])) {
     color-scheme: dark;
-    --bg: #12100D; --bg-2: #171310; --panel: #1D1A16; --panel-2: #171310;
-    --ink: #F2EDE3; --ink-soft: #CFC8BC; --ink-dim: #A89F90;
-    --line: rgba(242, 237, 227, .1); --line-2: rgba(242, 237, 227, .2); --grid: rgba(255, 255, 255, .03);
-    --accent-ink: #E8A24A; --accent-ink-lg: #E8A24A;
+    --bg: #0E1510; --bg-2: #121A14; --panel: #18211A; --panel-2: #131B15;
+    --ink: #EAEDE2; --ink-soft: #C7CEC1; --ink-dim: #9CA79A;
+    --line: rgba(234, 237, 226, .1); --line-2: rgba(234, 237, 226, .2); --grid: rgba(255, 255, 255, .03);
+    --accent: #D9784A; --accent-ink: #E0875A; --accent-ink-lg: #E0875A;
     --good: #4CB86A; --bad: #F2746B; --good-wash: rgba(76, 184, 106, .16); --bad-wash: rgba(242, 116, 107, .15);
     --band: rgba(255, 255, 255, .035); --band-2: rgba(255, 255, 255, .07);
-    --chart-grid: #2B2620; --chart-axis: #3D362D; --chart-muted: #978E80;
-    --s-cpi: #D06A30; --s-ff: #5487D0; --s-ur: #C25E9A; --s-wage: #32A9A0; --s-accent: #BD8226; --s-in: #9A7BD0;
-    --s-c1: #5F8FD8; --s-c2: #E07A3E; --s-c3: #A58BE0; --s-c4: #A59B8C; --s-c5: #3BB5AB; --s-c6: #E06A9E; --s-c7: #CDB13C; --s-all: #F2EDE3;
+    --chart-grid: #243026; --chart-axis: #34413A; --chart-muted: #8C988C;
+    --s-cpi: #E57A45; --s-ff: #5E9BE0; --s-ur: #2FB59A; --s-wage: #AE88E6; --s-accent: #B59620; --s-in: #AE88E6;
+    --s-c1: #5E9BE0; --s-c2: #E57A45; --s-c3: #2FB59A; --s-c4: #AE88E6; --s-c5: #B59620; --s-c6: #DE5F8C; --s-c7: #7FAC3A; --s-all: #EAEDE2;
+    --tree-far: rgba(140, 182, 148, .16);
+    --tree-near: rgba(2, 5, 3, .78);
+    --tree-floor: rgba(6, 10, 7, .55);
+    --sun: rgba(217, 140, 80, .20);
+    --shaft: rgba(255, 220, 170, .045);
     --shadow: 0 30px 70px -50px rgba(0, 0, 0, .9);
   }
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #12100D; --bg-2: #171310; --panel: #1D1A16; --panel-2: #171310;
-  --ink: #F2EDE3; --ink-soft: #CFC8BC; --ink-dim: #A89F90;
-  --line: rgba(242, 237, 227, .1); --line-2: rgba(242, 237, 227, .2); --grid: rgba(255, 255, 255, .03);
-  --accent-ink: #E8A24A; --accent-ink-lg: #E8A24A;
+  --bg: #0E1510; --bg-2: #121A14; --panel: #18211A; --panel-2: #131B15;
+  --ink: #EAEDE2; --ink-soft: #C7CEC1; --ink-dim: #9CA79A;
+  --line: rgba(234, 237, 226, .1); --line-2: rgba(234, 237, 226, .2); --grid: rgba(255, 255, 255, .03);
+  --accent: #D9784A; --accent-ink: #E0875A; --accent-ink-lg: #E0875A;
   --good: #4CB86A; --bad: #F2746B; --good-wash: rgba(76, 184, 106, .16); --bad-wash: rgba(242, 116, 107, .15);
   --band: rgba(255, 255, 255, .035); --band-2: rgba(255, 255, 255, .07);
-  --chart-grid: #2B2620; --chart-axis: #3D362D; --chart-muted: #978E80;
-  --s-cpi: #D06A30; --s-ff: #5487D0; --s-ur: #C25E9A; --s-wage: #32A9A0; --s-accent: #BD8226; --s-in: #9A7BD0;
-    --s-c1: #5F8FD8; --s-c2: #E07A3E; --s-c3: #A58BE0; --s-c4: #A59B8C; --s-c5: #3BB5AB; --s-c6: #E06A9E; --s-c7: #CDB13C; --s-all: #F2EDE3;
+  --chart-grid: #243026; --chart-axis: #34413A; --chart-muted: #8C988C;
+  --s-cpi: #E57A45; --s-ff: #5E9BE0; --s-ur: #2FB59A; --s-wage: #AE88E6; --s-accent: #B59620; --s-in: #AE88E6;
+  --s-c1: #5E9BE0; --s-c2: #E57A45; --s-c3: #2FB59A; --s-c4: #AE88E6; --s-c5: #B59620; --s-c6: #DE5F8C; --s-c7: #7FAC3A; --s-all: #EAEDE2;
+  --tree-far: rgba(140, 182, 148, .16);
+  --tree-near: rgba(2, 5, 3, .78);
+  --tree-floor: rgba(6, 10, 7, .55);
+  --sun: rgba(217, 140, 80, .20);
+  --shaft: rgba(255, 220, 170, .045);
   --shadow: 0 30px 70px -50px rgba(0, 0, 0, .9);
 }
 
@@ -86,13 +103,16 @@ body {
   font: 400 16px/1.55 var(--sans);
   -webkit-font-smoothing: antialiased;
 }
-/* faint blueprint grid behind everything */
+/* light through the canopy: warm sun high on the right, soft shafts fading into fog */
+html { overflow-x: clip; }
+body { position: relative; }
 body::before {
-  content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background-image:
-    linear-gradient(var(--grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-  background-size: 48px 48px;
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 980px; z-index: -2; pointer-events: none;
+  background:
+    radial-gradient(900px 520px at 78% -140px, var(--sun), transparent 70%),
+    repeating-linear-gradient(112deg, transparent 0 90px, var(--shaft) 90px 150px, transparent 150px 230px, var(--shaft) 230px 260px, transparent 260px 380px);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .55) 45%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .55) 45%, transparent 100%);
 }
 a { color: inherit; }
 em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--accent-ink-lg); }
@@ -137,7 +157,28 @@ h3 { font-size: 1.15rem; letter-spacing: -.01em; }
 .lead { color: var(--ink-soft); font-size: 1.06rem; max-width: 66ch; margin: 14px 0 0; }
 
 /* ---------- page header */
-.masthead { padding-block: 64px 28px; }
+.masthead { padding-block: 64px 28px; position: relative; isolation: isolate; }
+.masthead::before, .masthead::after {
+  content: ""; position: absolute; z-index: -1; pointer-events: none;
+  left: 50%; width: 100vw; transform: translateX(-50%); bottom: -24px; height: min(330px, 92%);
+  -webkit-mask-repeat: repeat-x; mask-repeat: repeat-x;
+  -webkit-mask-position: bottom center; mask-position: bottom center;
+  -webkit-mask-size: 1200px 100%; mask-size: 1200px 100%;
+}
+/* far trees: misty, fading upward into fog */
+.masthead::before {
+  background: linear-gradient(to top, var(--tree-far), transparent 92%);
+  -webkit-mask-image: url("redwoods-far.svg"); mask-image: url("redwoods-far.svg");
+}
+/* near trees: darker bark, offset so trunks don't line up */
+.masthead::after {
+  background: linear-gradient(to top, var(--tree-near), transparent 95%);
+  -webkit-mask-image: url("redwoods-near.svg"); mask-image: url("redwoods-near.svg");
+  -webkit-mask-position: calc(50% + 380px) bottom; mask-position: calc(50% + 380px) bottom;
+}
+@media (max-width: 640px) {
+  .masthead::before, .masthead::after { -webkit-mask-size: 760px 100%; mask-size: 760px 100%; height: 88%; }
+}
 @media (max-width: 640px) { .masthead { padding-block: 36px 16px; } }
 .masthead h1 { margin-top: 18px; }
 .meta-row { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 22px; font: 400 .78rem/1.4 var(--mono); color: var(--ink-dim); }
@@ -156,7 +197,7 @@ h3 { font-size: 1.15rem; letter-spacing: -.01em; }
   border-radius: var(--r); padding: 28px 30px 20px; box-shadow: var(--shadow);
 }
 @media (max-width: 640px) { .card { padding: 22px 16px 16px; } }
-.card::before, .card::after { content: ""; position: absolute; width: 16px; height: 16px; pointer-events: none; }
+.card::before, .card::after { content: ""; position: absolute; width: 22px; height: 22px; pointer-events: none; }
 .card::before { top: -1px; left: -1px; border-top: 2px solid var(--accent); border-left: 2px solid var(--accent); border-top-left-radius: var(--r); }
 .card::after { bottom: -1px; right: -1px; border-bottom: 2px solid var(--accent); border-right: 2px solid var(--accent); border-bottom-right-radius: var(--r); }
 .card-head { display: grid; gap: 10px; margin-bottom: 18px; }
@@ -307,7 +348,15 @@ thead th { position: sticky; top: 0; background: var(--panel-2); font-weight: 60
 .method-grid span { color: var(--ink-soft); text-align: right; }
 .caveats { margin: 18px 0 0; padding-left: 0; list-style: none; display: grid; gap: 6px; font-size: .88rem; color: var(--ink-soft); max-width: 90ch; }
 .caveats li::before { content: "+ "; color: var(--accent-ink); }
-.site-foot { padding: 40px 0 60px; color: var(--ink-dim); font-size: .82rem; }
+.site-foot { padding: 120px 0 60px; color: var(--ink-dim); font-size: .82rem; position: relative; isolation: isolate; }
+/* forest floor: a low tree line rising behind the footer */
+.site-foot::before {
+  content: ""; position: absolute; z-index: -1; pointer-events: none; left: 50%; width: 100vw; transform: translateX(-50%);
+  top: 0; bottom: 0;
+  background: linear-gradient(to top, var(--tree-floor), transparent 80%);
+  -webkit-mask: url("redwoods-low.svg") repeat-x top center / 1200px 140px, linear-gradient(#000, #000) no-repeat 0 140px / 100% 100%;
+  mask: url("redwoods-low.svg") repeat-x top center / 1200px 140px, linear-gradient(#000, #000) no-repeat 0 140px / 100% 100%;
+}
 .site-foot .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); padding-top: 22px; }
 .built { display: inline-flex; align-items: center; gap: 8px; }
 
